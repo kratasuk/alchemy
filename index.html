@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Алхимия Женщины — программа Елизаветы Бабановой</title>
+<meta name="description" content="14-недельная программа для реализованных женщин, которые умеют достигать результатов, но устали жертвовать ради этого своей женской природой.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #f3ece0;
+    --bg-warm: #ede4d3;
+    --bg-deep: #e7dcc6;
+    --paper: #faf6ee;
+    --ink: #1c1814;
+    --ink-2: #2a241e;
+    --ink-soft: rgba(28, 24, 20, 0.66);
+    --ink-faint: rgba(28, 24, 20, 0.42);
+    --ink-hair: rgba(28, 24, 20, 0.14);
+    --ink-mist: rgba(28, 24, 20, 0.06);
+    --night: #14110d;
+    --light: #f3ece0;
+    --light-soft: rgba(243, 236, 224, 0.72);
+    --light-faint: rgba(243, 236, 224, 0.42);
+    --light-hair: rgba(243, 236, 224, 0.14);
+    --gold: #9a7838;
+    --gold-bright: #c8a160;
+    --gold-soft: #b89460;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --maxw: 1320px;
+    --gutter: clamp(20px, 4vw, 56px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  ::selection { background: var(--gold); color: var(--paper); }
+
+  .shell { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+  .shell-wide { max-width: 1480px; margin: 0 auto; padding: 0 var(--gutter); }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+  }
+
+  .h-1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5.4vw, 76px);
+    line-height: 1.04;
+    letter-spacing: -0.012em;
+  }
+  .h-1 em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+  }
+
+  .body {
+    font-family: var(--sans);
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.7;
+    color: var(--ink-soft);
+    letter-spacing: 0.002em;
+    text-wrap: pretty;
+  }
+  .body strong { color: var(--ink); font-weight: 500; }
+
+  /* CTAs */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 17px 26px 17px 28px;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    transition: transform .25s cubic-bezier(.2,.7,.2,1), background .25s, color .25s, border-color .25s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--gold); border-color: var(--gold); color: var(--paper); transform: translateY(-1px); }
+  .btn .arrow { display: inline-block; transition: transform .25s; }
+  .btn:hover .arrow { transform: translateX(4px); }
+  .btn--ghost { background: transparent; color: var(--ink); }
+  .btn--ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .btn--light { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .btn--light:hover { background: var(--gold-bright); border-color: var(--gold-bright); color: var(--ink); }
+  .btn--ghost-light { background: transparent; color: var(--paper); border-color: var(--light-faint); }
+  .btn--ghost-light:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+  /* nav */
+  .nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px var(--gutter);
+    transition: background .3s, backdrop-filter .3s, border-color .3s, padding .3s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.scrolled {
+    background: rgba(243, 236, 224, 0.86);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    border-bottom-color: var(--ink-hair);
+    padding: 12px var(--gutter);
+  }
+  .nav.hero-mode { color: var(--paper); }
+  .nav.hero-mode:not(.scrolled) .brand-name { color: var(--paper); }
+  .nav.hero-mode:not(.scrolled) .nav-menu a { color: rgba(243, 236, 224, 0.72); }
+  .nav.hero-mode:not(.scrolled) .nav-menu a:hover { color: var(--paper); }
+  .nav.hero-mode:not(.scrolled) .nav-menu .nav-cta { border-color: rgba(243, 236, 224, 0.6); color: var(--paper); }
+  .nav.hero-mode:not(.scrolled) .nav-menu .nav-cta:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .brand { display: inline-flex; align-items: center; color: var(--ink); }
+  .brand-wordmark { display: inline-flex; align-items: center; }
+  .brand-name {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: 0.14em;
+    color: var(--ink);
+    white-space: nowrap;
+    text-transform: uppercase;
+    font-variant-numeric: lining-nums;
+  }
+  .nav-menu { display: flex; align-items: center; gap: 32px; }
+  .nav-menu a {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transition: color .2s;
+  }
+  .nav-menu a:hover { color: var(--ink); }
+  .nav-menu .nav-cta {
+    padding: 10px 18px;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    color: var(--ink);
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  .nav-menu .nav-cta:hover { background: var(--ink); color: var(--paper); }
+
+  /* reveals */
+  .reveal {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1);
+  }
+  .reveal.in { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+
+  /* sections */
+  section { position: relative; }
+  .section { padding: clamp(80px, 10vw, 160px) 0; }
+  .section-deep { background: var(--bg-warm); }
+  .section-paper { background: var(--paper); }
+
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: end;
+    margin-bottom: clamp(48px, 7vw, 96px);
+  }
+  .section-head-stack { display: flex; flex-direction: column; gap: 20px; }
+
+  /* ─── HERO ─── */
+  .alc-hero {
+    position: relative;
+    min-height: 100vh;
+    padding: 0;
+    overflow: hidden;
+    background: var(--night);
+    color: var(--paper);
+  }
+  .alc-hero-portrait {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .alc-hero-portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+  .alc-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(95deg, rgba(20,17,13,0.55) 0%, rgba(20,17,13,0.30) 28%, rgba(20,17,13,0.08) 52%, transparent 70%);
+    pointer-events: none;
+  }
+  .alc-hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    padding: 26vh clamp(48px, 6vw, 96px) 12vh var(--gutter);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 28px;
+    min-height: 100vh;
+    justify-content: center;
+  }
+  .alc-hero-title { text-shadow: 0 2px 24px rgba(0,0,0,0.25); }
+  .alc-hero-lede { text-shadow: 0 1px 12px rgba(0,0,0,0.35); }
+  .alc-hero-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(64px, 10vw, 168px);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--paper);
+  }
+  .alc-hero-title .alc-fem {
+    font-style: italic;
+    color: var(--gold-bright);
+    font-weight: 400;
+    display: inline-block;
+  }
+  .alc-hero-ornament {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin: -8px 0 -4px;
+    opacity: 0.85;
+  }
+  .alc-hero-ornament .ln {
+    width: 44px;
+    height: 1px;
+    background: var(--gold-bright);
+    opacity: 0.55;
+  }
+  .alc-hero-ornament .dia {
+    width: 6px;
+    height: 6px;
+    background: var(--gold-bright);
+    transform: rotate(45deg);
+  }
+  .alc-hero-lede {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.7vw, 30px);
+    line-height: 1.5;
+    color: var(--light-soft);
+    font-weight: 400;
+    max-width: 60ch;
+    text-wrap: balance;
+  }
+  .alc-hero-lede em {
+    font-style: italic;
+    color: var(--gold-bright);
+  }
+  .alc-hero-cta-row {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  /* ─── WHO FOR ─── */
+  .alc-whofor-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--ink-hair);
+    border-top: 1px solid var(--ink-hair);
+    border-bottom: 1px solid var(--ink-hair);
+  }
+  .alc-whofor-card {
+    background: var(--bg);
+    padding: 44px 36px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    min-height: 480px;
+    position: relative;
+    transition: background .35s;
+  }
+  .alc-whofor-card:hover { background: var(--paper); }
+  .alc-whofor-card .num {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .alc-whofor-illu {
+    width: 100%;
+    aspect-ratio: 5 / 3;
+    background: var(--bg-warm);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .alc-whofor-illu svg { width: 70%; height: auto; opacity: 0.78; }
+  .alc-whofor-title {
+    font-family: var(--serif);
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.18;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  .alc-whofor-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .alc-whofor-bullets li {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .alc-whofor-bullets li::before {
+    content: '✦';
+    color: var(--gold);
+    font-size: 12px;
+    line-height: 1.65;
+    flex-shrink: 0;
+  }
+
+  /* ─── ABOUT ─── */
+  .alc-about {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .alc-about-photo {
+    position: sticky;
+    top: 110px;
+    aspect-ratio: 4 / 5;
+    background: var(--bg-warm);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .alc-about-photo img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  }
+  .alc-about-photo .badge {
+    position: absolute;
+    bottom: 24px; left: 24px;
+    padding: 8px 14px;
+    background: rgba(28,24,20,0.85);
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .alc-about-text {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-top: 12px;
+  }
+  .alc-about-text .h-1 {
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  .alc-about-text p {
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+    max-width: 58ch;
+  }
+  .alc-about-text p strong { color: var(--ink); font-weight: 500; }
+  .alc-about-sign {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 22px;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+  .alc-about-cta { margin-top: 16px; }
+
+  /* ─── WEEKS ─── */
+  .alc-weeks {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--ink-hair);
+  }
+  .alc-week {
+    display: grid;
+    grid-template-columns: 110px 1fr 1fr;
+    gap: clamp(20px, 3vw, 48px);
+    padding: 40px 0;
+    border-bottom: 1px solid var(--ink-hair);
+    align-items: start;
+  }
+  .alc-week-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding-top: 10px;
+    white-space: nowrap;
+  }
+  .alc-week-name {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(24px, 2.6vw, 34px);
+    line-height: 1.14;
+    letter-spacing: -0.006em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  .alc-week-name .sub {
+    display: block;
+    margin-top: 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.2vw, 18px);
+    line-height: 1.45;
+    color: var(--gold);
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+  }
+  .alc-week-body {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .alc-week-desc {
+    font-family: var(--sans);
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  .alc-week-quote {
+    padding: 18px 0 0;
+    border-top: 1px dashed var(--ink-hair);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .alc-week-quote q {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    quotes: '«' '»';
+  }
+  .alc-week-quote .who {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .alc-weeks-cta { margin-top: 56px; text-align: center; }
+
+  /* ─── HOW ─── */
+  .alc-how {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+  .alc-how-block h3 {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 28px;
+  }
+  .alc-included { display: flex; flex-direction: column; }
+  .alc-included-row {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 22px;
+    padding: 24px 0;
+    border-top: 1px solid var(--ink-hair);
+    align-items: start;
+  }
+  .alc-included-row:last-child { border-bottom: 1px solid var(--ink-hair); }
+  .alc-included-row .ico {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+  }
+  .alc-included-row .ico svg { width: 100%; height: auto; }
+  .alc-included-row .name {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  .alc-included-row .desc {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    max-width: 42ch;
+  }
+  .alc-apply-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .alc-apply-step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 24px;
+    padding: 26px 28px;
+    background: var(--paper);
+    border: 1px solid var(--ink-hair);
+    border-radius: 2px;
+    align-items: start;
+    transition: border-color .25s, transform .25s;
+  }
+  .alc-apply-step:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .alc-apply-step .step-num {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .alc-apply-step .step-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .alc-apply-step .step-desc {
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+  .alc-how-cta { margin-top: 36px; }
+
+  /* ─── VOICES ─── */
+  .alc-voices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .alc-voice {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 36px 32px 32px;
+    background: var(--paper);
+    border-top: 2px solid var(--gold);
+    border-radius: 2px;
+    min-height: 320px;
+  }
+  .alc-voice .quote-mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 56px;
+    line-height: 0.4;
+    color: var(--gold);
+    height: 28px;
+  }
+  .alc-voice .text {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.42;
+    color: var(--ink);
+    flex: 1;
+    text-wrap: pretty;
+  }
+  .alc-voice .who {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 18px;
+    border-top: 1px solid var(--ink-hair);
+  }
+  .alc-voice .who strong {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    font-weight: 400;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ─── FAQ ─── */
+  .alc-faq {
+    max-width: 920px;
+    margin: 0 auto;
+    border-top: 1px solid var(--ink-hair);
+  }
+  .alc-faq-item { border-bottom: 1px solid var(--ink-hair); }
+  .alc-faq-q {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px 0;
+    text-align: left;
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.7vw, 24px);
+    line-height: 1.3;
+    color: var(--ink);
+    cursor: pointer;
+    transition: color .2s;
+  }
+  .alc-faq-q:hover { color: var(--gold); }
+  .alc-faq-q .plus {
+    font-family: var(--mono);
+    font-size: 22px;
+    color: var(--gold);
+    transition: transform .35s cubic-bezier(.2,.7,.2,1);
+    flex-shrink: 0;
+    line-height: 1;
+    width: 24px;
+    text-align: center;
+  }
+  .alc-faq-item.open .alc-faq-q .plus { transform: rotate(45deg); }
+  .alc-faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .alc-faq-item.open .alc-faq-a { max-height: 600px; }
+  .alc-faq-a-inner {
+    padding: 0 0 32px;
+    max-width: 64ch;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+
+  /* ─── FINAL ─── */
+  .alc-final {
+    background: var(--night);
+    color: var(--paper);
+    padding: clamp(100px, 12vw, 180px) var(--gutter);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .alc-final::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(200, 161, 96, 0.10), transparent 60%);
+    pointer-events: none;
+  }
+  .alc-final-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+  .alc-final-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .alc-final-eyebrow::before,
+  .alc-final-eyebrow::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: var(--gold-bright);
+    opacity: 0.6;
+  }
+  .alc-final-title {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(48px, 7vw, 96px);
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+    color: var(--paper);
+  }
+  .alc-final-text {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.5;
+    color: var(--light-soft);
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+  .alc-final-fine {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--light-faint);
+    margin-top: 8px;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .alc-final-fine .dot { color: var(--gold-bright); }
+  .alc-final-cta-row {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+  .alc-final-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 24px 0 8px;
+    width: 100%;
+    max-width: 720px;
+    border-top: 1px solid var(--light-hair);
+    border-bottom: 1px solid var(--light-hair);
+  }
+  .alc-final-step {
+    padding: 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    text-align: center;
+    border-right: 1px solid var(--light-hair);
+  }
+  .alc-final-step:last-child { border-right: 0; }
+  .alc-final-step .n {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    color: var(--gold-bright);
+    line-height: 1;
+  }
+  .alc-final-step .lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--light-soft);
+  }
+  .alc-final-step .lbl .here {
+    color: var(--gold-bright);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0;
+    display: block;
+    margin-top: 4px;
+  }
+  @media (max-width: 720px) {
+    .alc-final-steps { grid-template-columns: 1fr; }
+    .alc-final-step { border-right: 0; border-bottom: 1px solid var(--light-hair); }
+    .alc-final-step:last-child { border-bottom: 0; }
+  }
+
+  /* ─── FOOTER ─── */
+  .alc-footer {
+    background: var(--bg-warm);
+    padding: 80px var(--gutter) 36px;
+  }
+  .alc-footer-inner {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 64px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--ink-hair);
+  }
+  .alc-footer-brand .brand-name { font-size: 28px; }
+  .alc-footer-brand p {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-top: 18px;
+    max-width: 42ch;
+  }
+  .alc-footer-col h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 18px;
+    font-weight: 400;
+  }
+  .alc-footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .alc-footer-col li a {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+    transition: color .2s;
+  }
+  .alc-footer-col li a:hover { color: var(--gold); }
+  .alc-footer-base {
+    max-width: var(--maxw);
+    margin: 24px auto 0;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  /* ─── MODAL ─── */
+  .alc-modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(20, 17, 13, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s;
+  }
+  .alc-modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .alc-modal {
+    background: var(--bg);
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 4px;
+    padding: 48px 40px;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .alc-modal-overlay.open .alc-modal { transform: none; }
+  .alc-modal-close {
+    position: absolute;
+    top: 18px; right: 18px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--ink-hair);
+    background: transparent;
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .alc-modal-close:hover { background: var(--ink); color: var(--paper); }
+  .alc-modal-eyebrow {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .alc-modal-eyebrow::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .alc-modal h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.008em;
+    color: var(--ink);
+    margin-bottom: 14px;
+    text-wrap: balance;
+  }
+  .alc-modal p {
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 26px;
+  }
+  .alc-form { display: flex; flex-direction: column; gap: 18px; }
+  .alc-form label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .alc-form input,
+  .alc-form textarea {
+    font-family: var(--sans);
+    font-size: 15px;
+    padding: 14px 16px;
+    border: 1px solid var(--ink-hair);
+    border-radius: 2px;
+    background: var(--paper);
+    color: var(--ink);
+    transition: border-color .2s;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+  .alc-form input:focus,
+  .alc-form textarea:focus { outline: none; border-color: var(--gold); }
+  .alc-form textarea { min-height: 110px; resize: vertical; }
+  .alc-form .btn { align-self: flex-start; margin-top: 8px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 1024px) {
+    .alc-whofor-grid { grid-template-columns: repeat(2, 1fr); }
+    .alc-about { grid-template-columns: 1fr; }
+    .alc-about-photo { position: relative; top: 0; aspect-ratio: 4 / 3; max-width: 520px; }
+    .alc-how { grid-template-columns: 1fr; gap: 48px; }
+    .alc-voices-grid { grid-template-columns: repeat(2, 1fr); }
+    .alc-footer-inner { grid-template-columns: 1fr 1fr; }
+    .section-head { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 720px) {
+    .alc-hero-inner { padding: 22vh var(--gutter) 14vh; max-width: 100%; }
+    .alc-hero-portrait img { object-position: 62% 22%; }
+    .alc-hero::before {
+      background:
+        linear-gradient(180deg, rgba(20,17,13,0.55) 0%, rgba(20,17,13,0.30) 35%, rgba(20,17,13,0.55) 100%);
+    }
+    .alc-hero-title { font-size: clamp(48px, 13vw, 80px); }
+    .alc-whofor-grid { grid-template-columns: 1fr; }
+    .alc-whofor-card { min-height: auto; padding: 36px 28px; }
+    .alc-week { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
+    .alc-week-num { padding-top: 0; }
+    .alc-voices-grid { grid-template-columns: 1fr; }
+    .alc-footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    .alc-footer-base { justify-content: flex-start; }
+    .alc-final-title { font-size: clamp(36px, 10vw, 60px); }
+    .nav-menu a:not(.nav-cta) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="alc-hero" id="top">
+  <div class="alc-hero-inner">
+    <h1 class="alc-hero-title reveal in reveal-delay-1">
+      Алхимия<br>
+      <span class="alc-fem">Женщины</span>
+    </h1>
+    <div class="alc-hero-ornament reveal in reveal-delay-2" aria-hidden="true">
+      <span class="ln"></span><span class="dia"></span><span class="ln"></span>
+    </div>
+    <p class="alc-hero-lede reveal in reveal-delay-2">
+      Для реализованных женщин, которые умеют достигать результатов, но устали жертвовать ради этого <em>своей женской природой.</em>
+    </p>
+    <div class="alc-hero-cta-row reveal in reveal-delay-3">
+      <button class="btn btn--light" data-apply>Подать заявку <span class="arrow">→</span></button>
+    </div>
+  </div>
+  <div class="alc-hero-portrait" aria-hidden="true">
+    <img src="images/hero-eliza.webp" alt="">
+  </div>
+</section>
+
+<!-- WHO FOR -->
+<section class="section section-paper" id="whofor">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="section-head-stack">
+        <span class="section-num">01 / Для кого</span>
+        <h2 class="h-1">Для кого <em>эта программа.</em></h2>
+      </div>
+      <p class="body" style="max-width:46ch; align-self:end;">Шесть знакомых ситуаций. Если хотя бы одна из них — про вас, читайте дальше.</p>
+    </div>
+  </div>
+  <div class="shell-wide">
+    <div class="alc-whofor-grid">
+
+      <div class="alc-whofor-card reveal">
+        <span class="num">01</span>
+        <div class="alc-whofor-illu">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
+            <circle cx="100" cy="46" r="14"/>
+            <path d="M86 78 q14 -14 28 0 v22 H86z"/>
+            <circle cx="60" cy="56" r="9"/>
+            <path d="M50 80 q10 -10 20 0 v16 H50z"/>
+            <circle cx="140" cy="56" r="9"/>
+            <path d="M130 80 q10 -10 20 0 v16 H130z"/>
+            <path d="M30 108 H170" stroke-dasharray="2 4"/>
+          </svg>
+        </div>
+        <h3 class="alc-whofor-title">Руководите командой</h3>
+        <ul class="alc-whofor-bullets">
+          <li>На вас ответственность за высокие результаты и стандарты компании</li>
+          <li>Вы платите за их поддержание своей энергией, здоровьем и личной жизнью</li>
+        </ul>
+      </div>
+
+      <div class="alc-whofor-card reveal">
+        <span class="num">02</span>
+        <div class="alc-whofor-illu">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
+            <path d="M30 100 L60 70 L90 86 L130 50 L170 30"/>
+            <circle cx="30" cy="100" r="2.5" fill="#9a7838"/>
+            <circle cx="60" cy="70" r="2.5" fill="#9a7838"/>
+            <circle cx="90" cy="86" r="2.5" fill="#9a7838"/>
+            <circle cx="130" cy="50" r="2.5" fill="#9a7838"/>
+            <circle cx="170" cy="30" r="2.5" fill="#9a7838"/>
+            <path d="M22 110 H180"/><path d="M22 110 V20"/>
+            <path d="M170 18 L170 30" stroke-dasharray="2 3"/>
+          </svg>
+        </div>
+        <h3 class="alc-whofor-title">Развиваете свой бизнес</h3>
+        <ul class="alc-whofor-bullets">
+          <li>Вы хотите роста, развития и нового масштаба в своём деле</li>
+          <li>Но не хотите при этом терять свою женственность и жизнь вне работы</li>
+        </ul>
+      </div>
+
+      <div class="alc-whofor-card reveal">
+        <span class="num">03</span>
+        <div class="alc-whofor-illu">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
+            <path d="M100 92 C 60 72 50 38 78 30 C 92 26 100 38 100 46 C 100 38 108 26 122 30 C 150 38 140 72 100 92z"/>
+            <path d="M40 100 H160" stroke-dasharray="2 4"/>
+            <circle cx="100" cy="46" r="2" fill="#9a7838"/>
+          </svg>
+        </div>
+        <h3 class="alc-whofor-title">Реализованы, но одиноки</h3>
+        <ul class="alc-whofor-bullets">
+          <li>Вы хотите встретить мужчину своего уровня и построить с ним глубокие отношения</li>
+          <li>Но не готовы упрощать себя, притворяться слабой и снижать свои стандарты</li>
+        </ul>
+      </div>
+
+      <div class="alc-whofor-card reveal">
+        <span class="num">04</span>
+        <div class="alc-whofor-illu">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
+            <circle cx="100" cy="42" r="13"/>
+            <path d="M86 76 q14 -14 28 0 v22 H86z"/>
+            <path d="M50 90 q0 -18 20 -18"/>
+            <path d="M150 90 q0 -18 -20 -18"/>
+            <circle cx="50" cy="90" r="4"/><circle cx="150" cy="90" r="4"/>
+            <circle cx="30" cy="100" r="3"/><circle cx="170" cy="100" r="3"/>
+            <path d="M100 14 L92 28 L108 28 z"/>
+          </svg>
+        </div>
+        <h3 class="alc-whofor-title">Наставник для других</h3>
+        <ul class="alc-whofor-bullets">
+          <li>Вы авторитет в своей сфере, ведёте за собой других личным примером</li>
+          <li>Но сейчас период, где ваш ресурс почти исчерпан и вам самой нужна опора</li>
+        </ul>
+      </div>
+
+      <div class="alc-whofor-card reveal">
+        <span class="num">05</span>
+        <div class="alc-whofor-illu">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
+            <circle cx="100" cy="64" r="14"/>
+            <path d="M86 96 q14 -14 28 0 v14 H86z"/>
+            <circle cx="60" cy="28" r="6" fill="#9a7838"/>
+            <circle cx="100" cy="20" r="6" fill="#9a7838"/>
+            <circle cx="140" cy="28" r="6" fill="#9a7838"/>
+            <path d="M100 50 C 80 38 70 32 60 30" stroke-dasharray="2 3"/>
+            <path d="M100 50 C 100 36 100 28 100 24" stroke-dasharray="2 3"/>
+            <path d="M100 50 C 120 38 130 32 140 30" stroke-dasharray="2 3"/>
+          </svg>
+        </div>
+        <h3 class="alc-whofor-title">Совмещаете семью и работу</h3>
+        <ul class="alc-whofor-bullets">
+          <li>Вы жонглируете ролями — мама, жена, руководитель, профессионал</li>
+          <li>Но за всеми этими ролями не остаётся времени и места для самой себя</li>
+        </ul>
+      </div>
+
+      <div class="alc-whofor-card reveal">
+        <span class="num">06</span>
+        <div class="alc-whofor-illu">
+          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
+            <path d="M30 100 C 60 70 80 80 100 50 C 120 80 140 70 170 100"/>
+            <circle cx="100" cy="32" r="10"/>
+            <path d="M88 32 L112 32"/>
+            <path d="M100 8 L100 20"/>
+            <path d="M86 18 L92 24"/>
+            <path d="M114 18 L108 24"/>
+            <path d="M30 100 H170"/>
+          </svg>
+        </div>
+        <h3 class="alc-whofor-title">Выходите на новый виток</h3>
+        <ul class="alc-whofor-bullets">
+          <li>Вы накопили большой опыт и чувствуете, что пора этим делиться</li>
+          <li>Но когда дело доходит до того, чтобы проявляться, чего-то словно не хватает</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="section-head-stack">
+        <span class="section-num">02 / О Лизе</span>
+      </div>
+    </div>
+    <div class="alc-about">
+      <div class="alc-about-photo reveal">
+        <img src="images/about-eliza.webp" alt="Елизавета Бабанова">
+        <div class="badge">Лиза · Бали</div>
+      </div>
+      <div class="alc-about-text reveal reveal-delay-1">
+        <h2 class="h-1">Я знаю на своём опыте, какую цену платит женщина за <em>достижение высоких результатов.</em></h2>
+        <p>Строя карьеру в хедж-фонде, управляя большой командой, развивая свой бизнес — я сталкивалась с ключевым противоречием. Чем больше повышался уровень ответственности, тем выше был уровень стресса.</p>
+        <p>За каждым новым результатом стояла потеря. <strong>Здоровья. Энергии. Контакта со своей женской природой.</strong> Казалось, это единственный способ реализовывать свой внутренний масштаб.</p>
+        <p>Но спустя 13 лет поисков, как решить это противоречие — для себя и для женщин, с которыми работаю — родилась «Алхимия». И это кульминация всего моего опыта реализации по-женски.</p>
+        <p>Секрет «Алхимии» не в том, чтобы замедлиться, отдыхать больше или ставить себя на первое место. А в том, чтобы <strong>перестать накапливать напряжение</strong> и стать пропускной для потоков жизни — энергетических и финансовых. Тогда при росте ответственности растёт не стресс, а ясность, уверенность и способность притягивать ресурсы.</p>
+        <p>Но эта программа не для всех. Реальную пользу она принесёт только тем, кто уже научился достигать. И хочет делать это теперь, не жертвуя своим ресурсом.</p>
+        <div class="alc-about-sign">— Лиза</div>
+        <div class="alc-about-cta">
+          <button class="btn btn--ghost" data-apply>Узнать, подходит ли вам программа <span class="arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEEKS -->
+<section class="section section-deep" id="weeks">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="section-head-stack">
+        <span class="section-num">03 / Программа</span>
+        <h2 class="h-1">14 недель <em>алхимии.</em></h2>
+      </div>
+      <p class="body" style="max-width:46ch; align-self:end;">Каждая неделя — одно занятие, одна тема, ежедневная практика. Темы собираются в единую систему — путь от нервной системы к жизни, которую вы строите осознанно.</p>
+    </div>
+    <div class="alc-weeks" id="weeks-list"></div>
+    <div class="alc-weeks-cta reveal">
+      <button class="btn" data-apply>Узнать, подходит ли вам программа <span class="arrow">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="section" id="how">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="section-head-stack">
+        <span class="section-num">04 / Как проходит</span>
+        <h2 class="h-1">Что включено <em>и как войти.</em></h2>
+      </div>
+    </div>
+    <div class="alc-how">
+      <div class="alc-how-block reveal">
+        <h3>Что включено</h3>
+        <div class="alc-included">
+          <div class="alc-included-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9h18"/><circle cx="6.5" cy="7" r="0.5" fill="currentColor"/></svg></div>
+            <div>
+              <div class="name">14 занятий</div>
+              <div class="desc">Раз в неделю, в записи. Открываются по графику программы.</div>
+            </div>
+          </div>
+          <div class="alc-included-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 4-4 7-9 7-1.4 0-2.7-.2-3.9-.6L3 20l1.7-4.3C3.6 14.4 3 13.2 3 12c0-4 4-7 9-7s9 3 9 7z"/></svg></div>
+            <div>
+              <div class="name">Общий чат с Елизаветой</div>
+              <div class="desc">Закрытое пространство для участниц на все три месяца.</div>
+            </div>
+          </div>
+          <div class="alc-included-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></div>
+            <div>
+              <div class="name">Живые разборы</div>
+              <div class="desc">Регулярные разборы Лизы — ответы на вопросы, разбор практик, навигация в общем поле.</div>
+            </div>
+          </div>
+          <div class="alc-included-row">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
+            <div>
+              <div class="name">Сопровождение куратора</div>
+              <div class="desc">Куратор поддерживает на пути: отвечает на вопросы, помогает не выпадать из ритма.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="alc-how-block reveal reveal-delay-1">
+        <h3>Как войти в программу</h3>
+        <div class="alc-apply-steps">
+          <div class="alc-apply-step">
+            <div class="step-num">1</div>
+            <div>
+              <div class="step-name">Пройти тест</div>
+              <div class="step-desc">Чтобы понять, подходит ли вам программа.</div>
+            </div>
+          </div>
+          <div class="alc-apply-step">
+            <div class="step-num">2</div>
+            <div>
+              <div class="step-name">Заполнить анкету</div>
+              <div class="step-desc">Расскажете о себе и о том, где сейчас.</div>
+            </div>
+          </div>
+          <div class="alc-apply-step">
+            <div class="step-num">3</div>
+            <div>
+              <div class="step-name">Пройти собеседование</div>
+              <div class="step-desc">Личный разговор с Лизой о вашем резонансе с программой.</div>
+            </div>
+          </div>
+        </div>
+        <div class="alc-how-cta">
+          <button class="btn" data-apply>Подать заявку <span class="arrow">→</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICES -->
+<section class="section section-paper" id="voices">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="section-head-stack">
+        <span class="section-num">05 / Отзывы</span>
+        <h2 class="h-1">Так говорят <em>алхимические женщины.</em></h2>
+      </div>
+    </div>
+    <div class="alc-voices-grid" id="voices-grid"></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="shell">
+    <div class="section-head reveal">
+      <div class="section-head-stack">
+        <span class="section-num">06 / FAQ</span>
+        <h2 class="h-1">Частые <em>вопросы.</em></h2>
+      </div>
+    </div>
+    <div class="alc-faq" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="alc-final" id="apply">
+  <div class="alc-final-inner reveal">
+    <span class="alc-final-eyebrow">Следующий шаг</span>
+    <h2 class="alc-final-title">Расскажите, где вы&nbsp;сейчас. <br>Точно.</h2>
+    <p class="alc-final-text">Анкета — пятнадцать минут. Восемь вопросов о том, что вы уже построили и где сейчас упираетесь. Лиза читает каждую лично и отвечает в течение 48&nbsp;часов. Если есть резонанс — пригласит на собеседование. Если нет — скажет прямо.</p>
+    <div class="alc-final-steps" aria-hidden="true">
+      <div class="alc-final-step">
+        <span class="n">1</span>
+        <span class="lbl">Тест<span class="here">4 минуты</span></span>
+      </div>
+      <div class="alc-final-step">
+        <span class="n">2</span>
+        <span class="lbl">Анкета<span class="here">вы здесь →</span></span>
+      </div>
+      <div class="alc-final-step">
+        <span class="n">3</span>
+        <span class="lbl">Собеседование<span class="here">с Лизой лично</span></span>
+      </div>
+    </div>
+    <div class="alc-final-cta-row">
+      <button class="btn btn--light" data-apply>Заполнить анкету <span class="arrow">→</span></button>
+      <a href="quiz.html" class="btn btn--ghost-light">Пройти тест сначала <span class="arrow">↓</span></a>
+    </div>
+    <div class="alc-final-fine">
+      <span>15 минут</span><span class="dot">·</span>
+      <span>Лиза читает лично</span><span class="dot">·</span>
+      <span>Ответ в 48 часов</span><span class="dot">·</span>
+      <span>Без автоматических рассылок</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="alc-footer">
+  <div class="alc-footer-inner">
+    <div class="alc-footer-brand">
+      <div class="brand"><span class="brand-wordmark"><span class="brand-name">АЛХИМИЯ ЖЕНЩИНЫ</span></span></div>
+      <p>Программа Елизаветы Бабановой. 14 недель работы с нервной системой, телом и женской природой — для тех, кто умеет достигать и хочет делать это, не теряя себя.</p>
+    </div>
+    <div class="alc-footer-col">
+      <h4>Программа</h4>
+      <ul>
+        <li><a href="#whofor">Для кого</a></li>
+        <li><a href="#about">О Лизе</a></li>
+        <li><a href="#weeks">14 недель</a></li>
+        <li><a href="#how">Как проходит</a></li>
+      </ul>
+    </div>
+    <div class="alc-footer-col">
+      <h4>Контакт</h4>
+      <ul>
+        <li><a href="#voices">Отзывы</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#apply">Подать заявку</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="alc-footer-base">
+    <span>© 2026 Eliza Babanova · Алхимия Женщины</span>
+    <span>Программа · По собеседованию</span>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="alc-modal-overlay" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="alc-modal" id="modal-body">
+    <button class="alc-modal-close" id="modal-close" aria-label="Закрыть">×</button>
+    <div id="modal-form">
+      <div class="alc-modal-eyebrow">Анкета · 8 вопросов · ~15 минут</div>
+      <h3>Расскажите, где вы сейчас.</h3>
+      <p>Лиза читает каждую анкету лично. Если есть резонанс — пригласит на собеседование. Если нет — ответит прямо.</p>
+      <form class="alc-form" id="apply-form">
+        <label>1. Имя<input type="text" name="name" required placeholder="Ваше имя"></label>
+        <label>2. Email<input type="email" name="email" required placeholder="vy@example.com"></label>
+        <label>3. Город / часовой пояс<input type="text" name="city" placeholder="Например, Лиссабон · UTC+1"></label>
+        <label>4. Чем занимаетесь<input type="text" name="role" required placeholder="Сфера, роль, краткий контекст"></label>
+        <label>5. Что вы уже построили — кратко<textarea name="built" rows="3" placeholder="Главные результаты, которыми гордитесь"></textarea></label>
+        <label>6. Где сейчас упираетесь<textarea name="stuck" rows="3" required placeholder="То, что повторяется и не решается обычными способами"></textarea></label>
+        <label>7. Опыт работы с собой<input type="text" name="exp" placeholder="Терапия, ретриты, практики — что было важным"></label>
+        <label>8. Что важно знать о вас, чтобы Лиза увидела вас точнее<textarea name="extra" rows="3" placeholder="Контекст, который не вписался в предыдущие вопросы"></textarea></label>
+        <button type="submit" class="btn">Отправить анкету <span class="arrow">→</span></button>
+      </form>
+    </div>
+    <div id="modal-sent" style="display:none;">
+      <div class="alc-modal-eyebrow">Анкета принята</div>
+      <h3>Спасибо. Лиза прочитает её лично.</h3>
+      <p>Ответ — в течение 48 часов. Если есть резонанс, придёт приглашение на собеседование. Если нет — короткое и прямое письмо. Никаких автоматических рассылок.</p>
+      <button class="btn btn--ghost" id="modal-sent-close">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  // ── data ──
+  const weeks = [
+    { n: 'Неделя 01', name: 'Нервная система как алхимический сосуд', sub: 'Расслабленное тело — фундамент масштаба без истощения',
+      desc: 'Состояние нервной системы определяет, какой объём потока жизнь мы способны через себя пропустить. Мы начинаем с фундамента: учимся освобождаться от напряжения, восстанавливать парасимпатику, возвращаться в тело.',
+      q: 'Я наконец-то замедлилась. Стала больше чувствовать и меньше думать.', who: 'Инна, 41 год' },
+    { n: 'Неделя 02', name: 'Деконцентрация и доступ к интуиции', sub: 'Возвращение к женскому режиму восприятия',
+      desc: 'Если мужской путь — концентрация и покорение через волю, то женский — деконцентрация и слияние через расслабление. Включение расширенного внимания открывает доступ к новому способу взаимодействия с миром.',
+      q: 'Я перестала продавливать реальность. Появилось доверие, мягкость и одновременно внутренняя сила.', who: 'Юлия, 43 года' },
+    { n: 'Неделя 03', name: 'Опора на Землю', sub: 'Земля как источник силы и ресурсного состояния',
+      desc: 'Женщина теряет силы, потому что привыкла всё нести на себе. Мы учимся отдавать напряжение земле и получать взамен доступ к её безграничной энергии. Это та опора, которой не хватает большинству женщин-лидеров.',
+      q: 'Алхимия началась за месяц до рождения моего ребёнка. Опора на землю помогала снизить тревогу — я делала её по два раза в день.', who: 'Ирина, 38 лет' },
+    { n: 'Неделя 04', name: 'Сакральные практики', sub: 'Оживление энергии в нижнем центре',
+      desc: 'Когда нервная система расслабилась и тело почувствовало опору, появляется пространство для сакрального. Через практики, которые тысячелетиями передавались по женской линии, мы переходим из режима «я просто существую» к «я занимаюсь любовью с жизнью».',
+      q: 'Тело гудит, низ наполнен силой, сердце открыто, а я стала «больше».', who: 'Инна, 41 год' },
+    { n: 'Неделя 05', name: 'Женская воля', sub: 'Проявление воли через любовь, а не насилие над собой',
+      desc: 'Мужская воля — это давление на себя. Женская идёт через резонанс с сердцем. Мы учимся действовать, когда «не хочется» — не через преодоление, а через обтекание препятствий, как река, которая неизбежно течёт к океану.',
+      q: 'Я заметила, где в своём проекте действую из напряжения. И с помощью практик возвращала себя в расслабленное состояние.', who: 'Ирина, 38 лет' },
+    { n: 'Неделя 06', name: 'Управление вниманием', sub: 'Расширенное присутствие за пределами реактивного ума',
+      desc: 'Внимание — главный ресурс, который мы тратим каждый день. Мы учимся управлять им: когда сжимать, когда расширять, как удерживать Свидетеля даже в напряжённой коммуникации. Это рабочий навык, который превращает реактивный ум в инструмент.',
+      q: 'Через практики стало по-другому проживаться состояние — теперь больше тишины внутри, больше пространства, меньше внутренней борьбы.', who: 'Юлия, 43 года' },
+    { n: 'Неделя 07', name: 'Жизнь в гармонии с циклами', sub: 'Сонастройка с ритмами, которые управляют телом',
+      desc: 'Восемь ключевых точек солнечного года и лунный цикл как микро-карта внутри солнечного. Учимся различать фазы — когда накапливать, когда разгоняться, а когда останавливаться и собирать урожай.',
+      q: 'Беру с собой идею цикличности — лунные ритмы, чередование активности и интеграции. Это создаёт более естественный ритм жизни.', who: 'Юлия, 43 года' },
+    { n: 'Неделя 08', name: 'Наслаждение и красота', sub: 'Топливо для женской реализации',
+      desc: 'Наслаждение и красота — это не «бонус к жизни», а лучшее топливо, которое питает женскую волю и помогает ей расцветать даже при интенсивном режиме. Мы осваиваем практики, которые помогут проживать каждый день как праздник жизни.',
+      q: 'Удивительным образом мне удалось закончить рабочий проект без ночных переработок, без стресса, играючи и в наслаждении.', who: 'Инна, 41 год' },
+    { n: 'Неделя 09', name: 'Полярность мужского и женского', sub: 'Суть женского начала',
+      desc: 'Без точной карты мужского и женского невозможно правильно строить отношения, проекты, команды. Мы разбираем эту карту целиком — и учимся видеть, где в нас активно мужское, где женское, и как они работают вместе.',
+      q: 'Я перестала смотреть в травму и начала видеть его силу.', who: 'Наталья, 46 лет' },
+    { n: 'Неделя 10', name: 'Открытие сердца', sub: 'Принятие — фундамент женского счастья',
+      desc: 'Сильная умная женщина с закрытым сердцем никогда не будет счастлива. Открытое сердце способно вместить всё — и в этом алхимическая роль женщины: трансформировать любой яд в нектар. Мы осваиваем ключевую практику, которая позволяет воплотить эту идею в реальной жизни.',
+      q: 'Я сделала большой шаг к отпусканию контроля и принятию того, что ранее меня так раздражало.', who: 'Ирина, 38 лет' },
+    { n: 'Неделя 11', name: 'Доверие жизни', sub: 'Отпускание контроля и возвращение в поток',
+      desc: 'Когда женщина в недоверии — каждая ситуация требует контроля и проверки. Когда в доверии — жизнь начинает работать на неё. Мы учимся переходу: как выйти из режима контроля и удерживать состояние потока, даже когда жизнь даёт неожиданное.',
+      q: 'Появилось глубочайшее чувство доверия к жизни, что жизнь всегда за меня.', who: 'Светлана, 49 лет' },
+    { n: 'Неделя 12', name: 'Женская реализация в паре', sub: 'Основа гармонии между полюсами',
+      desc: 'В жизни каждой женщины есть боль, связанная с мужчиной. Но если женщина научилась исцелять себя, мужчина в её поле меняется автоматически. Любящий взгляд женщины может наделять мужчину колоссальной силой.',
+      q: 'Благодаря занятию с расстановкой на женственность я чувствую, как мои отношения с мужем переходят на другой уровень. Я наконец поняла, как надо вдохновлять мужа.', who: 'Ирина, 38 лет' },
+    { n: 'Неделя 13', name: 'Жизнь как алхимия', sub: 'Создаём свой идеальный день',
+      desc: 'Высший пилотаж жизни — спонтанное творчество с максимально живым присутствием. Алхимическая женщина строит осознанный диалог с жизнью. На этой неделе мы интегрируем все практики в ежедневный ритм.',
+      q: 'Я научилась останавливаться, замедляться в моменте и понимать, на какую ветку реальности хочу попасть.', who: 'Антонина, 43 года' },
+    { n: 'Неделя 14', name: 'Выпускной', sub: 'Не финал, а рождение новой формы жизни',
+      desc: 'Все тринадцать недель собираются в единую систему. Каждая выпускница уходит с практиками, встроенными в день, картой следующего шага и новым ощущением себя — как алхимической женщины, которая реализует свой масштаб, не теряя себя.',
+      q: 'С этой программы для меня очень многое только начинается.', who: 'Анна, 41 год' }
+  ];
+
+  const voices = [
+    { text: 'Executive MBA по женственности — структурно, глубоко, трансформирующе и при этом очень практично.', name: 'Татьяна', who: 'Топ-менеджер · 47 лет' },
+    { text: 'Мы масштабировали стоматологический бизнес. Второй филиал. Месячный доход вырос в пять раз. Не тактика — структурное изменение в том, кем я была.', name: 'Антонина', who: 'Владелец клиники · 43 года' },
+    { text: 'Впервые за четыре года мой чек вырос в десять раз. Я набрала мини-вип-группу под своё сопровождение. И я просто была к этому готова.', name: 'Анна', who: 'Наставник · 41 год' },
+    { text: 'Я не отлетела — я облегчилась. Энергия ушла из головы и спустилась в тело, где она всегда была нужна. Я вернулась в себя.', name: 'Екатерина', who: 'Преподаватель вокала · 44 года' },
+    { text: 'Я нашла те знания, которые так искала. Они каждой женщине необходимы как воздух.', name: 'Ирина', who: 'Предпринимательница · 38 лет' },
+    { text: 'Я ждала Алхимию три года. И как только Лиза объявила о наборе, я знала — мне сюда. Не было ни грамма сомнений.', name: 'Ирина', who: 'Предпринимательница · 38 лет' }
+  ];
+
+  const faq = [
+    { q: 'Чем «Алхимия» отличается от других программ женского развития?',
+      a: 'Большинство программ предлагают замедлиться, больше отдыхать или поставить себя на первое место. Для женщин, привыкших масштабно реализовываться, эти подходы остаются на поверхности. «Алхимия» работает на другом уровне — с нервной системой, телом и женской природой. Не для того, чтобы вы стали другой, а для того, чтобы ваша амбиция перестала стоить вам так дорого.' },
+    { q: 'У меня уже большой опыт работы с собой — терапия, ретриты, практики. Что нового даст «Алхимия»?',
+      a: 'Каждая школа, через которую вы прошли, скорее всего, дала что-то важное. И при этом часто остаётся ощущение, что пройденное пока не сшито воедино. Участницы часто говорят об «Алхимии» как о первой методологии, в которой их прежний опыт собирается в систему. Не «ещё одна программа», а та линия, в которую укладывается уже знакомое.' },
+    { q: 'У меня плотный график. Реально ли найти 30–60 минут в день на практики?',
+      a: 'Этот вопрос мы внимательно обсуждаем на собеседовании. «Алхимия» требует ежедневной регулярности — это серьёзное обучение телу. Большинство участниц через две-три недели обнаруживают, что времени становится больше, не меньше: появляется ресурс действовать из состояния, а не из реакции. Если сейчас выделить эти минуты сложно — мы вместе посмотрим, ваше ли это время для программы.' },
+    { q: 'Как женские практики связаны с моими бизнес-результатами?',
+      a: 'Связь прямая, хотя поначалу не очевидная. Когда нервная система в хроническом напряжении, большая часть внутреннего ресурса уходит на удержание контроля и тревоги. Когда она освобождается, тот же ресурс начинает работать на ясность решений, способность видеть возможности и притягивать нужных людей. Выпускницы говорят о росте дохода и расширении дела в разы — не как о цели программы, а как о следствии того, как меняется их состояние.' },
+    { q: 'Я скептична к мистике и эзотерике. Как мне с этим?',
+      a: 'Со скептицизмом мы работаем уважительно. «Алхимия» проверяема телом уже в первые недели — через ощущения нервной системы, дыхания, базовых телесных откликов. Биохимия, физиология, измеримые сдвиги — реальные и наблюдаемые. То, что выходит за рамки измеряемого, в программе тоже есть, но никогда не как обещание. Внутренний рационалист в «Алхимии» чувствует себя спокойно.' },
+    { q: 'Сколько стоит программа? Почему цены нет на странице?',
+      a: 'Стоимость обсуждается на собеседовании. Не как маркетинговый ход — а потому что инвестиция такой глубины имеет смысл только при настоящем фите. Сначала мы убеждаемся, что программа действительно ваша, и только потом разговор о деньгах. Если резонанс есть — формат и условия обсуждаются естественно. Если резонанса нет — мы скажем об этом, и вы не потеряете время на лишние решения.' },
+    { q: 'Что если я заполню анкету, а Лиза скажет, что программа мне сейчас не подходит?',
+      a: 'Так тоже бывает — по фазе жизни, по запросу, по готовности к формату. Лиза лично читает каждую анкету и проводит собеседование. Если она увидит, что «Алхимия» для вас сейчас не время — она скажет это бережно и при возможности подскажет, какой шаг подойдёт больше. В этом и смысл собеседования: в программу заходят те, для кого она реально работает.' },
+    { q: 'Я живу не в России. Подойдёт ли мне формат?',
+      a: 'Программа полностью онлайн, на русском языке. Большинство участниц живёт за рубежом — Лиссабон, Цюрих, Дубай, Бали, Лондон. Занятия открываются в записи, общий чат и куратор поддерживают независимо от часового пояса.' }
+  ];
+
+  // ── render weeks ──
+  const weeksHost = document.getElementById('weeks-list');
+  weeksHost.innerHTML = weeks.map(w => `
+    <div class="alc-week reveal">
+      <div class="alc-week-num">${w.n}</div>
+      <h3 class="alc-week-name">${w.name}<span class="sub">${w.sub}</span></h3>
+      <div class="alc-week-body">
+        <p class="alc-week-desc">${w.desc}</p>
+        <div class="alc-week-quote">
+          <q>${w.q}</q>
+          <span class="who">— ${w.who}</span>
+        </div>
+      </div>
+    </div>`).join('');
+
+  // ── render voices ──
+  document.getElementById('voices-grid').innerHTML = voices.map(v => `
+    <div class="alc-voice reveal">
+      <div class="quote-mark">"</div>
+      <p class="text">${v.text}</p>
+      <div class="who"><strong>${v.name}</strong>${v.who}</div>
+    </div>`).join('');
+
+  // ── render faq ──
+  const faqHost = document.getElementById('faq-list');
+  faqHost.innerHTML = faq.map((it, i) => `
+    <div class="alc-faq-item${i === 0 ? ' open' : ''}" data-i="${i}">
+      <button class="alc-faq-q" type="button">
+        <span>${it.q}</span><span class="plus">+</span>
+      </button>
+      <div class="alc-faq-a"><div class="alc-faq-a-inner">${it.a}</div></div>
+    </div>`).join('');
+  faqHost.addEventListener('click', e => {
+    const btn = e.target.closest('.alc-faq-q');
+    if (!btn) return;
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('open');
+    faqHost.querySelectorAll('.alc-faq-item').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+
+  // ── reveals ──
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ── modal ──
+  const modal = document.getElementById('modal');
+  const modalForm = document.getElementById('modal-form');
+  const modalSent = document.getElementById('modal-sent');
+  const openModal = () => {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeModal = () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      modalForm.style.display = '';
+      modalSent.style.display = 'none';
+    }, 400);
+  };
+  document.querySelectorAll('[data-apply]').forEach(el => {
+    el.addEventListener('click', e => { e.preventDefault(); openModal(); });
+  });
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-sent-close').addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
+  document.getElementById('apply-form').addEventListener('submit', e => {
+    e.preventDefault();
+    modalForm.style.display = 'none';
+    modalSent.style.display = '';
+  });
+})();
+</script>
+</body>
+</html>
