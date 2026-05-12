@@ -332,6 +332,55 @@
     align-items: center;
   }
 
+  .archetype-card {
+    display: flex;
+    align-items: center;
+    gap: clamp(24px, 4vw, 48px);
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--paper);
+    border-radius: 24px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
+  }
+  .archetype-illu {
+    flex: 0 0 clamp(120px, 18vw, 200px);
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--bg);
+  }
+  .archetype-illu img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .archetype-meta {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .archetype-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .archetype-name {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+  @media (max-width: 600px) {
+    .archetype-card { flex-direction: column; align-items: flex-start; text-align: left; }
+    .archetype-illu { flex-basis: auto; width: 140px; }
+  }
   .result-block {
     margin-bottom: 32px;
     padding-bottom: 32px;
@@ -437,6 +486,16 @@
 
   <div class="screen result shell" id="screen-result">
     <div class="eyebrow">Ваш результат</div>
+
+    <div class="archetype-card">
+      <div class="archetype-illu">
+        <img id="r-image" src="" alt="">
+      </div>
+      <div class="archetype-meta">
+        <div class="archetype-label">Ваш типаж</div>
+        <div class="archetype-name" id="r-archetype"></div>
+      </div>
+    </div>
 
     <div class="result-block">
       <div class="result-label">Ваша роль</div>
@@ -658,6 +717,43 @@ function buildHelp(a) {
   return 'Программа работает на всех уровнях – от нервной системы до проявления, – но для вашей точки особенно отзовутся ' + PAIN_WEEKS_TEXT[pains[0]] + '. И ' + PAIN_WEEKS_TEXT[pains[1]] + ' – для второго слоя того, что вы несёте.';
 }
 
+const ARCHETYPES = {
+  1: { name: 'Руководите командой',          image: 'images/whofor-01.png' },
+  2: { name: 'Развиваете свой бизнес',       image: 'images/whofor-02.png' },
+  3: { name: 'Реализованы, но одиноки',      image: 'images/whofor-03.png' },
+  4: { name: 'Наставник для других',         image: 'images/whofor-04.png' },
+  5: { name: 'Совмещаете семью и работу',    image: 'images/whofor-05.png' },
+  6: { name: 'Выходите на новый виток',      image: 'images/whofor-06.png' }
+};
+
+function pickArchetype(a) {
+  const pains = a.pains || [];
+  const primary = pains[0];
+  const prof = a.prof;
+  const rel = a.relations;
+  const fam = a.family;
+
+  // Pain-driven first (the strongest signal)
+  if (primary === 'odinochestvo') return 3;
+  if (primary === 'proyavitsya') return 6;
+  if (primary === 'zhonglirovanie') return 5;
+
+  // Profession-driven for remaining pains
+  if (prof === 'expert') return 4;
+  if (prof === 'owner') return 2;
+  if (prof === 'manager' || prof === 'top') return 1;
+
+  // Edge cases (transition / family)
+  if (prof === 'family' || fam === 'kids_small' || fam === 'kids_school') return 5;
+  if (rel === 'single_seeking') return 3;
+  if (prof === 'transition') return 6;
+
+  // Fallback: by remaining pain
+  if (primary === 'istoshenie') return 1;
+  if (primary === 'zhenstvennost') return 2;
+  return 1;
+}
+
 function buildReadiness(a) {
   const exp = a.experience;
   const rdy = a.readiness;
@@ -805,6 +901,12 @@ function renderQuestion() {
 }
 
 function renderResult() {
+  const archId = pickArchetype(state.answers);
+  const arch = ARCHETYPES[archId];
+  document.getElementById('r-archetype').textContent = arch.name;
+  const img = document.getElementById('r-image');
+  img.src = arch.image;
+  img.alt = arch.name;
   document.getElementById('r-role').textContent = buildRole(state.answers);
   document.getElementById('r-cost').textContent = buildCost(state.answers);
   document.getElementById('r-help').textContent = buildHelp(state.answers);
