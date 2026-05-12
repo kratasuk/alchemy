@@ -353,17 +353,11 @@
     transition: background .35s;
   }
   .alc-whofor-card:hover { background: var(--paper); }
-  .alc-whofor-card .num {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
+  .alc-whofor-card .num { display: none; }
   .alc-whofor-illu {
     width: 100%;
-    aspect-ratio: 5 / 3;
-    background: var(--bg-warm);
+    aspect-ratio: 1 / 1;
+    background: transparent;
     border-radius: 2px;
     display: flex;
     align-items: center;
@@ -372,6 +366,7 @@
     overflow: hidden;
   }
   .alc-whofor-illu svg { width: 70%; height: auto; opacity: 0.78; }
+  .alc-whofor-illu img { width: 100%; height: 100%; object-fit: cover; }
   .alc-whofor-title {
     font-family: var(--serif);
     font-size: clamp(22px, 2vw, 28px);
@@ -1124,17 +1119,8 @@
     <div class="alc-whofor-grid">
 
       <div class="alc-whofor-card reveal">
-        <span class="num">01</span>
         <div class="alc-whofor-illu">
-          <svg viewBox="0 0 200 120" fill="none" stroke="#9a7838" stroke-width="1.1" stroke-linecap="round">
-            <circle cx="100" cy="46" r="14"/>
-            <path d="M86 78 q14 -14 28 0 v22 H86z"/>
-            <circle cx="60" cy="56" r="9"/>
-            <path d="M50 80 q10 -10 20 0 v16 H50z"/>
-            <circle cx="140" cy="56" r="9"/>
-            <path d="M130 80 q10 -10 20 0 v16 H130z"/>
-            <path d="M30 108 H170" stroke-dasharray="2 4"/>
-          </svg>
+          <img src="images/whofor-01.png" alt="">
         </div>
         <h3 class="alc-whofor-title">Руководите командой</h3>
         <ul class="alc-whofor-bullets">
