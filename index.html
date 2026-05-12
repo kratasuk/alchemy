@@ -249,6 +249,23 @@
   }
   .alc-hero-title { text-shadow: 0 2px 24px rgba(0,0,0,0.25); }
   .alc-hero-lede { text-shadow: 0 1px 12px rgba(0,0,0,0.35); }
+  .alc-fem-aside {
+    position: absolute;
+    right: clamp(24px, 5vw, 80px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(80px, 11vw, 200px);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--gold-bright);
+    text-shadow: 0 2px 36px rgba(0,0,0,0.45);
+    pointer-events: none;
+    white-space: nowrap;
+  }
   .alc-hero-title {
     font-family: var(--serif);
     font-weight: 400;
@@ -1026,6 +1043,15 @@
     .alc-hero-lede { font-size: 17px; line-height: 1.45; }
     .alc-hero-ornament { margin: 0; }
     .alc-hero-cta-row .btn { padding: 15px 22px 15px 24px; font-size: 11px; }
+    .alc-fem-aside {
+      position: static;
+      transform: none;
+      font-size: clamp(56px, 16vw, 84px);
+      align-self: flex-start;
+      margin-top: -10px;
+      white-space: normal;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.4);
+    }
     .alc-whofor-grid { grid-template-columns: 1fr; }
     .alc-whofor-card { min-height: auto; padding: 36px 28px; }
     .alc-week { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
@@ -1043,10 +1069,7 @@
 <!-- HERO -->
 <section class="alc-hero" id="top">
   <div class="alc-hero-inner">
-    <h1 class="alc-hero-title reveal in reveal-delay-1">
-      Алхимия<br>
-      <span class="alc-fem">Женщины</span>
-    </h1>
+    <h1 class="alc-hero-title reveal in reveal-delay-1">Алхимия</h1>
     <div class="alc-hero-ornament reveal in reveal-delay-2" aria-hidden="true">
       <span class="ln"></span><span class="dia"></span><span class="ln"></span>
     </div>
@@ -1057,6 +1080,7 @@
       <button class="btn btn--light" data-apply>Подать заявку <span class="arrow">→</span></button>
     </div>
   </div>
+  <span class="alc-fem-aside reveal in reveal-delay-2" aria-hidden="true">Женщины</span>
   <div class="alc-hero-portrait" aria-hidden="true">
     <img src="images/hero-eliza.webp" alt="">
   </div>
