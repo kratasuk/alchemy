@@ -670,11 +670,21 @@
 
   /* ─── VOICES ─── */
   .alc-voices-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 8px clamp(20px, 4vw, 56px) 24px;
+    margin: 0 calc(-1 * clamp(20px, 4vw, 56px));
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-hair) transparent;
   }
+  .alc-voices-grid::-webkit-scrollbar { height: 8px; }
+  .alc-voices-grid::-webkit-scrollbar-track { background: transparent; }
+  .alc-voices-grid::-webkit-scrollbar-thumb { background: var(--ink-hair); border-radius: 4px; }
   .alc-voice {
+    flex: 0 0 clamp(280px, 30vw, 380px);
+    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -1170,7 +1180,7 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">01 / Для кого</span>
-        <h2 class="h-1">Для кого <em>эта программа.</em></h2>
+        <h2 class="h-1">Для кого <em>эта программа</em></h2>
       </div>
       <p class="body" style="max-width:46ch; align-self:end;">Шесть знакомых ситуаций. Если хотя бы одна из них – про вас, читайте дальше.</p>
     </div>
@@ -1281,14 +1291,11 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">03 / Программа</span>
-        <h2 class="h-1">14 недель <em>алхимии.</em></h2>
+        <h2 class="h-1">14 недель <em>Алхимии</em></h2>
       </div>
       <p class="body" style="max-width:46ch; align-self:end;">Каждая неделя – одно занятие, одна тема, ежедневная практика. Темы собираются в единую систему – путь от нервной системы к жизни, которую вы строите осознанно.</p>
     </div>
     <div class="alc-weeks" id="weeks-list"></div>
-    <div class="alc-weeks-cta reveal">
-      <button class="btn" data-apply>Узнать, подходит ли вам программа <span class="arrow">→</span></button>
-    </div>
   </div>
 </section>
 
@@ -1298,7 +1305,7 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">04 / Как проходит</span>
-        <h2 class="h-1">Что включено <em>и как войти.</em></h2>
+        <h2 class="h-1">Что включено <em>и как войти</em></h2>
       </div>
     </div>
     <div class="alc-how">
@@ -1339,15 +1346,15 @@
         <h3>Как войти:</h3>
         <div class="alc-apply-steps">
           <div class="alc-apply-step">
-            <div class="step-title">Шаг #1: <em>Пройти тест</em></div>
+            <div class="step-title">Шаг1: <em>Пройти тест</em></div>
             <div class="step-desc">Чтобы понять, подходит ли вам программа.</div>
           </div>
           <div class="alc-apply-step">
-            <div class="step-title">Шаг #2: <em>Заполнить анкету</em></div>
+            <div class="step-title">Шаг2: <em>Заполнить анкету</em></div>
             <div class="step-desc">Расскажете о себе и о том, где сейчас.</div>
           </div>
           <div class="alc-apply-step">
-            <div class="step-title">Шаг #3: <em>Пройти собеседование</em></div>
+            <div class="step-title">Шаг3: <em>Пройти собеседование</em></div>
             <div class="step-desc">Личный разговор с Лизой о вашем резонансе с программой.</div>
           </div>
         </div>
@@ -1365,7 +1372,7 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">05 / Отзывы</span>
-        <h2 class="h-1">Так говорят <em>алхимические женщины.</em></h2>
+        <h2 class="h-1"><em>Отзывы</em> участниц</h2>
       </div>
     </div>
     <div class="alc-voices-grid" id="voices-grid"></div>
@@ -1378,7 +1385,7 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">06 / FAQ</span>
-        <h2 class="h-1">Частые <em>вопросы.</em></h2>
+        <h2 class="h-1">Частые <em>вопросы</em></h2>
       </div>
     </div>
     <div class="alc-faq" id="faq-list"></div>
@@ -1522,7 +1529,7 @@
     { n: 'Неделя 13', name: 'Жизнь как алхимия', sub: 'Создаём свой идеальный день',
       desc: 'Высший пилотаж жизни – спонтанное творчество с максимально живым присутствием. Алхимическая женщина строит осознанный диалог с жизнью. На этой неделе мы интегрируем все практики в ежедневный ритм.',
       q: 'Я научилась останавливаться, замедляться в моменте и понимать, на какую ветку реальности хочу попасть.', who: 'Антонина, 43 года' },
-    { n: 'Неделя 14', name: 'Выпускной', sub: 'Не финал, а рождение новой формы жизни',
+    { n: 'Неделя 14', name: 'Выпускной', sub: 'Завершаем на высокой ноте',
       desc: 'Все тринадцать недель собираются в единую систему. Каждая выпускница уходит с практиками, встроенными в день, картой следующего шага и новым ощущением себя – как алхимической женщины, которая реализует свой масштаб, не теряя себя.',
       q: 'С этой программы для меня очень многое только начинается.', who: 'Анна, 41 год' }
   ];
