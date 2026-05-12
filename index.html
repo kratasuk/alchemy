@@ -234,37 +234,49 @@
       linear-gradient(95deg, rgba(20,17,13,0.55) 0%, rgba(20,17,13,0.30) 28%, rgba(20,17,13,0.08) 52%, transparent 70%);
     pointer-events: none;
   }
-  .alc-hero-inner {
+  .alc-hero-stage {
     position: relative;
     z-index: 2;
-    max-width: 720px;
-    padding: 26vh clamp(48px, 6vw, 96px) 12vh var(--gutter);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 18vh 0 12vh;
+  }
+  .alc-hero-headline {
+    display: flex;
+    width: 100%;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: clamp(40px, 8vw, 160px);
+    padding: 0 clamp(24px, 5vw, 80px) 0 var(--gutter);
+  }
+  .alc-hero-inner {
+    max-width: 640px;
+    padding: 28px var(--gutter) 0;
     text-align: left;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 28px;
-    min-height: 100vh;
-    justify-content: center;
   }
-  .alc-hero-title { text-shadow: 0 2px 24px rgba(0,0,0,0.25); }
+  .alc-hero-title {
+    text-shadow: 0 2px 24px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+  }
   .alc-hero-lede { text-shadow: 0 1px 12px rgba(0,0,0,0.35); }
   .alc-fem-aside {
-    position: absolute;
-    right: clamp(24px, 5vw, 80px);
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 3;
     font-family: var(--serif);
     font-weight: 400;
     font-style: italic;
-    font-size: clamp(80px, 11vw, 200px);
-    line-height: 0.9;
+    font-size: clamp(80px, 10vw, 168px);
+    line-height: 0.92;
     letter-spacing: -0.02em;
     color: var(--gold-bright);
     text-shadow: 0 2px 36px rgba(0,0,0,0.45);
     pointer-events: none;
     white-space: nowrap;
+    flex-shrink: 0;
   }
   .alc-hero-title {
     font-family: var(--serif);
@@ -1028,10 +1040,20 @@
   }
   @media (max-width: 720px) {
     .alc-hero { min-height: 100vh; }
-    .alc-hero-inner {
-      padding: 12vh var(--gutter) 7vh;
-      max-width: 100%;
+    .alc-hero-stage {
+      min-height: 100vh;
       justify-content: flex-end;
+      padding: 12vh 0 7vh;
+    }
+    .alc-hero-headline {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 0 var(--gutter);
+    }
+    .alc-hero-inner {
+      padding: 18px var(--gutter) 0;
+      max-width: 100%;
       gap: 18px;
     }
     .alc-hero-portrait img { object-position: 50% 25%; }
@@ -1044,13 +1066,10 @@
     .alc-hero-ornament { margin: 0; }
     .alc-hero-cta-row .btn { padding: 15px 22px 15px 24px; font-size: 11px; }
     .alc-fem-aside {
-      position: static;
-      transform: none;
       font-size: clamp(56px, 16vw, 84px);
-      align-self: flex-start;
-      margin-top: -10px;
       white-space: normal;
       text-shadow: 0 1px 12px rgba(0,0,0,0.4);
+      margin-top: -8px;
     }
     .alc-whofor-grid { grid-template-columns: 1fr; }
     .alc-whofor-card { min-height: auto; padding: 36px 28px; }
@@ -1068,21 +1087,25 @@
 
 <!-- HERO -->
 <section class="alc-hero" id="top">
-  <div class="alc-hero-inner">
-    <h1 class="alc-hero-title reveal in reveal-delay-1">Алхимия</h1>
-    <div class="alc-hero-ornament reveal in reveal-delay-2" aria-hidden="true">
-      <span class="ln"></span><span class="dia"></span><span class="ln"></span>
-    </div>
-    <p class="alc-hero-lede reveal in reveal-delay-2">
-      Для реализованных женщин, которые умеют достигать результатов, но устали жертвовать ради этого <em>своей женской природой.</em>
-    </p>
-    <div class="alc-hero-cta-row reveal in reveal-delay-3">
-      <button class="btn btn--light" data-apply>Подать заявку <span class="arrow">→</span></button>
-    </div>
-  </div>
-  <span class="alc-fem-aside reveal in reveal-delay-2" aria-hidden="true">Женщины</span>
   <div class="alc-hero-portrait" aria-hidden="true">
     <img src="images/hero-eliza.webp" alt="">
+  </div>
+  <div class="alc-hero-stage">
+    <div class="alc-hero-headline reveal in reveal-delay-1">
+      <h1 class="alc-hero-title">Алхимия</h1>
+      <span class="alc-fem-aside" aria-hidden="true">Женщины</span>
+    </div>
+    <div class="alc-hero-inner">
+      <div class="alc-hero-ornament reveal in reveal-delay-2" aria-hidden="true">
+        <span class="ln"></span><span class="dia"></span><span class="ln"></span>
+      </div>
+      <p class="alc-hero-lede reveal in reveal-delay-2">
+        Для реализованных женщин, которые умеют достигать результатов, но устали жертвовать ради этого <em>своей женской природой.</em>
+      </p>
+      <div class="alc-hero-cta-row reveal in reveal-delay-3">
+        <button class="btn btn--light" data-apply>Подать заявку <span class="arrow">→</span></button>
+      </div>
+    </div>
   </div>
 </section>
 
