@@ -463,79 +463,98 @@
   .alc-weeks {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid var(--ink-hair);
+    gap: 24px;
   }
   .alc-week {
     display: grid;
-    grid-template-columns: 110px 1fr 1fr;
-    gap: clamp(20px, 3vw, 48px);
-    padding: 40px 0;
-    border-bottom: 1px solid var(--ink-hair);
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    background: var(--paper);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
   }
-  .alc-week-num {
+  .alc-week-left {
+    padding: clamp(36px, 4vw, 56px);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: center;
+  }
+  .alc-week-badge {
+    align-self: flex-start;
+    padding: 8px 18px;
+    border: 1px solid var(--gold);
+    border-radius: 999px;
     font-family: var(--mono);
     font-size: 11px;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--gold);
-    padding-top: 10px;
     white-space: nowrap;
   }
   .alc-week-name {
     font-family: var(--serif);
     font-weight: 400;
-    font-size: clamp(24px, 2.6vw, 34px);
-    line-height: 1.14;
-    letter-spacing: -0.006em;
+    font-size: clamp(28px, 2.8vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.008em;
     color: var(--ink);
     text-wrap: balance;
   }
-  .alc-week-name .sub {
-    display: block;
-    margin-top: 14px;
+  .alc-week-sub {
     font-family: var(--serif);
     font-style: italic;
-    font-size: clamp(16px, 1.2vw, 18px);
-    line-height: 1.45;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.35;
     color: var(--gold);
-    letter-spacing: 0;
-    text-transform: none;
-    font-weight: 400;
+    max-width: 32ch;
   }
-  .alc-week-body {
+  .alc-week-right {
+    background: #4a3528;
+    color: var(--paper);
+    padding: clamp(36px, 4vw, 56px);
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 28px;
+    justify-content: center;
   }
   .alc-week-desc {
     font-family: var(--sans);
-    font-size: 15.5px;
-    line-height: 1.7;
-    color: var(--ink-soft);
+    font-size: 16px;
+    line-height: 1.65;
+    color: rgba(250, 246, 238, 0.88);
     text-wrap: pretty;
   }
   .alc-week-quote {
-    padding: 18px 0 0;
-    border-top: 1px dashed var(--ink-hair);
+    padding-top: 24px;
+    border-top: 1px solid rgba(250, 246, 238, 0.18);
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 18px;
   }
   .alc-week-quote q {
     font-family: var(--serif);
     font-style: italic;
     font-size: 17px;
     line-height: 1.5;
-    color: var(--ink-2);
-    quotes: '«' '»';
+    color: rgba(250, 246, 238, 0.82);
+    quotes: '' '';
   }
-  .alc-week-quote .who {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
+  .alc-week-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: rgba(250, 246, 238, 0.7);
+  }
+  .alc-week-author::before {
+    content: '';
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(250, 246, 238, 0.22);
+    flex-shrink: 0;
   }
   .alc-weeks-cta { margin-top: 56px; text-align: center; }
 
@@ -1070,8 +1089,9 @@
     }
     .alc-whofor-grid { grid-template-columns: 1fr; }
     .alc-whofor-card { min-height: auto; padding: 36px 28px; }
-    .alc-week { grid-template-columns: 1fr; gap: 16px; padding: 32px 0; }
-    .alc-week-num { padding-top: 0; }
+    .alc-week { grid-template-columns: 1fr; }
+    .alc-week-left { padding: 32px 28px; }
+    .alc-week-right { padding: 32px 28px; }
     .alc-voices-grid { grid-template-columns: 1fr; }
     .alc-footer-inner { grid-template-columns: 1fr; gap: 40px; }
     .alc-footer-base { justify-content: flex-start; }
@@ -1508,15 +1528,18 @@
 
   // ── render weeks ──
   const weeksHost = document.getElementById('weeks-list');
-  weeksHost.innerHTML = weeks.map(w => `
+  weeksHost.innerHTML = weeks.map((w, i) => `
     <div class="alc-week reveal">
-      <div class="alc-week-num">${w.n}</div>
-      <h3 class="alc-week-name">${w.name}<span class="sub">${w.sub}</span></h3>
-      <div class="alc-week-body">
+      <div class="alc-week-left">
+        <span class="alc-week-badge">Неделя №${i + 1}</span>
+        <h3 class="alc-week-name">${w.name}</h3>
+        <p class="alc-week-sub">${w.sub}</p>
+      </div>
+      <div class="alc-week-right">
         <p class="alc-week-desc">${w.desc}</p>
         <div class="alc-week-quote">
           <q>${w.q}</q>
-          <span class="who">– ${w.who}</span>
+          <span class="alc-week-author">${w.who}</span>
         </div>
       </div>
     </div>`).join('');
