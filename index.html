@@ -1633,7 +1633,7 @@
     }, 400);
   };
   document.querySelectorAll('[data-apply]').forEach(el => {
-    el.addEventListener('click', e => { e.preventDefault(); openModal(); });
+    el.addEventListener('click', e => { e.preventDefault(); window.location.href = 'test.html'; });
   });
   document.getElementById('modal-close').addEventListener('click', closeModal);
   document.getElementById('modal-sent-close').addEventListener('click', closeModal);

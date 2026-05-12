@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Тест · Алхимия Женщины</title>
+<meta name="description" content="Восемь вопросов, чтобы увидеть свою точку и понять, может ли Алхимия быть вам полезна сейчас.">
+<meta name="robots" content="noindex">
+
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #f3ece0;
+    --bg-warm: #ede4d3;
+    --paper: #faf6ee;
+    --ink: #1c1814;
+    --ink-2: #2a241e;
+    --ink-soft: rgba(28, 24, 20, 0.66);
+    --ink-faint: rgba(28, 24, 20, 0.42);
+    --ink-hair: rgba(28, 24, 20, 0.14);
+    --night: #14110d;
+    --gold: #9a7838;
+    --gold-bright: #c8a160;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    --gutter: clamp(20px, 4vw, 56px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  ::selection { background: var(--gold); color: var(--paper); }
+
+  .nav {
+    padding: 18px var(--gutter);
+    border-bottom: 1px solid var(--ink-hair);
+  }
+  .nav-back {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    transition: color .2s;
+  }
+  .nav-back:hover { color: var(--ink); }
+
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 56px var(--gutter);
+  }
+  .shell {
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn .5s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before {
+    content: '';
+    width: 22px;
+    height: 1px;
+    background: var(--gold);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(40px, 5.4vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.012em;
+    color: var(--ink);
+    margin-bottom: 28px;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .lede {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.7vw, 26px);
+    line-height: 1.4;
+    color: var(--ink-2);
+    margin-bottom: 36px;
+    max-width: 50ch;
+    text-wrap: pretty;
+  }
+
+  .bullets {
+    list-style: none;
+    margin: 36px 0 48px;
+    border-top: 1px solid var(--ink-hair);
+  }
+  .bullets li {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--ink-hair);
+    display: flex;
+    gap: 16px;
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .bullets .num {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--gold);
+    font-size: 20px;
+    min-width: 24px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 17px 28px;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    transition: transform .25s, background .25s, color .25s, border-color .25s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--gold); border-color: var(--gold); transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .btn:disabled:hover { background: var(--ink); border-color: var(--ink); }
+  .btn--gold { background: var(--gold-bright); color: var(--ink); border-color: var(--gold-bright); }
+  .btn--gold:hover { background: var(--gold); color: var(--paper); border-color: var(--gold); }
+  .btn-arrow { display: inline-block; transition: transform .25s; }
+  .btn:hover .btn-arrow { transform: translateX(4px); }
+  .btn-ghost {
+    background: none;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 8px 0;
+    border: 0;
+    transition: color .2s;
+    cursor: pointer;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .btn-ghost:disabled { opacity: 0; cursor: default; }
+
+  .cta-row {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  .meta {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 48px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .progress-bar {
+    flex: 1;
+    height: 1px;
+    background: var(--ink-hair);
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--gold);
+    transition: width .4s ease;
+  }
+
+  .question h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -0.008em;
+    color: var(--ink);
+    margin-bottom: 12px;
+    max-width: 28ch;
+    text-wrap: balance;
+  }
+  .hint {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 32px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  .option {
+    display: block;
+    position: relative;
+    padding: 20px 24px 20px 60px;
+    background: var(--paper);
+    border: 1px solid var(--ink-hair);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .option:hover { border-color: var(--gold); }
+  .option input { position: absolute; opacity: 0; pointer-events: none; }
+  .option::before {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--ink-faint);
+    border-radius: 50%;
+    transition: all .2s;
+  }
+  .option.selected {
+    border-color: var(--gold);
+    background: rgba(200, 161, 96, 0.06);
+  }
+  .option.selected::before {
+    border-color: var(--gold);
+    background: var(--gold);
+    box-shadow: inset 0 0 0 4px var(--paper);
+  }
+  .option--check::before { border-radius: 4px; }
+  .option--check.selected::before {
+    box-shadow: none;
+    background: var(--gold);
+  }
+  .option--check.selected::after {
+    content: '✓';
+    position: absolute;
+    left: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--paper);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 18px 20px;
+    border: 1px solid var(--ink-hair);
+    border-radius: 12px;
+    background: var(--paper);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink);
+    min-height: 140px;
+    resize: vertical;
+    transition: border-color .2s;
+    margin-bottom: 40px;
+  }
+  textarea:focus { outline: none; border-color: var(--gold); }
+  textarea::placeholder { color: var(--ink-faint); }
+
+  .q-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .result-block {
+    margin-bottom: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--ink-hair);
+  }
+  .result-block:last-of-type {
+    border-bottom: 0;
+    margin-bottom: 24px;
+  }
+  .result-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+  }
+  .result-text {
+    font-family: var(--serif);
+    font-size: clamp(19px, 1.5vw, 23px);
+    line-height: 1.45;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .result-cta {
+    background: var(--paper);
+    border-radius: 20px;
+    padding: 36px 40px;
+    margin-top: 24px;
+    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
+    text-align: center;
+  }
+  .result-cta p {
+    font-family: var(--serif);
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-bottom: 24px;
+    max-width: 44ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .retake {
+    margin-top: 48px;
+    padding-top: 24px;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .nav { padding: 14px 24px; }
+    main { padding: 32px 24px; }
+    .option { padding: 16px 18px 16px 52px; font-size: 15px; }
+    .option::before { left: 18px; }
+    .option--check.selected::after { left: 22px; }
+    .progress { margin-bottom: 36px; gap: 12px; }
+    .result-cta { padding: 28px 24px; }
+    .btn { padding: 14px 22px; font-size: 11px; }
+  }
+</style>
+</head>
+
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-back">← Алхимия Женщины</a>
+</nav>
+
+<main>
+
+  <div class="screen intro active shell" id="screen-intro">
+    <div class="eyebrow">Тест</div>
+    <h1>Какая Алхимия <em>будет вашей</em></h1>
+    <p class="lede">
+      Восемь вопросов, чтобы увидеть свою точку и понять, может ли Алхимия быть вам полезна сейчас.
+    </p>
+    <ul class="bullets">
+      <li><span class="num">01</span><span>Время — 4–5 минут. Без email, без давления.</span></li>
+      <li><span class="num">02</span><span>Отвечайте так, как есть в обычный вторник. Не за ту, кем вы хотели бы быть.</span></li>
+      <li><span class="num">03</span><span>В конце — конкретный взгляд на вашу ситуацию и следующий шаг.</span></li>
+    </ul>
+    <div class="cta-row">
+      <button class="btn" id="btn-start"><span class="btn-text">Начать</span> <span class="btn-arrow">→</span></button>
+      <span class="meta">4–5 минут</span>
+    </div>
+  </div>
+
+  <div class="screen question shell" id="screen-question">
+    <div class="progress">
+      <span><span id="q-current">1</span> / <span id="q-total">8</span></span>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <h2 id="q-text"></h2>
+    <p class="hint" id="q-hint" style="display:none;"></p>
+    <div class="options" id="q-options"></div>
+    <textarea id="q-textarea" style="display:none;" placeholder="Несколько строк – то, что не вписалось в варианты выше."></textarea>
+    <div class="q-actions">
+      <button class="btn-ghost" id="btn-back">← Назад</button>
+      <button class="btn" id="btn-next" disabled><span class="btn-text">Дальше</span> <span class="btn-arrow">→</span></button>
+    </div>
+  </div>
+
+  <div class="screen result shell" id="screen-result">
+    <div class="eyebrow">Ваш результат</div>
+
+    <div class="result-block">
+      <div class="result-label">Ваша роль</div>
+      <div class="result-text" id="r-role"></div>
+    </div>
+    <div class="result-block">
+      <div class="result-label">Её цена</div>
+      <div class="result-text" id="r-cost"></div>
+    </div>
+    <div class="result-block">
+      <div class="result-label">Чем Алхимия может помочь</div>
+      <div class="result-text" id="r-help"></div>
+    </div>
+    <div class="result-block">
+      <div class="result-label">К чему быть готовой</div>
+      <div class="result-text" id="r-readiness"></div>
+    </div>
+
+    <div class="result-cta">
+      <p>Если резонирует – следующий шаг собеседование с Лизой. 60 минут, бесплатно.</p>
+      <button class="btn btn--gold" id="btn-book"><span class="btn-text">Забронировать собеседование</span> <span class="btn-arrow">→</span></button>
+    </div>
+
+    <div class="retake">
+      <button class="btn-ghost" id="btn-retake">Пройти тест заново</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+(() => {
+
+const QUESTIONS = [
+  {
+    id: 'prof',
+    q: 'Чем вы заняты профессионально?',
+    options: [
+      { v: 'manager', t: 'Руковожу командой или отделом в найме' },
+      { v: 'top', t: 'Топ-менеджер или директор крупной компании' },
+      { v: 'owner', t: 'Собственник, развиваю свой бизнес' },
+      { v: 'expert', t: 'Эксперт, наставник, веду частную практику' },
+      { v: 'transition', t: 'В переходе: вышла из роли, ищу новое' },
+      { v: 'family', t: 'Сейчас в семейной фазе' }
+    ]
+  },
+  {
+    id: 'etap',
+    q: 'На каком этапе сейчас ваше дело?',
+    options: [
+      { v: 'stable_growth', t: 'Стабильный рост, ищу следующий уровень' },
+      { v: 'new_level', t: 'Только что вышла на новую планку – учусь её держать' },
+      { v: 'choice_point', t: 'В точке выбора: продолжать как было или иначе' },
+      { v: 'ceiling', t: 'Чувствую – уперлась в потолок' },
+      { v: 'not_main', t: 'Сейчас не главное, фокус на другом' }
+    ]
+  },
+  {
+    id: 'income',
+    q: 'Уровень дохода в месяц',
+    options: [
+      { v: 'under_100', t: 'Менее 100 тысяч ₽' },
+      { v: '100_300', t: '100–300 тысяч ₽' },
+      { v: '300_1m', t: '300 тысяч – 1 миллион ₽' },
+      { v: '1_3m', t: '1–3 миллиона ₽' },
+      { v: '3m_plus', t: '3+ миллиона ₽' }
+    ]
+  },
+  {
+    id: 'relations',
+    q: 'Что сейчас в отношениях?',
+    options: [
+      { v: 'married_good', t: 'В браке или долгих отношениях – хорошо' },
+      { v: 'married_issues', t: 'В браке или долгих отношениях – что-то не так' },
+      { v: 'single_choice', t: 'Одна. Свой выбор, не страдаю' },
+      { v: 'single_seeking', t: 'Одна. Хотела бы встретить – не получается' },
+      { v: 'recent_split', t: 'Развод или расставание недавно' }
+    ]
+  },
+  {
+    id: 'family',
+    q: 'Семья',
+    options: [
+      { v: 'kids_small', t: 'Дети маленькие – до 7 лет' },
+      { v: 'kids_school', t: 'Дети школьники или подростки' },
+      { v: 'kids_adult', t: 'Дети уже взрослые' },
+      { v: 'no_kids', t: 'Без детей' },
+      { v: 'considering', t: 'Думаю или готовлюсь' }
+    ]
+  },
+  {
+    id: 'pains',
+    q: 'Что сейчас тяжелее всего?',
+    hint: 'Выберите 1–2',
+    multi: true,
+    max: 2,
+    options: [
+      { v: 'istoshenie', t: 'Истощение – ресурс на исходе, несу слишком много' },
+      { v: 'zhenstvennost', t: 'Потеря женственности на пути к масштабу' },
+      { v: 'odinochestvo', t: 'Одиночество на уровне – рядом нет того, с кем разделить' },
+      { v: 'zhonglirovanie', t: 'Жонглирование без места для себя' },
+      { v: 'proyavitsya', t: 'Не получается проявиться публично' }
+    ]
+  },
+  {
+    id: 'experience',
+    q: 'Опыт работы с собой',
+    options: [
+      { v: 'liza_grad', t: 'Проходила программы Лизы или других сильных авторов' },
+      { v: 'therapy', t: 'Психотерапия, коучинг – есть база' },
+      { v: 'practices', t: 'Какие-то практики, нерегулярно' },
+      { v: 'starter', t: 'Серьёзно – только начинаю' }
+    ]
+  },
+  {
+    id: 'readiness',
+    q: 'Готовность к ежедневной практике 30–60 минут',
+    options: [
+      { v: 'ready', t: 'Готова, время найду' },
+      { v: 'struggle', t: 'Сложно, но хочу – спросите меня' },
+      { v: 'unsure', t: 'Не уверена, что вытяну сейчас' }
+    ]
+  },
+  {
+    id: 'context',
+    q: 'Что важно знать о вашей ситуации?',
+    hint: 'Опционально – несколько строк о том, что Лизе важно увидеть',
+    textarea: true,
+    optional: true
+  }
+];
+
+const ROLE_PROF = {
+  manager: 'Вы руководите командой в найме',
+  top: 'Вы – топ-менеджер крупной компании',
+  owner: 'Вы – собственник своего бизнеса',
+  expert: 'Вы – эксперт с частной практикой',
+  transition: 'Вы в переходе между ролями',
+  family: 'Вы сейчас в семейной фазе'
+};
+
+const ROLE_ETAP = {
+  stable_growth: 'на этапе стабильного роста',
+  new_level: 'недавно вышли на новый уровень и учитесь его держать',
+  choice_point: 'в точке выбора: продолжать как было или иначе',
+  ceiling: 'упёрлись в потолок, который не пробивается прежними инструментами',
+  not_main: ''
+};
+
+function buildRole(a) {
+  const prof = ROLE_PROF[a.prof] || 'Каждая женщина приходит со своей точкой';
+  const etap = ROLE_ETAP[a.etap];
+  if (!etap || a.etap === 'not_main') return prof + '.';
+  return prof + ', ' + etap + '.';
+}
+
+function buildCost(a) {
+  const pains = a.pains || [];
+  const rel = a.relations;
+  const fam = a.family;
+  const primary = pains[0];
+  let cost = '';
+
+  switch (primary) {
+    case 'istoshenie':
+      cost = 'Энергии становится меньше, ресурс распределяется на пределе. То, что когда-то давало радость, теперь требует усилия.';
+      if (rel === 'married_issues') cost += ' Дома накапливается то, что не успеваете прожить.';
+      if (fam === 'kids_small' || fam === 'kids_school') cost += ' Дети получают вашу нагруженную версию, а не вас.';
+      break;
+    case 'zhenstvennost':
+      cost = 'Каждый шаг в масштаб даётся ценой женского – мягкости, тела, ощущения себя живой.';
+      if (rel === 'married_issues') cost += ' В отношениях это первым замечает партнёр.';
+      if (rel === 'single_seeking') cost += ' Мужчины вашего уровня не появляются – потому что та, в которую можно прийти, не доступна даже вам самой.';
+      break;
+    case 'odinochestvo':
+      cost = 'Реализация состоялась – а рядом нет того, с кем её разделить. И встретить пока не получается, потому что вы не готовы упрощать себя и снижать стандарты.';
+      break;
+    case 'zhonglirovanie':
+      cost = 'Энергия распределяется между ролями – работа, дом, дети, партнёр. На себя саму места не остаётся.';
+      if (rel === 'married_issues') cost += ' И первой страдает близость в паре.';
+      break;
+    case 'proyavitsya':
+      cost = 'Внутренне вы готовы держать больший масштаб – но проявиться публично на него что-то не пускает. Чужой рост идёт легко, свой – буксует.';
+      break;
+    default:
+      cost = 'У каждой роли есть своя цена – та, что женщина платит ресурсом, телом, отношениями или собой.';
+  }
+
+  if (pains.length > 1) {
+    const second = pains[1];
+    const secondMap = {
+      istoshenie: ' И на это накладывается общее истощение – несёте больше, чем выдерживает система.',
+      zhenstvennost: ' И параллельно – постепенная потеря женского в себе на пути к достижениям.',
+      odinochestvo: ' А рядом нет того, с кем можно было бы это разделить.',
+      zhonglirovanie: ' И всё это – на фоне многих ролей, в которых вы себя не успеваете найти.',
+      proyavitsya: ' А выход из этой точки в большую публичную работу пока не складывается.'
+    };
+    if (secondMap[second]) cost += secondMap[second];
+  }
+  return cost;
+}
+
+const PAIN_WEEKS_TEXT = {
+  istoshenie: 'недели 1-я (нервная система), 3-я (опора на Землю), 5-я (женская воля) и 6-я (управление вниманием)',
+  zhenstvennost: 'недели 2-я (деконцентрация и интуиция), 4-я (сакральные практики), 8-я (наслаждение и красота) и 10-я (открытие сердца)',
+  odinochestvo: 'недели 9-я (полярность мужского и женского), 10-я (открытие сердца) и 12-я (реализация в паре)',
+  zhonglirovanie: 'недели 1-я (нервная система), 7-я (циклы), 8-я (наслаждение как топливо) и 13-я (жизнь как алхимия)',
+  proyavitsya: 'недели 5-я (женская воля), 6-я (внимание), 8-я (видимость и наслаждение) и 11-я (доверие жизни)'
+};
+
+function buildHelp(a) {
+  const pains = a.pains || [];
+  if (pains.length === 0) {
+    return 'Программа работает на всех уровнях – от нервной системы до проявления. На собеседовании Лиза увидит, какие из 14 недель особенно отзовутся именно вам.';
+  }
+  if (pains.length === 1) {
+    return 'Программа работает на всех уровнях – от нервной системы до проявления, – но для вашей точки особенно отзовутся ' + PAIN_WEEKS_TEXT[pains[0]] + '.';
+  }
+  return 'Программа работает на всех уровнях – от нервной системы до проявления, – но для вашей точки особенно отзовутся ' + PAIN_WEEKS_TEXT[pains[0]] + '. И ' + PAIN_WEEKS_TEXT[pains[1]] + ' – для второго слоя того, что вы несёте.';
+}
+
+function buildReadiness(a) {
+  const exp = a.experience;
+  const rdy = a.readiness;
+  const map = {
+    'liza_grad|ready': 'У вас есть и опыт работы с собой, и готовность к практике. Методологию Лизы вы узнаете сразу – первые недели не уйдут на адаптацию, можно идти глубже с самого начала.',
+    'liza_grad|struggle': 'Опыт у вас есть – методологию узнаете сразу. Но ежедневная регулярность сейчас в вопросе. Это место для обсуждения на собеседовании.',
+    'liza_grad|unsure': 'Опыт у вас есть – но регулярная ежедневная практика сейчас под большим вопросом. Прежде чем принимать решение, важно честно посмотреть, есть ли в графике место для серьёзной работы.',
+    'therapy|ready': 'Психотерапия и коучинг дают базу – в Алхимии вы быстро увидите, как ваш опыт ложится в новую систему. Первые недели – освоение методологии. Дальше – глубже.',
+    'therapy|struggle': 'У вас есть база, но ежедневная регулярная практика – другой уровень обязательства. На собеседовании важно обсудить, реалистично ли встроить 30–60 минут в день именно сейчас.',
+    'therapy|unsure': 'База у вас есть, но без ежедневной практики Алхимия не работает. Если в графике пока нет этих 30–60 минут – возможно, не сейчас.',
+    'practices|ready': 'Какой-то опыт есть, и есть готовность – это хорошая стартовая точка. В первые недели будет погружение в методологию, и вы увидите, как разрозненные практики собираются в систему.',
+    'practices|struggle': 'Опыт есть, но не системный. И с регулярностью пока сложно. Это важно прямо проговорить на собеседовании – иногда самое время начать, иногда лучше сначала навести порядок в графике.',
+    'practices|unsure': 'Без ежедневной регулярной работы Алхимия не работает. Прежде чем принимать решение, посмотрите на свой график – если 30–60 минут сейчас не найти, лучше отложить набор.',
+    'starter|ready': 'Это ваш первый серьёзный заход в такую работу. В первые недели будет адаптация – программа потребует переоценки того, как вы привыкли действовать. Дайте себе на это пространство.',
+    'starter|struggle': 'Это первый серьёзный заход в работу с собой, и регулярность пока в вопросе. Это серьёзное обучение телу – без ежедневной практики оно не происходит. Обсудим на собеседовании, ваше ли это сейчас время.',
+    'starter|unsure': 'Первый серьёзный заход и неуверенность с регулярностью – это много сразу. Возможно, имеет смысл начать с одной частной консультации с Лизой – посмотреть на свою точку и решить шаг за шагом.'
+  };
+  return map[exp + '|' + rdy] || 'На собеседовании Лиза посмотрит вашу ситуацию и скажет, ваше ли это время для программы.';
+}
+
+const state = { idx: 0, answers: {} };
+
+const screens = {
+  intro: document.getElementById('screen-intro'),
+  question: document.getElementById('screen-question'),
+  result: document.getElementById('screen-result')
+};
+
+const qTextEl = document.getElementById('q-text');
+const qHintEl = document.getElementById('q-hint');
+const qOptionsEl = document.getElementById('q-options');
+const qTextarea = document.getElementById('q-textarea');
+const qCurrentEl = document.getElementById('q-current');
+const qTotalEl = document.getElementById('q-total');
+const progressFill = document.getElementById('progress-fill');
+const btnNext = document.getElementById('btn-next');
+const btnBack = document.getElementById('btn-back');
+const btnStart = document.getElementById('btn-start');
+const btnRetake = document.getElementById('btn-retake');
+const btnBook = document.getElementById('btn-book');
+
+qTotalEl.textContent = QUESTIONS.length;
+
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function setNextText(text) {
+  btnNext.querySelector('.btn-text').textContent = text;
+}
+
+function renderQuestion() {
+  const item = QUESTIONS[state.idx];
+  qTextEl.textContent = item.q;
+  qCurrentEl.textContent = state.idx + 1;
+  progressFill.style.width = (state.idx / QUESTIONS.length * 100) + '%';
+
+  if (item.hint) {
+    qHintEl.textContent = item.hint;
+    qHintEl.style.display = 'block';
+  } else {
+    qHintEl.style.display = 'none';
+  }
+
+  if (item.textarea) {
+    qOptionsEl.style.display = 'none';
+    qTextarea.style.display = 'block';
+    qTextarea.value = state.answers[item.id] || '';
+    btnNext.disabled = false;
+  } else {
+    qOptionsEl.style.display = 'flex';
+    qTextarea.style.display = 'none';
+    qOptionsEl.innerHTML = '';
+
+    item.options.forEach(opt => {
+      const label = document.createElement('label');
+      label.className = 'option' + (item.multi ? ' option--check' : '');
+      label.setAttribute('data-v', opt.v);
+      label.innerHTML = '<input type="' + (item.multi ? 'checkbox' : 'radio') + '" name="' + item.id + '" value="' + opt.v + '"><span>' + opt.t + '</span>';
+
+      const stored = state.answers[item.id];
+      if (item.multi) {
+        if (Array.isArray(stored) && stored.includes(opt.v)) {
+          label.classList.add('selected');
+          label.querySelector('input').checked = true;
+        }
+      } else {
+        if (stored === opt.v) {
+          label.classList.add('selected');
+          label.querySelector('input').checked = true;
+        }
+      }
+
+      label.addEventListener('click', e => {
+        e.preventDefault();
+        if (item.multi) {
+          const isSelected = label.classList.contains('selected');
+          if (isSelected) {
+            label.classList.remove('selected');
+            label.querySelector('input').checked = false;
+            state.answers[item.id] = (state.answers[item.id] || []).filter(v => v !== opt.v);
+          } else {
+            const current = state.answers[item.id] || [];
+            if (current.length >= (item.max || 99)) {
+              const removed = current[0];
+              const removeLabel = qOptionsEl.querySelector('[data-v="' + removed + '"]');
+              if (removeLabel) {
+                removeLabel.classList.remove('selected');
+                removeLabel.querySelector('input').checked = false;
+              }
+              state.answers[item.id] = current.slice(1);
+            }
+            label.classList.add('selected');
+            label.querySelector('input').checked = true;
+            state.answers[item.id] = [...(state.answers[item.id] || []), opt.v];
+          }
+          btnNext.disabled = !(state.answers[item.id] && state.answers[item.id].length > 0);
+        } else {
+          qOptionsEl.querySelectorAll('.option').forEach(o => {
+            o.classList.remove('selected');
+            o.querySelector('input').checked = false;
+          });
+          label.classList.add('selected');
+          label.querySelector('input').checked = true;
+          state.answers[item.id] = opt.v;
+          btnNext.disabled = false;
+        }
+      });
+
+      qOptionsEl.appendChild(label);
+    });
+
+    const stored = state.answers[item.id];
+    if (item.multi) {
+      btnNext.disabled = !Array.isArray(stored) || stored.length === 0;
+    } else {
+      btnNext.disabled = !stored;
+    }
+  }
+
+  setNextText(state.idx === QUESTIONS.length - 1 ? 'Увидеть результат' : 'Дальше');
+  btnBack.disabled = state.idx === 0;
+}
+
+function renderResult() {
+  document.getElementById('r-role').textContent = buildRole(state.answers);
+  document.getElementById('r-cost').textContent = buildCost(state.answers);
+  document.getElementById('r-help').textContent = buildHelp(state.answers);
+  document.getElementById('r-readiness').textContent = buildReadiness(state.answers);
+}
+
+btnStart.addEventListener('click', () => {
+  state.idx = 0;
+  renderQuestion();
+  showScreen('question');
+});
+
+btnNext.addEventListener('click', () => {
+  const item = QUESTIONS[state.idx];
+  if (item.textarea) {
+    state.answers[item.id] = qTextarea.value.trim();
+  }
+  if (state.idx < QUESTIONS.length - 1) {
+    state.idx++;
+    renderQuestion();
+  } else {
+    progressFill.style.width = '100%';
+    renderResult();
+    try { localStorage.setItem('alchemy_test_answers', JSON.stringify(state.answers)); } catch (e) {}
+    showScreen('result');
+  }
+});
+
+btnBack.addEventListener('click', () => {
+  if (state.idx > 0) {
+    state.idx--;
+    renderQuestion();
+  }
+});
+
+btnRetake.addEventListener('click', () => {
+  state.idx = 0;
+  state.answers = {};
+  showScreen('intro');
+});
+
+btnBook.addEventListener('click', () => {
+  // TODO: replace with real booking flow (Calendly link / form / Telegram bot).
+  // Answers from the test are stored in localStorage and passed via URL for the next step.
+  const params = new URLSearchParams();
+  Object.entries(state.answers).forEach(([k, v]) => {
+    params.append(k, Array.isArray(v) ? v.join(',') : (v || ''));
+  });
+  // For now: stays on the page with a confirmation. Replace with real URL when ready.
+  alert('Спасибо! Ваши ответы сохранены – далее здесь будет переход к выбору времени собеседования с Лизой.\n\n(Эту кнопку нужно подключить к календарю / форме.)');
+  console.log('Test answers:', state.answers);
+  console.log('URL params:', params.toString());
+});
+
+})();
+</script>
+
+</body>
+</html>
