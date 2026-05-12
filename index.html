@@ -566,13 +566,19 @@
     align-items: start;
   }
   .alc-how-block h3 {
-    font-family: var(--mono);
-    font-size: 11px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(24px, 2vw, 32px);
     font-weight: 400;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
+    letter-spacing: -0.005em;
+    color: var(--ink);
     margin-bottom: 28px;
+  }
+  .alc-how-block--card {
+    background: var(--paper);
+    border-radius: 24px;
+    padding: clamp(28px, 3vw, 44px);
+    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
   }
   .alc-included { display: flex; flex-direction: column; }
   .alc-included-row {
@@ -611,38 +617,50 @@
     gap: 22px;
   }
   .alc-apply-step {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 24px;
-    padding: 26px 28px;
-    background: var(--paper);
-    border: 1px solid var(--ink-hair);
-    border-radius: 2px;
-    align-items: start;
-    transition: border-color .25s, transform .25s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 26px;
+    background: var(--bg);
+    border-radius: 16px;
+    transition: background .25s;
   }
-  .alc-apply-step:hover { border-color: var(--gold); transform: translateY(-2px); }
-  .alc-apply-step .step-num {
+  .alc-apply-step:hover { background: var(--bg-warm); }
+  .alc-apply-step .step-title {
     font-family: var(--serif);
-    font-style: italic;
-    font-size: 38px;
-    line-height: 1;
-    color: var(--gold);
-  }
-  .alc-apply-step .step-name {
-    font-family: var(--serif);
-    font-size: 22px;
+    font-size: clamp(20px, 1.6vw, 24px);
     line-height: 1.2;
     color: var(--ink);
+    font-weight: 500;
+  }
+  .alc-apply-step .step-title em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 400;
+    margin-left: 4px;
   }
   .alc-apply-step .step-desc {
     font-family: var(--sans);
-    font-size: 14.5px;
+    font-size: 15px;
     line-height: 1.55;
     color: var(--ink-soft);
-    margin-top: 6px;
   }
-  .alc-how-cta { margin-top: 36px; }
+  .alc-how-cta { margin-top: 24px; }
+  .alc-how-cta .btn {
+    width: 100%;
+    justify-content: center;
+    background: var(--gold-bright);
+    color: var(--ink);
+    border-color: var(--gold-bright);
+    padding: 22px 32px;
+    font-size: 13px;
+  }
+  .alc-how-cta .btn:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--paper);
+    transform: translateY(-1px);
+  }
 
   /* ─── VOICES ─── */
   .alc-voices-grid {
@@ -654,47 +672,61 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 36px 32px 32px;
+    padding: 36px 32px 28px;
     background: var(--paper);
-    border-top: 2px solid var(--gold);
-    border-radius: 2px;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
     min-height: 320px;
   }
   .alc-voice .quote-mark {
     font-family: var(--serif);
     font-style: italic;
-    font-size: 56px;
+    font-size: 48px;
     line-height: 0.4;
-    color: var(--gold);
-    height: 28px;
+    color: #4a3528;
+    height: 24px;
+    letter-spacing: -0.05em;
   }
   .alc-voice .text {
-    font-family: var(--serif);
-    font-size: 19px;
-    line-height: 1.42;
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
     color: var(--ink);
     flex: 1;
     text-wrap: pretty;
   }
   .alc-voice .who {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    padding-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-top: 22px;
     border-top: 1px solid var(--ink-hair);
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .alc-voice .who::before {
+    content: '';
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #4a3528;
+    flex-shrink: 0;
   }
   .alc-voice .who strong {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 16px;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--ink);
     text-transform: none;
     letter-spacing: 0;
-    color: var(--ink);
+    display: inline;
+    margin: 0;
+  }
+  .alc-voice .who strong::after {
+    content: ', ';
     font-weight: 400;
-    display: block;
-    margin-bottom: 4px;
+    color: var(--ink-soft);
   }
 
   /* ─── FAQ ─── */
@@ -1265,7 +1297,7 @@
     </div>
     <div class="alc-how">
       <div class="alc-how-block reveal">
-        <h3>Что включено</h3>
+        <h3>Что включено:</h3>
         <div class="alc-included">
           <div class="alc-included-row">
             <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9h18"/><circle cx="6.5" cy="7" r="0.5" fill="currentColor"/></svg></div>
@@ -1297,29 +1329,20 @@
           </div>
         </div>
       </div>
-      <div class="alc-how-block reveal reveal-delay-1">
-        <h3>Как войти в программу</h3>
+      <div class="alc-how-block alc-how-block--card reveal reveal-delay-1">
+        <h3>Как войти:</h3>
         <div class="alc-apply-steps">
           <div class="alc-apply-step">
-            <div class="step-num">1</div>
-            <div>
-              <div class="step-name">Пройти тест</div>
-              <div class="step-desc">Чтобы понять, подходит ли вам программа.</div>
-            </div>
+            <div class="step-title">Шаг #1: <em>Пройти тест</em></div>
+            <div class="step-desc">Чтобы понять, подходит ли вам программа.</div>
           </div>
           <div class="alc-apply-step">
-            <div class="step-num">2</div>
-            <div>
-              <div class="step-name">Заполнить анкету</div>
-              <div class="step-desc">Расскажете о себе и о том, где сейчас.</div>
-            </div>
+            <div class="step-title">Шаг #2: <em>Заполнить анкету</em></div>
+            <div class="step-desc">Расскажете о себе и о том, где сейчас.</div>
           </div>
           <div class="alc-apply-step">
-            <div class="step-num">3</div>
-            <div>
-              <div class="step-name">Пройти собеседование</div>
-              <div class="step-desc">Личный разговор с Лизой о вашем резонансе с программой.</div>
-            </div>
+            <div class="step-title">Шаг #3: <em>Пройти собеседование</em></div>
+            <div class="step-desc">Личный разговор с Лизой о вашем резонансе с программой.</div>
           </div>
         </div>
         <div class="alc-how-cta">
