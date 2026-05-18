@@ -66,20 +66,6 @@ const PAIN_LABELS = {
   proyavitsya: 'Внутренний потолок'
 };
 
-const EXPERIENCE_LABELS = {
-  liza_grad: 'Программы Лизы',
-  therapy: 'Психотерапия / коучинг',
-  somatic: 'Телесные практики',
-  practices: 'Какие-то практики',
-  starter: 'Только начинает'
-};
-
-const READINESS_LABELS = {
-  ready: 'Готова',
-  struggle: 'Хочу, но сложно',
-  unsure: 'Не уверена'
-};
-
 function pickArchetype(a) {
   const pains = a.pains || [];
   const primary = pains[0];
@@ -108,10 +94,6 @@ function formatNotification(answers, archetypeId) {
   const c = answers.contact || {};
   const arch = ARCHETYPES[archetypeId] || 'Неопределён';
   const pains = (answers.pains || []).map((p) => PAIN_LABELS[p] || p).join(', ');
-  const exp = (Array.isArray(answers.experience) ? answers.experience : [answers.experience])
-    .filter(Boolean)
-    .map((e) => EXPERIENCE_LABELS[e] || e)
-    .join(', ');
 
   const tg = (c.telegram || '').trim();
   const tgLink = tg.startsWith('@')
@@ -130,10 +112,16 @@ function formatNotification(answers, archetypeId) {
 <b>Доход:</b> ${escapeHtml(INCOME_LABELS[answers.income] || '—')}
 <b>Отношения:</b> ${escapeHtml(RELATIONS_LABELS[answers.relations] || '—')}
 <b>Дети:</b> ${escapeHtml(FAMILY_LABELS[answers.family] || '—')}
-
 <b>Боли:</b> ${escapeHtml(pains || '—')}
-<b>Опыт работы с собой:</b> ${escapeHtml(exp || '—')}
-<b>Готовность к практике:</b> ${escapeHtml(READINESS_LABELS[answers.readiness] || '—')}`;
+
+<b>Мечта:</b>
+${escapeHtml(answers.dream || '—')}
+
+<b>Препятствия:</b>
+${escapeHtml(answers.obstacles || '—')}
+
+<b>Что пробовала:</b>
+${escapeHtml(answers.tried || '—')}`;
 }
 
 function shortToken() {
