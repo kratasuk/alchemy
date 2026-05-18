@@ -151,7 +151,7 @@ function describeAnketa(answers, archetypeId) {
   return lines.join('\n');
 }
 
-export async function generateLetter(answers, archetypeId, { timeoutMs = 8000 } = {}) {
+export async function generateLetter(answers, archetypeId, { timeoutMs = 25000 } = {}) {
   if (!process.env.ANTHROPIC_API_KEY) {
     console.warn('ANTHROPIC_API_KEY not set — skipping letter generation');
     return null;

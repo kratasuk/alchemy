@@ -2,6 +2,8 @@ import { Redis } from '@upstash/redis';
 import crypto from 'node:crypto';
 import { generateLetter } from './_letter.js';
 
+export const config = { maxDuration: 30 };
+
 const redis = Redis.fromEnv();
 
 const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
