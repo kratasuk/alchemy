@@ -73,17 +73,15 @@ export default async function handler(req, res) {
   }
 
   const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
-  const name = escapeHtml(data.answers?.contact?.name || 'привет');
-  const arch = escapeHtml(ARCHETYPES[data.archetypeId] || 'Архетип');
+  const name = escapeHtml(data.answers?.contact?.name || 'друзья');
 
-  const greeting = `Привет, <b>${name}</b>! 👋
+  const greeting = `Добрый день, <b>${name}</b>! 👋
 
-Лиза получила вашу анкету.
-<b>Архетип:</b> ${arch}
+Мы получили вашу анкету.
 
-Менеджер Ольга свяжется с вами в течение часа — здесь или напишет в личку.
+<b>Ольга</b> – наш руководитель службы поддержки, напишет вам в ближайшее время.
 
-Если хотите задать вопрос прямо сейчас — пишите сюда, мы передадим.`;
+Но если есть срочный вопрос – можно сразу написать ей напрямую: <a href="https://t.me/Olga_Turova">@Olga_Turova</a>`;
 
   await sendTgMessage(msg.chat.id, greeting);
   return res.status(200).end();
