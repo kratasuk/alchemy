@@ -205,8 +205,14 @@ export default async function handler(req, res) {
       console.error('TG notification failed:', tgResult.reason?.message || tgResult.reason);
     }
 
-    const personalText =
-      letterResult.status === 'fulfilled' && letterResult.value ? letterResult.value : null;
+    let personalText = null;
+    let letterDebug = null;
+    if (letterResult.status === 'fulfilled' && letterResult.value) {
+      personalText = letterResult.value.text || null;
+      letterDebug = { debug: letterResult.value.debug, ms: letterResult.value.ms };
+    } else if (letterResult.status === 'rejected') {
+      letterDebug = { debug: 'promise_rejected', reason: String(letterResult.reason).slice(0, 200) };
+    }
 
     await appendToSheet(answers, archetypeId);
 
@@ -214,7 +220,8 @@ export default async function handler(req, res) {
       ok: true,
       token,
       botUsername: TG_BOT_USERNAME,
-      personalText
+      personalText,
+      _letterDebug: letterDebug
     });
   } catch (err) {
     console.error('submit error:', err);
