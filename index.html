@@ -465,6 +465,33 @@
     margin-top: 4px;
   }
   .alc-about-cta { margin-top: 16px; }
+  .alc-about-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 58ch;
+  }
+  .alc-about-list li {
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+    padding-left: 26px;
+    position: relative;
+  }
+  .alc-about-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 14px;
+    height: 1px;
+    background: var(--gold);
+  }
 
   /* ─── WEEKS ─── */
   .alc-weeks {
