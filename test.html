@@ -382,13 +382,12 @@
     .archetype-illu { flex-basis: auto; width: 140px; }
   }
   .result-block {
-    margin-bottom: 32px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--ink-hair);
+    margin-bottom: 40px;
+    padding-bottom: 0;
+    border-bottom: 0;
   }
   .result-block:last-of-type {
-    border-bottom: 0;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
   .result-label {
     font-family: var(--mono);
@@ -404,6 +403,31 @@
     line-height: 1.45;
     color: var(--ink);
     text-wrap: pretty;
+  }
+  /* Block 2 — Цена: italic emphasis, drama */
+  .result-block--cost .result-text {
+    font-style: italic;
+  }
+  /* Block 3 — Помощь: diamond turn-marker above, signals pivot from cost to hope */
+  .result-block--turn {
+    position: relative;
+    padding-top: 44px;
+    margin-top: 8px;
+  }
+  .result-block--turn::before {
+    content: "◆";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    line-height: 1;
+    color: var(--gold);
+  }
+  /* Block 4 — Готовность: muted reality-check, slightly smaller */
+  .result-block--sober .result-text {
+    color: var(--ink-soft);
+    font-size: clamp(17px, 1.4vw, 20px);
   }
 
   .result-cta {
@@ -423,6 +447,14 @@
     max-width: 44ch;
     margin-left: auto;
     margin-right: auto;
+  }
+  .result-cta p::before {
+    content: "";
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+    margin: 0 auto 20px;
   }
 
   .retake {
@@ -497,19 +529,19 @@
       </div>
     </div>
 
-    <div class="result-block">
+    <div class="result-block result-block--mirror">
       <div class="result-label">Ваша роль</div>
       <div class="result-text" id="r-role"></div>
     </div>
-    <div class="result-block">
+    <div class="result-block result-block--cost">
       <div class="result-label">Её цена</div>
       <div class="result-text" id="r-cost"></div>
     </div>
-    <div class="result-block">
+    <div class="result-block result-block--turn">
       <div class="result-label">Чем Алхимия может помочь</div>
       <div class="result-text" id="r-help"></div>
     </div>
-    <div class="result-block">
+    <div class="result-block result-block--sober">
       <div class="result-label">К чему быть готовой</div>
       <div class="result-text" id="r-readiness"></div>
     </div>
