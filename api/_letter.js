@@ -153,14 +153,14 @@ function describeAnketa(answers, archetypeId) {
 
 export async function generateLetter(answers, archetypeId, { timeoutMs = 25000 } = {}) {
   if (!process.env.ANTHROPIC_API_KEY) {
-    console.warn('ANTHROPIC_API_KEY not set — skipping letter generation');
-    return null;
+    return { text: null, debug: 'no_api_key' };
   }
 
   const userText = describeAnketa(answers, archetypeId) + '\n\nНапишите ей письмо-результат по правилам.';
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const t0 = Date.now();
 
   try {
     const response = await anthropic.messages.create(
@@ -177,13 +177,18 @@ export async function generateLetter(answers, archetypeId, { timeoutMs = 25000 }
 
     const textBlock = response.content.find((b) => b.type === 'text');
     const text = textBlock?.text?.trim();
-    if (!text) return null;
+    if (!text) return { text: null, debug: 'empty_text', ms: Date.now() - t0 };
 
-    // Sanity check: defend against em-dash slipping through despite system rules
-    return text.replace(/—/g, '–');
+    return {
+      text: text.replace(/—/g, '–'),
+      debug: 'ok',
+      ms: Date.now() - t0
+    };
   } catch (err) {
     clearTimeout(timer);
-    console.error('generateLetter failed:', err?.message || err);
-    return null;
+    const msg = err?.message || String(err);
+    const status = err?.status || err?.response?.status;
+    console.error('generateLetter failed:', msg);
+    return { text: null, debug: `error:${status || 'noStatus'}:${msg.slice(0, 200)}`, ms: Date.now() - t0 };
   }
 }
