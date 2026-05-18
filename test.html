@@ -813,26 +813,28 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'experience',
-    q: 'Опыт работы с собой',
-    hint: 'Выберите всё, что подходит',
-    multi: true,
-    options: [
-      { v: 'liza_grad', t: 'Проходила программы Елизаветы' },
-      { v: 'therapy', t: 'Проходила психотерапию, коучинг' },
-      { v: 'somatic', t: 'Регулярно делаю телесные практики' },
-      { v: 'practices', t: 'Что-то делаю, но несистемно' },
-      { v: 'starter', t: 'Только подхожу к осознанной работе над собой' }
-    ]
+    id: 'dream',
+    q: 'Что для вас сейчас самое важное в плане женской реализации? О чём вы мечтаете?',
+    hint: 'Своими словами, 2–4 предложения. Чем конкретнее – тем точнее разбор.',
+    textarea: true,
+    minLength: 30,
+    placeholder: 'Например: какой женщиной я хочу проснуться через два года, какие отношения у меня тогда есть, как я живу свой день.'
   },
   {
-    id: 'readiness',
-    q: 'Готовность к ежедневной практике 30–60 минут',
-    options: [
-      { v: 'ready', t: 'Готова, время найду' },
-      { v: 'struggle', t: 'Сложно, но хочу – спросите меня' },
-      { v: 'unsure', t: 'Не уверена, что вытяну сейчас' }
-    ]
+    id: 'obstacles',
+    q: 'Какие главные препятствия стоят между вами и этой мечтой сейчас?',
+    hint: 'Можно несколько. Внешние, внутренние – как чувствуется.',
+    textarea: true,
+    minLength: 30,
+    placeholder: 'Можно про обстоятельства, про себя, про окружение. То, что не даёт сделать шаг.'
+  },
+  {
+    id: 'tried',
+    q: 'Что вы уже пробовали, чтобы это изменить? И что из этого помогало, а что нет?',
+    hint: 'Терапия, коучинг, тренинги, книги, духовные практики, что-то ещё – расскажите своими словами.',
+    textarea: true,
+    minLength: 30,
+    placeholder: 'Особенно ценно: что из попыток давало результат, что нет – и почему.'
   },
   {
     id: 'contact',
@@ -1112,8 +1114,14 @@ function renderQuestion() {
     validateContact();
   } else if (item.textarea) {
     qTextarea.style.display = 'block';
+    qTextarea.placeholder = item.placeholder || '';
     qTextarea.value = state.answers[item.id] || '';
-    btnNext.disabled = false;
+    const validateTextarea = () => {
+      const min = item.minLength || 0;
+      btnNext.disabled = qTextarea.value.trim().length < min;
+    };
+    qTextarea.oninput = validateTextarea;
+    validateTextarea();
   } else {
     qOptionsEl.style.display = 'flex';
     qOptionsEl.innerHTML = '';
