@@ -58,7 +58,7 @@ export default async function handler(req, res) {
   if (!token) {
     await sendTgMessage(
       msg.chat.id,
-      'Привет! Похоже, вы открыли бота напрямую. Чтобы пройти тест «Алхимия Женщины» — откройте <a href="https://wmnalchemy.com/test.html">эту страницу</a>, а после результата вернётесь сюда автоматически.'
+      'Привет! Похоже, вы открыли бота напрямую. Чтобы пройти тест «Алхимия Женщины» – откройте <a href="https://wmnalchemy.com/test.html">эту страницу</a>, а после результата вернётесь сюда автоматически.'
     );
     return res.status(200).end();
   }
@@ -67,7 +67,7 @@ export default async function handler(req, res) {
   if (!raw) {
     await sendTgMessage(
       msg.chat.id,
-      'Похоже, ссылка устарела. <a href="https://wmnalchemy.com/test.html">Пройдите тест заново</a> — мы свяжемся в течение часа.'
+      'Похоже, ссылка устарела. <a href="https://wmnalchemy.com/test.html">Пройдите тест заново</a> – мы свяжемся в течение часа.'
     );
     return res.status(200).end();
   }
