@@ -524,6 +524,29 @@
   .personal-letter {
     margin-bottom: 40px;
   }
+  .personal-letter-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .personal-letter-header .diamond {
+    font-size: 9px;
+    animation: pulse-diamond 1.6s ease-in-out infinite;
+  }
+  .personal-letter-header--done .diamond {
+    animation: none;
+    opacity: 0.6;
+  }
+  @keyframes pulse-diamond {
+    0%, 100% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1); }
+  }
   .personal-letter p {
     font-family: var(--serif);
     font-size: clamp(19px, 1.5vw, 23px);
@@ -534,6 +557,26 @@
   }
   .personal-letter p:last-child {
     margin-bottom: 0;
+  }
+  /* Blinking cursor at the end of the last paragraph while streaming */
+  .personal-letter.is-streaming p:last-child::after {
+    content: "▌";
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--gold);
+    font-weight: 400;
+    animation: cursor-blink 1s steps(2, start) infinite;
+    vertical-align: baseline;
+    transform: translateY(-2px);
+  }
+  @keyframes cursor-blink {
+    to { visibility: hidden; }
+  }
+  /* CTA stays muted until the letter has finished — keeps focus on reading */
+  .result-cta.is-pending {
+    opacity: 0.45;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
   }
 
   .result-cta {
@@ -656,7 +699,13 @@
       </div>
     </div>
 
-    <div class="personal-letter" id="personal-letter" style="display:none;"></div>
+    <div class="personal-letter" id="personal-letter" style="display:none;">
+      <div class="personal-letter-header" id="personal-letter-header">
+        <span class="diamond">◆</span>
+        <span class="label" id="personal-letter-label">Лиза готовит ваш разбор…</span>
+      </div>
+      <div class="personal-letter-body" id="personal-letter-body"></div>
+    </div>
 
     <div class="legacy-blocks" id="legacy-blocks">
       <div class="result-block result-block--mirror">
@@ -677,7 +726,7 @@
       </div>
     </div>
 
-    <div class="result-cta">
+    <div class="result-cta" id="result-cta">
       <p>Если откликается – следующий шаг собеседование с Лизой. 60 минут, бесплатно.</p>
       <a class="btn btn--gold" id="btn-book" href="#" target="_blank" rel="noopener"><span class="btn-text">Написать менеджеру</span> <span class="btn-arrow">→</span></a>
     </div>
@@ -1212,21 +1261,95 @@ function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
 
-function renderPersonalLetter(text) {
+// Renders streaming text into the letter body. Splits buffer on \n\n
+// boundaries so a complete paragraph becomes its own <p>; the trailing
+// (unfinished) fragment stays in a "live" paragraph until the next break.
+function makeLetterStream() {
   const letterEl = document.getElementById('personal-letter');
+  const bodyEl = document.getElementById('personal-letter-body');
+  const headerEl = document.getElementById('personal-letter-header');
+  const labelEl = document.getElementById('personal-letter-label');
+  const ctaEl = document.getElementById('result-cta');
   const legacyEl = document.getElementById('legacy-blocks');
-  if (!text || !letterEl || !legacyEl) return;
-  const paragraphs = text
-    .split(/(?:\r?\n){2,}/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-  if (!paragraphs.length) return;
-  letterEl.innerHTML = paragraphs.map((p) => '<p>' + escapeHtml(p).replace(/\n/g, '<br>') + '</p>').join('');
+
   letterEl.style.display = 'block';
+  letterEl.classList.add('is-streaming');
   legacyEl.style.display = 'none';
+  ctaEl.classList.add('is-pending');
+
+  let buffer = '';
+  let committedParas = [];
+  let liveP = document.createElement('p');
+  bodyEl.appendChild(liveP);
+
+  return {
+    append(chunk) {
+      buffer += chunk;
+      // Split on paragraph breaks (\n\n). Keep last fragment as the live paragraph.
+      const parts = buffer.split(/\n{2,}/);
+      const liveText = parts.pop();
+      for (const completed of parts) {
+        const trimmed = completed.trim();
+        if (trimmed) {
+          liveP.textContent = trimmed;
+          committedParas.push(liveP);
+          liveP = document.createElement('p');
+          bodyEl.appendChild(liveP);
+        }
+      }
+      liveP.textContent = liveText;
+      buffer = liveText;
+      // Scroll the letter into view smoothly so the user follows as it writes
+      // without us yanking the page on every chunk.
+    },
+    done() {
+      const tail = buffer.trim();
+      if (tail) liveP.textContent = tail;
+      else if (!liveP.textContent) liveP.remove();
+      letterEl.classList.remove('is-streaming');
+      headerEl.classList.add('personal-letter-header--done');
+      labelEl.textContent = 'Ваш разбор';
+      ctaEl.classList.remove('is-pending');
+    },
+    fail() {
+      letterEl.classList.remove('is-streaming');
+      letterEl.style.display = 'none';
+      legacyEl.style.display = 'block';
+      ctaEl.classList.remove('is-pending');
+    }
+  };
 }
 
-function applySubmitSuccess(token, botUsername, personalText) {
+function startLetterStream(token) {
+  const stream = makeLetterStream();
+  const url = '/api/letter?token=' + encodeURIComponent(token);
+  const es = new EventSource(url);
+  let gotAnyText = false;
+
+  es.onmessage = (event) => {
+    if (!event.data) return;
+    let payload;
+    try { payload = JSON.parse(event.data); } catch { return; }
+    if (payload.type === 'text' && typeof payload.text === 'string') {
+      gotAnyText = true;
+      stream.append(payload.text);
+    } else if (payload.type === 'done') {
+      stream.done();
+      es.close();
+    } else if (payload.type === 'error') {
+      if (!gotAnyText) stream.fail();
+      else stream.done();
+      es.close();
+    }
+  };
+  es.onerror = () => {
+    if (!gotAnyText) stream.fail();
+    else stream.done();
+    es.close();
+  };
+}
+
+function applySubmitSuccess(token, botUsername) {
   state.token = token;
   state.botUsername = botUsername || 'alchemysupportbot';
   const link = 'https://t.me/' + state.botUsername + '?start=' + encodeURIComponent(token);
@@ -1234,7 +1357,7 @@ function applySubmitSuccess(token, botUsername, personalText) {
   submitBanner.classList.remove('submit-banner--error');
   submitBannerText.innerHTML = '<b>Анкета получена.</b> Менеджер Ольга свяжется с вами в течение часа. Прочитайте свой разбор ниже и нажмите «Написать менеджеру», когда будете готовы.';
   submitBanner.style.display = 'flex';
-  if (personalText) renderPersonalLetter(personalText);
+  startLetterStream(token);
 }
 
 btnNext.addEventListener('click', async () => {
@@ -1260,7 +1383,7 @@ btnNext.addEventListener('click', async () => {
     const data = await submitAnketa();
     progressFill.style.width = '100%';
     renderResult();
-    applySubmitSuccess(data.token, data.botUsername, data.personalText);
+    applySubmitSuccess(data.token, data.botUsername);
     try { localStorage.setItem('alchemy_test_answers', JSON.stringify(state.answers)); } catch (e) {}
     showScreen('result');
   } catch (err) {

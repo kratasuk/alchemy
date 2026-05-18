@@ -1,6 +1,5 @@
-import Anthropic from '@anthropic-ai/sdk';
-
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// Prompt + anketa renderer for the personal letter LLM call.
+// Used by api/letter.js (SSE streaming endpoint).
 
 const ARCHETYPES = {
   1: 'Руководите командой',
@@ -74,7 +73,7 @@ const READINESS = {
   unsure: 'не уверена, что вытянет ежедневную практику сейчас'
 };
 
-const SYSTEM_PROMPT = `Вы пишете персонализированное письмо-результат женщине, только что прошедшей 9-вопросный диагностический тест программы «Алхимия Женщины» Елизаветы Бабановой.
+export const SYSTEM_PROMPT = `Вы пишете персонализированное письмо-результат женщине, только что прошедшей 9-вопросный диагностический тест программы «Алхимия Женщины» Елизаветы Бабановой.
 
 КОНТЕКСТ ПРОГРАММЫ:
 14-недельная программа для реализованных женщин 40+. Сочетает соматические практики, женскую психологию, работу с энергией. Метод: рост в масштабе через мягкость, не через волю. Ведёт Елизавета Бабанова (хедж-фонд → бизнес → духовная учительница). Премиум-формат, требует ежедневной практики 30–60 минут.
@@ -127,7 +126,7 @@ const SYSTEM_PROMPT = `Вы пишете персонализированное 
 
 ВЫХОД: чистый текст письма. Без preamble. Начинайте сразу с обращения по имени. Никакого «Вот ваш результат:» или подписи в конце.`;
 
-function describeAnketa(answers, archetypeId) {
+export function describeAnketa(answers, archetypeId) {
   const c = answers.contact || {};
   const archName = ARCHETYPES[archetypeId] || 'неопределён';
   const pains = (answers.pains || []).map((p) => PAIN[p] || p);
@@ -151,44 +150,3 @@ function describeAnketa(answers, archetypeId) {
   return lines.join('\n');
 }
 
-export async function generateLetter(answers, archetypeId, { timeoutMs = 25000 } = {}) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return { text: null, debug: 'no_api_key' };
-  }
-
-  const userText = describeAnketa(answers, archetypeId) + '\n\nНапишите ей письмо-результат по правилам.';
-
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  const t0 = Date.now();
-
-  try {
-    const response = await anthropic.messages.create(
-      {
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
-        thinking: { type: 'disabled' },
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userText }]
-      },
-      { signal: controller.signal }
-    );
-    clearTimeout(timer);
-
-    const textBlock = response.content.find((b) => b.type === 'text');
-    const text = textBlock?.text?.trim();
-    if (!text) return { text: null, debug: 'empty_text', ms: Date.now() - t0 };
-
-    return {
-      text: text.replace(/—/g, '–'),
-      debug: 'ok',
-      ms: Date.now() - t0
-    };
-  } catch (err) {
-    clearTimeout(timer);
-    const msg = err?.message || String(err);
-    const status = err?.status || err?.response?.status;
-    console.error('generateLetter failed:', msg);
-    return { text: null, debug: `error:${status || 'noStatus'}:${msg.slice(0, 200)}`, ms: Date.now() - t0 };
-  }
-}

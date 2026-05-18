@@ -1,8 +1,5 @@
 import { Redis } from '@upstash/redis';
 import crypto from 'node:crypto';
-import { generateLetter } from './_letter.js';
-
-export const config = { maxDuration: 30 };
 
 const redis = Redis.fromEnv();
 
@@ -196,22 +193,9 @@ export default async function handler(req, res) {
     );
 
     const tgText = formatNotification(answers, archetypeId);
-    const [tgResult, letterResult] = await Promise.allSettled([
-      sendTgMessage(TG_GROUP_CHAT_ID, tgText),
-      generateLetter(answers, archetypeId)
-    ]);
-
-    if (tgResult.status === 'rejected') {
-      console.error('TG notification failed:', tgResult.reason?.message || tgResult.reason);
-    }
-
-    let personalText = null;
-    let letterDebug = null;
-    if (letterResult.status === 'fulfilled' && letterResult.value) {
-      personalText = letterResult.value.text || null;
-      letterDebug = { debug: letterResult.value.debug, ms: letterResult.value.ms };
-    } else if (letterResult.status === 'rejected') {
-      letterDebug = { debug: 'promise_rejected', reason: String(letterResult.reason).slice(0, 200) };
+    const tgResult = await Promise.allSettled([sendTgMessage(TG_GROUP_CHAT_ID, tgText)]);
+    if (tgResult[0].status === 'rejected') {
+      console.error('TG notification failed:', tgResult[0].reason?.message || tgResult[0].reason);
     }
 
     await appendToSheet(answers, archetypeId);
@@ -219,9 +203,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       token,
-      botUsername: TG_BOT_USERNAME,
-      personalText,
-      _letterDebug: letterDebug
+      botUsername: TG_BOT_USERNAME
     });
   } catch (err) {
     console.error('submit error:', err);
