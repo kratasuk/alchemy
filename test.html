@@ -326,6 +326,44 @@
   textarea:focus { outline: none; border-color: var(--gold); }
   textarea::placeholder { color: var(--ink-faint); }
 
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact-field label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .contact-field input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid var(--ink-hair);
+    border-radius: 12px;
+    background: var(--paper);
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .contact-field input:focus {
+    border-color: var(--gold);
+  }
+  .contact-field input::placeholder {
+    color: var(--ink-faint);
+  }
+
   .q-actions {
     display: flex;
     justify-content: space-between;
@@ -491,7 +529,7 @@
       Девять вопросов о том, где вы сейчас. В конце увидите свой архетип и поймёте, что программа может дать именно вам.
     </p>
     <ul class="bullets">
-      <li><span class="num">01</span><span>Займёт 2–3 минуты. Без email.</span></li>
+      <li><span class="num">01</span><span>Займёт 2–3 минуты.</span></li>
       <li><span class="num">02</span><span>Отвечайте честно – как есть, а не как хотелось бы.</span></li>
       <li><span class="num">03</span><span>В конце – ваш архетип, разбор вашей исходной точки и следующий шаг.</span></li>
     </ul>
@@ -510,6 +548,20 @@
     <p class="hint" id="q-hint" style="display:none;"></p>
     <div class="options" id="q-options"></div>
     <textarea id="q-textarea" style="display:none;" placeholder="Несколько строк – то, что не вписалось в варианты выше."></textarea>
+    <div class="contact-form" id="q-contact" style="display:none;">
+      <div class="contact-field">
+        <label for="contact-name">Имя</label>
+        <input type="text" id="contact-name" autocomplete="given-name" placeholder="Как к вам обращаться">
+      </div>
+      <div class="contact-field">
+        <label for="contact-email">Email</label>
+        <input type="email" id="contact-email" autocomplete="email" placeholder="вы@почта.ru">
+      </div>
+      <div class="contact-field">
+        <label for="contact-telegram">Telegram или телефон</label>
+        <input type="text" id="contact-telegram" autocomplete="tel" placeholder="@username или +7 ...">
+      </div>
+    </div>
     <div class="q-actions">
       <button class="btn-ghost" id="btn-back">← Назад</button>
       <button class="btn" id="btn-next" disabled><span class="btn-text">Дальше</span> <span class="btn-arrow">→</span></button>
@@ -655,11 +707,10 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'context',
-    q: 'Что важно знать о вашей ситуации?',
-    hint: 'Опционально – несколько строк о том, что Лизе важно увидеть',
-    textarea: true,
-    optional: true
+    id: 'contact',
+    q: 'Как с вами связаться?',
+    hint: 'Чтобы Лиза могла прислать ваш разбор и пригласить на собеседование',
+    contact: true
   }
 ];
 
@@ -882,6 +933,10 @@ const qTextEl = document.getElementById('q-text');
 const qHintEl = document.getElementById('q-hint');
 const qOptionsEl = document.getElementById('q-options');
 const qTextarea = document.getElementById('q-textarea');
+const qContactEl = document.getElementById('q-contact');
+const qContactName = document.getElementById('contact-name');
+const qContactEmail = document.getElementById('contact-email');
+const qContactTel = document.getElementById('contact-telegram');
 const qCurrentEl = document.getElementById('q-current');
 const qTotalEl = document.getElementById('q-total');
 const progressFill = document.getElementById('progress-fill');
@@ -916,14 +971,23 @@ function renderQuestion() {
     qHintEl.style.display = 'none';
   }
 
-  if (item.textarea) {
-    qOptionsEl.style.display = 'none';
+  qOptionsEl.style.display = 'none';
+  qTextarea.style.display = 'none';
+  qContactEl.style.display = 'none';
+
+  if (item.contact) {
+    qContactEl.style.display = 'flex';
+    const stored = state.answers[item.id] || {};
+    qContactName.value = stored.name || '';
+    qContactEmail.value = stored.email || '';
+    qContactTel.value = stored.telegram || '';
+    validateContact();
+  } else if (item.textarea) {
     qTextarea.style.display = 'block';
     qTextarea.value = state.answers[item.id] || '';
     btnNext.disabled = false;
   } else {
     qOptionsEl.style.display = 'flex';
-    qTextarea.style.display = 'none';
     qOptionsEl.innerHTML = '';
 
     item.options.forEach(opt => {
@@ -1015,9 +1079,28 @@ btnStart.addEventListener('click', () => {
   showScreen('question');
 });
 
+function validateContact() {
+  const name = qContactName.value.trim();
+  const email = qContactEmail.value.trim();
+  const tel = qContactTel.value.trim();
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const valid = name.length >= 2 && emailValid && tel.length >= 3;
+  state.answers.contact = { name, email, telegram: tel };
+  btnNext.disabled = !valid;
+}
+[qContactName, qContactEmail, qContactTel].forEach(el => {
+  el.addEventListener('input', validateContact);
+});
+
 btnNext.addEventListener('click', () => {
   const item = QUESTIONS[state.idx];
-  if (item.textarea) {
+  if (item.contact) {
+    state.answers[item.id] = {
+      name: qContactName.value.trim(),
+      email: qContactEmail.value.trim(),
+      telegram: qContactTel.value.trim()
+    };
+  } else if (item.textarea) {
     state.answers[item.id] = qTextarea.value.trim();
   }
   if (state.idx < QUESTIONS.length - 1) {
@@ -1049,7 +1132,15 @@ btnBook.addEventListener('click', () => {
   // Answers from the test are stored in localStorage and passed via URL for the next step.
   const params = new URLSearchParams();
   Object.entries(state.answers).forEach(([k, v]) => {
-    params.append(k, Array.isArray(v) ? v.join(',') : (v || ''));
+    if (k === 'contact' && v && typeof v === 'object') {
+      params.append('name', v.name || '');
+      params.append('email', v.email || '');
+      params.append('telegram', v.telegram || '');
+    } else if (Array.isArray(v)) {
+      params.append(k, v.join(','));
+    } else {
+      params.append(k, v || '');
+    }
   });
   // For now: stays on the page with a confirmation. Replace with real URL when ready.
   alert('Спасибо! Ваши ответы сохранены – далее здесь будет переход к выбору времени собеседования с Лизой.\n\n(Эту кнопку нужно подключить к календарю / форме.)');
