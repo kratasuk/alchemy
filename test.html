@@ -758,6 +758,31 @@ const ARCHETYPES = {
   6: { name: 'Выходите на новый виток',      image: 'images/whofor-06.png' }
 };
 
+/*
+ * pickArchetype — assignment matrix (audit ALC-17, 2026-05-18)
+ *
+ *                  istoshenie  zhenstvennost  odinochestvo  zhonglirovanie  proyavitsya
+ *   manager          1             1              3             5             6
+ *   top              1             1              3             5             6
+ *   owner            2             2              3             5             6
+ *   expert           4             4              3             5             6
+ *   transition       6             6              3             5             6
+ *   family           5             5              3             5             6
+ *
+ * Logic (priority order):
+ *   1. Pain-primary trio (odinochestvo→3, proyavitsya→6, zhonglirovanie→5)
+ *      overrides everything else — these pains define the archetype.
+ *   2. For pains istoshenie/zhenstvennost, archetype is profession-driven:
+ *      expert→4, owner→2, manager/top→1.
+ *   3. Edge cases by life-phase: family-prof or kids_small/school→5;
+ *      rel=single_seeking→3; transition-prof→6.
+ *   4. Final fallback by pain: istoshenie→1, zhenstvennost→2, else 1.
+ *
+ * No mismatches found — all 30 prof×pain cells map to a defensible
+ * archetype. Edge cells (manager/top + zhenstvennost → 1 «Руководите
+ * командой») fall back to professional identity because zhenstvennost
+ * is felt across many archetypes and prof is the disambiguator.
+ */
 function pickArchetype(a) {
   const pains = a.pains || [];
   const primary = pains[0];
@@ -784,6 +809,33 @@ function pickArchetype(a) {
   if (primary === 'istoshenie') return 1;
   if (primary === 'zhenstvennost') return 2;
   return 1;
+}
+
+/* ALC-17 audit harness — runs in browser console only if DEBUG=true.
+ * Verifies the 30-cell prof×pain matrix above against pickArchetype output. */
+const DEBUG = false;
+if (DEBUG) {
+  const profs = ['manager', 'top', 'owner', 'expert', 'transition', 'family'];
+  const pains = ['istoshenie', 'zhenstvennost', 'odinochestvo', 'zhonglirovanie', 'proyavitsya'];
+  const expected = {
+    'manager|istoshenie': 1, 'manager|zhenstvennost': 1, 'manager|odinochestvo': 3, 'manager|zhonglirovanie': 5, 'manager|proyavitsya': 6,
+    'top|istoshenie':     1, 'top|zhenstvennost':     1, 'top|odinochestvo':     3, 'top|zhonglirovanie':     5, 'top|proyavitsya':     6,
+    'owner|istoshenie':   2, 'owner|zhenstvennost':   2, 'owner|odinochestvo':   3, 'owner|zhonglirovanie':   5, 'owner|proyavitsya':   6,
+    'expert|istoshenie':  4, 'expert|zhenstvennost':  4, 'expert|odinochestvo':  3, 'expert|zhonglirovanie':  5, 'expert|proyavitsya':  6,
+    'transition|istoshenie': 6, 'transition|zhenstvennost': 6, 'transition|odinochestvo': 3, 'transition|zhonglirovanie': 5, 'transition|proyavitsya': 6,
+    'family|istoshenie':  5, 'family|zhenstvennost':  5, 'family|odinochestvo':  3, 'family|zhonglirovanie':  5, 'family|proyavitsya':  6
+  };
+  let mismatches = 0;
+  console.group('ALC-17 archetype audit');
+  for (const p of profs) for (const x of pains) {
+    const actual = pickArchetype({ prof: p, pains: [x] });
+    const exp = expected[p + '|' + x];
+    const ok = actual === exp;
+    if (!ok) mismatches++;
+    console.log((ok ? '✓' : '✗'), p + ' × ' + x, '→', actual, '(expected', exp + ')');
+  }
+  console.log(mismatches === 0 ? 'All 30 cells match.' : mismatches + ' mismatches.');
+  console.groupEnd();
 }
 
 function buildReadiness(a) {
