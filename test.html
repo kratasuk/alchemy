@@ -520,6 +520,22 @@
     font-size: clamp(17px, 1.4vw, 20px);
   }
 
+  /* Personal letter — LLM-generated, replaces the 4 legacy blocks when present */
+  .personal-letter {
+    margin-bottom: 40px;
+  }
+  .personal-letter p {
+    font-family: var(--serif);
+    font-size: clamp(19px, 1.5vw, 23px);
+    line-height: 1.55;
+    color: var(--ink);
+    text-wrap: pretty;
+    margin-bottom: 1em;
+  }
+  .personal-letter p:last-child {
+    margin-bottom: 0;
+  }
+
   .result-cta {
     background: var(--paper);
     border-radius: 20px;
@@ -640,21 +656,25 @@
       </div>
     </div>
 
-    <div class="result-block result-block--mirror">
-      <div class="result-label">Ваша роль</div>
-      <div class="result-text" id="r-role"></div>
-    </div>
-    <div class="result-block result-block--cost">
-      <div class="result-label">Её цена</div>
-      <div class="result-text" id="r-cost"></div>
-    </div>
-    <div class="result-block result-block--turn">
-      <div class="result-label">Чем Алхимия может помочь</div>
-      <div class="result-text" id="r-help"></div>
-    </div>
-    <div class="result-block result-block--sober">
-      <div class="result-label">К чему быть готовой</div>
-      <div class="result-text" id="r-readiness"></div>
+    <div class="personal-letter" id="personal-letter" style="display:none;"></div>
+
+    <div class="legacy-blocks" id="legacy-blocks">
+      <div class="result-block result-block--mirror">
+        <div class="result-label">Ваша роль</div>
+        <div class="result-text" id="r-role"></div>
+      </div>
+      <div class="result-block result-block--cost">
+        <div class="result-label">Её цена</div>
+        <div class="result-text" id="r-cost"></div>
+      </div>
+      <div class="result-block result-block--turn">
+        <div class="result-label">Чем Алхимия может помочь</div>
+        <div class="result-text" id="r-help"></div>
+      </div>
+      <div class="result-block result-block--sober">
+        <div class="result-label">К чему быть готовой</div>
+        <div class="result-text" id="r-readiness"></div>
+      </div>
     </div>
 
     <div class="result-cta">
@@ -1188,7 +1208,25 @@ async function submitAnketa() {
   return data;
 }
 
-function applySubmitSuccess(token, botUsername) {
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+}
+
+function renderPersonalLetter(text) {
+  const letterEl = document.getElementById('personal-letter');
+  const legacyEl = document.getElementById('legacy-blocks');
+  if (!text || !letterEl || !legacyEl) return;
+  const paragraphs = text
+    .split(/(?:\r?\n){2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (!paragraphs.length) return;
+  letterEl.innerHTML = paragraphs.map((p) => '<p>' + escapeHtml(p).replace(/\n/g, '<br>') + '</p>').join('');
+  letterEl.style.display = 'block';
+  legacyEl.style.display = 'none';
+}
+
+function applySubmitSuccess(token, botUsername, personalText) {
   state.token = token;
   state.botUsername = botUsername || 'alchemysupportbot';
   const link = 'https://t.me/' + state.botUsername + '?start=' + encodeURIComponent(token);
@@ -1196,6 +1234,7 @@ function applySubmitSuccess(token, botUsername) {
   submitBanner.classList.remove('submit-banner--error');
   submitBannerText.innerHTML = '<b>Анкета получена.</b> Менеджер Ольга свяжется с вами в течение часа. Прочитайте свой разбор ниже и нажмите «Написать менеджеру», когда будете готовы.';
   submitBanner.style.display = 'flex';
+  if (personalText) renderPersonalLetter(personalText);
 }
 
 btnNext.addEventListener('click', async () => {
@@ -1221,7 +1260,7 @@ btnNext.addEventListener('click', async () => {
     const data = await submitAnketa();
     progressFill.style.width = '100%';
     renderResult();
-    applySubmitSuccess(data.token, data.botUsername);
+    applySubmitSuccess(data.token, data.botUsername, data.personalText);
     try { localStorage.setItem('alchemy_test_answers', JSON.stringify(state.answers)); } catch (e) {}
     showScreen('result');
   } catch (err) {

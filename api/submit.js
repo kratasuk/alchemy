@@ -1,5 +1,6 @@
 import { Redis } from '@upstash/redis';
 import crypto from 'node:crypto';
+import { generateLetter } from './_letter.js';
 
 const redis = Redis.fromEnv();
 
@@ -192,15 +193,26 @@ export default async function handler(req, res) {
       { ex: 60 * 60 * 24 }
     );
 
-    const text = formatNotification(answers, archetypeId);
-    await sendTgMessage(TG_GROUP_CHAT_ID, text);
+    const tgText = formatNotification(answers, archetypeId);
+    const [tgResult, letterResult] = await Promise.allSettled([
+      sendTgMessage(TG_GROUP_CHAT_ID, tgText),
+      generateLetter(answers, archetypeId)
+    ]);
+
+    if (tgResult.status === 'rejected') {
+      console.error('TG notification failed:', tgResult.reason?.message || tgResult.reason);
+    }
+
+    const personalText =
+      letterResult.status === 'fulfilled' && letterResult.value ? letterResult.value : null;
 
     await appendToSheet(answers, archetypeId);
 
     return res.status(200).json({
       ok: true,
       token,
-      botUsername: TG_BOT_USERNAME
+      botUsername: TG_BOT_USERNAME,
+      personalText
     });
   } catch (err) {
     console.error('submit error:', err);
