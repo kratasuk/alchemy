@@ -326,6 +326,44 @@
   textarea:focus { outline: none; border-color: var(--gold); }
   textarea::placeholder { color: var(--ink-faint); }
 
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 540px;
+    margin-bottom: 40px;
+  }
+  .contact-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .contact-field label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .contact-field input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid var(--ink-hair);
+    border-radius: 12px;
+    background: var(--paper);
+    font-family: var(--sans);
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .2s;
+  }
+  .contact-field input:focus {
+    border-color: var(--gold);
+  }
+  .contact-field input::placeholder {
+    color: var(--ink-faint);
+  }
+
   .q-actions {
     display: flex;
     justify-content: space-between;
@@ -488,16 +526,16 @@
     <div class="eyebrow">Тест</div>
     <h1>Проверьте, подойдёт ли вам <em>Алхимия Женщины</em></h1>
     <p class="lede">
-      Девять вопросов о том, где вы сейчас. Последний – опциональный. В конце увидите свой типаж и поймёте, что программа может дать именно вам.
+      Девять вопросов о том, где вы сейчас. В конце увидите свой архетип и поймёте, что программа может дать именно вам.
     </p>
     <ul class="bullets">
-      <li><span class="num">01</span><span>4–5 минут. Без email.</span></li>
+      <li><span class="num">01</span><span>Займёт 2–3 минуты.</span></li>
       <li><span class="num">02</span><span>Отвечайте честно – как есть, а не как хотелось бы.</span></li>
-      <li><span class="num">03</span><span>В конце – ваш типаж, разбор вашей точки и следующий шаг.</span></li>
+      <li><span class="num">03</span><span>В конце – ваш архетип, разбор вашей исходной точки и следующий шаг.</span></li>
     </ul>
     <div class="cta-row">
       <button class="btn" id="btn-start"><span class="btn-text">Начать</span> <span class="btn-arrow">→</span></button>
-      <span class="meta">4–5 минут</span>
+      <span class="meta">2–3 минуты</span>
     </div>
   </div>
 
@@ -510,6 +548,20 @@
     <p class="hint" id="q-hint" style="display:none;"></p>
     <div class="options" id="q-options"></div>
     <textarea id="q-textarea" style="display:none;" placeholder="Несколько строк – то, что не вписалось в варианты выше."></textarea>
+    <div class="contact-form" id="q-contact" style="display:none;">
+      <div class="contact-field">
+        <label for="contact-name">Имя</label>
+        <input type="text" id="contact-name" autocomplete="given-name" placeholder="Как к вам обращаться">
+      </div>
+      <div class="contact-field">
+        <label for="contact-email">Email</label>
+        <input type="email" id="contact-email" autocomplete="email" placeholder="вы@почта.ru">
+      </div>
+      <div class="contact-field">
+        <label for="contact-telegram">Telegram или телефон</label>
+        <input type="text" id="contact-telegram" autocomplete="tel" placeholder="@username или +7 ...">
+      </div>
+    </div>
     <div class="q-actions">
       <button class="btn-ghost" id="btn-back">← Назад</button>
       <button class="btn" id="btn-next" disabled><span class="btn-text">Дальше</span> <span class="btn-arrow">→</span></button>
@@ -524,7 +576,7 @@
         <img id="r-image" src="" alt="">
       </div>
       <div class="archetype-meta">
-        <div class="archetype-label">Ваш типаж</div>
+        <div class="archetype-label">Ваш архетип</div>
         <div class="archetype-name" id="r-archetype"></div>
       </div>
     </div>
@@ -566,8 +618,8 @@ const QUESTIONS = [
     id: 'prof',
     q: 'Чем вы заняты профессионально?',
     options: [
-      { v: 'manager', t: 'Руковожу командой или отделом в найме' },
-      { v: 'top', t: 'Топ-менеджер или директор крупной компании' },
+      { v: 'manager', t: 'Работаю специалистом в найме' },
+      { v: 'top', t: 'Руководитель/топ-менеджер в компании' },
       { v: 'owner', t: 'Собственник, развиваю свой бизнес' },
       { v: 'expert', t: 'Эксперт, наставник, веду частную практику' },
       { v: 'transition', t: 'В переходе: вышла из роли, ищу новое' },
@@ -609,7 +661,7 @@ const QUESTIONS = [
   },
   {
     id: 'family',
-    q: 'Семья',
+    q: 'Дети',
     options: [
       { v: 'kids_small', t: 'Дети маленькие – до 7 лет' },
       { v: 'kids_school', t: 'Дети школьники или подростки' },
@@ -625,21 +677,24 @@ const QUESTIONS = [
     multi: true,
     max: 2,
     options: [
-      { v: 'istoshenie', t: 'Истощение – ресурс на исходе, несу слишком много' },
-      { v: 'zhenstvennost', t: 'Потеря женственности по мере роста в масштаб' },
-      { v: 'odinochestvo', t: 'Одиночество на уровне – рядом нет того, с кем разделить' },
-      { v: 'zhonglirovanie', t: 'Жонглирование без места для себя' },
-      { v: 'proyavitsya', t: 'Не получается выходить публично' }
+      { v: 'istoshenie', t: 'Истощение – нет сил, не успеваю восстановиться' },
+      { v: 'zhenstvennost', t: 'Потеря женственности – стала жёсткой, тело сжалось' },
+      { v: 'odinochestvo', t: 'Одиночество на уровне – нет равных рядом, с кем делиться по-настоящему' },
+      { v: 'zhonglirovanie', t: 'Перегруз ролями – мать, жена, лидер, дочь… на себя места не остаётся' },
+      { v: 'proyavitsya', t: 'Внутренний потолок – есть что сказать, но что-то держит выходить шире' }
     ]
   },
   {
     id: 'experience',
     q: 'Опыт работы с собой',
+    hint: 'Выберите всё, что подходит',
+    multi: true,
     options: [
       { v: 'liza_grad', t: 'Проходила программы Лизы или других сильных авторов' },
       { v: 'therapy', t: 'Психотерапия, коучинг – есть база' },
+      { v: 'somatic', t: 'Телесные практики: йога, цигун, медитация' },
       { v: 'practices', t: 'Какие-то практики, нерегулярно' },
-      { v: 'starter', t: 'Серьёзно – только начинаю' }
+      { v: 'starter', t: 'В работе с собой только начинаю' }
     ]
   },
   {
@@ -652,17 +707,16 @@ const QUESTIONS = [
     ]
   },
   {
-    id: 'context',
-    q: 'Что важно знать о вашей ситуации?',
-    hint: 'Опционально – несколько строк о том, что Лизе важно увидеть',
-    textarea: true,
-    optional: true
+    id: 'contact',
+    q: 'Как с вами связаться?',
+    hint: 'Чтобы Лиза могла прислать ваш разбор и пригласить на собеседование',
+    contact: true
   }
 ];
 
 const ROLE_PROF = {
-  manager: 'Вы руководите командой в найме',
-  top: 'Вы – топ-менеджер крупной компании',
+  manager: 'Вы работаете специалистом в найме',
+  top: 'Вы – руководитель или топ-менеджер в компании',
   owner: 'Вы – собственник своего бизнеса',
   expert: 'Вы – эксперт с частной практикой',
   transition: 'Вы в переходе между ролями',
@@ -839,7 +893,13 @@ if (DEBUG) {
 }
 
 function buildReadiness(a) {
-  const exp = a.experience;
+  // experience is multi-select (array). Pick highest-priority entry for the
+  // map lookup. Priority: liza_grad > therapy > somatic > practices > starter.
+  let exp = a.experience;
+  if (Array.isArray(exp)) {
+    const priority = ['liza_grad', 'therapy', 'somatic', 'practices', 'starter'];
+    exp = priority.find(p => exp.includes(p)) || exp[0];
+  }
   const rdy = a.readiness;
   const map = {
     'liza_grad|ready': 'У вас есть и опыт работы с собой, и готовность к практике. Методологию Лизы вы узнаете сразу – первые недели не уйдут на адаптацию, можно идти глубже с самого начала.',
@@ -848,6 +908,9 @@ function buildReadiness(a) {
     'therapy|ready': 'Психотерапия и коучинг дают базу – в Алхимии вы быстро увидите, как ваш опыт ложится в новую систему. Первые недели – освоение методологии. Дальше – глубже.',
     'therapy|struggle': 'У вас есть база, но ежедневная регулярная практика – другой уровень обязательства. На собеседовании важно обсудить, реалистично ли встроить 30–60 минут в день именно сейчас.',
     'therapy|unsure': 'База у вас есть, но без ежедневной практики Алхимия не работает. Если в графике пока нет этих 30–60 минут – возможно, не сейчас.',
+    'somatic|ready': 'Телесные практики дают вам базу – тело уже умеет слушать. В Алхимии вы быстро узнаете похожие принципы и углубитесь в их женский слой.',
+    'somatic|struggle': 'Опыт телесной работы у вас есть – это огромный плюс. Но ежедневная регулярная работа – другой уровень. На собеседовании важно обсудить, как это встроится в график.',
+    'somatic|unsure': 'База телесных практик у вас есть, но без ежедневности результат будет ограничен. Прежде чем решать, важно посмотреть, есть ли в графике место для серьёзной работы.',
     'practices|ready': 'Какой-то опыт есть, и есть готовность – это хорошая стартовая точка. В первые недели будет погружение в методологию, и вы увидите, как разрозненные практики собираются в систему.',
     'practices|struggle': 'Опыт есть, но не системный. И с регулярностью пока сложно. Это важно прямо проговорить на собеседовании – иногда самое время начать, иногда лучше сначала навести порядок в графике.',
     'practices|unsure': 'Без ежедневной регулярной работы Алхимия не работает. Прежде чем принимать решение, посмотрите на свой график – если 30–60 минут сейчас не найти, лучше отложить набор.',
@@ -870,6 +933,10 @@ const qTextEl = document.getElementById('q-text');
 const qHintEl = document.getElementById('q-hint');
 const qOptionsEl = document.getElementById('q-options');
 const qTextarea = document.getElementById('q-textarea');
+const qContactEl = document.getElementById('q-contact');
+const qContactName = document.getElementById('contact-name');
+const qContactEmail = document.getElementById('contact-email');
+const qContactTel = document.getElementById('contact-telegram');
 const qCurrentEl = document.getElementById('q-current');
 const qTotalEl = document.getElementById('q-total');
 const progressFill = document.getElementById('progress-fill');
@@ -904,14 +971,23 @@ function renderQuestion() {
     qHintEl.style.display = 'none';
   }
 
-  if (item.textarea) {
-    qOptionsEl.style.display = 'none';
+  qOptionsEl.style.display = 'none';
+  qTextarea.style.display = 'none';
+  qContactEl.style.display = 'none';
+
+  if (item.contact) {
+    qContactEl.style.display = 'flex';
+    const stored = state.answers[item.id] || {};
+    qContactName.value = stored.name || '';
+    qContactEmail.value = stored.email || '';
+    qContactTel.value = stored.telegram || '';
+    validateContact();
+  } else if (item.textarea) {
     qTextarea.style.display = 'block';
     qTextarea.value = state.answers[item.id] || '';
     btnNext.disabled = false;
   } else {
     qOptionsEl.style.display = 'flex';
-    qTextarea.style.display = 'none';
     qOptionsEl.innerHTML = '';
 
     item.options.forEach(opt => {
@@ -1003,9 +1079,28 @@ btnStart.addEventListener('click', () => {
   showScreen('question');
 });
 
+function validateContact() {
+  const name = qContactName.value.trim();
+  const email = qContactEmail.value.trim();
+  const tel = qContactTel.value.trim();
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const valid = name.length >= 2 && emailValid && tel.length >= 3;
+  state.answers.contact = { name, email, telegram: tel };
+  btnNext.disabled = !valid;
+}
+[qContactName, qContactEmail, qContactTel].forEach(el => {
+  el.addEventListener('input', validateContact);
+});
+
 btnNext.addEventListener('click', () => {
   const item = QUESTIONS[state.idx];
-  if (item.textarea) {
+  if (item.contact) {
+    state.answers[item.id] = {
+      name: qContactName.value.trim(),
+      email: qContactEmail.value.trim(),
+      telegram: qContactTel.value.trim()
+    };
+  } else if (item.textarea) {
     state.answers[item.id] = qTextarea.value.trim();
   }
   if (state.idx < QUESTIONS.length - 1) {
@@ -1037,7 +1132,15 @@ btnBook.addEventListener('click', () => {
   // Answers from the test are stored in localStorage and passed via URL for the next step.
   const params = new URLSearchParams();
   Object.entries(state.answers).forEach(([k, v]) => {
-    params.append(k, Array.isArray(v) ? v.join(',') : (v || ''));
+    if (k === 'contact' && v && typeof v === 'object') {
+      params.append('name', v.name || '');
+      params.append('email', v.email || '');
+      params.append('telegram', v.telegram || '');
+    } else if (Array.isArray(v)) {
+      params.append(k, v.join(','));
+    } else {
+      params.append(k, v || '');
+    }
   });
   // For now: stays on the page with a confirmation. Replace with real URL when ready.
   alert('Спасибо! Ваши ответы сохранены – далее здесь будет переход к выбору времени собеседования с Лизой.\n\n(Эту кнопку нужно подключить к календарю / форме.)');
