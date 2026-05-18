@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.96.0",
     "@upstash/redis": "^1.34.3"
   }
 }
