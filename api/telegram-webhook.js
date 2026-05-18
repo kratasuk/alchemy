@@ -58,7 +58,7 @@ export default async function handler(req, res) {
   if (!token) {
     await sendTgMessage(
       msg.chat.id,
-      'Привет! Похоже, вы открыли бота напрямую. Чтобы пройти тест «Алхимия Женщины» — откройте <a href="https://wmnalchemy.com/test.html">эту страницу</a>, а после результата вернётесь сюда автоматически.'
+      'Привет! Похоже, вы открыли бота напрямую. Чтобы пройти тест «Алхимия Женщины» – откройте <a href="https://wmnalchemy.com/test.html">эту страницу</a>, а после результата вернётесь сюда автоматически.'
     );
     return res.status(200).end();
   }
@@ -67,23 +67,21 @@ export default async function handler(req, res) {
   if (!raw) {
     await sendTgMessage(
       msg.chat.id,
-      'Похоже, ссылка устарела. <a href="https://wmnalchemy.com/test.html">Пройдите тест заново</a> — мы свяжемся в течение часа.'
+      'Похоже, ссылка устарела. <a href="https://wmnalchemy.com/test.html">Пройдите тест заново</a> – мы свяжемся в течение часа.'
     );
     return res.status(200).end();
   }
 
   const data = typeof raw === 'string' ? JSON.parse(raw) : raw;
-  const name = escapeHtml(data.answers?.contact?.name || 'привет');
-  const arch = escapeHtml(ARCHETYPES[data.archetypeId] || 'Архетип');
+  const name = escapeHtml(data.answers?.contact?.name || 'друзья');
 
-  const greeting = `Привет, <b>${name}</b>! 👋
+  const greeting = `Добрый день, <b>${name}</b>! 👋
 
-Лиза получила вашу анкету.
-<b>Архетип:</b> ${arch}
+Мы получили вашу анкету.
 
-Менеджер Ольга свяжется с вами в течение часа — здесь или напишет в личку.
+<b>Ольга</b> – наш руководитель службы поддержки, напишет вам в ближайшее время.
 
-Если хотите задать вопрос прямо сейчас — пишите сюда, мы передадим.`;
+Но если есть срочный вопрос – можно сразу написать ей напрямую: <a href="https://t.me/Olga_Turova">@Olga_Turova</a>`;
 
   await sendTgMessage(msg.chat.id, greeting);
   return res.status(200).end();
