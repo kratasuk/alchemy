@@ -503,12 +503,18 @@
   .alc-about-text p {
     font-family: var(--serif);
     font-size: clamp(19px, 1.45vw, 22px);
-    line-height: 1.65;
+    line-height: 1.45;
     color: var(--ink-2);
     text-wrap: pretty;
     max-width: 56ch;
   }
-  .alc-about-text p strong { color: var(--ink); font-weight: 500; }
+  /* Emphasis vocabulary: italic Cormorant in gold-anchor — same accent system as H2 italic-em */
+  .alc-about-text p strong {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 400;
+  }
+  .alc-about-text p em { font-style: italic; color: var(--ink); }
   .alc-about-cta { margin-top: 20px; }
   .alc-about-list {
     list-style: none;
@@ -522,7 +528,7 @@
   .alc-about-list li {
     font-family: var(--serif);
     font-size: clamp(19px, 1.45vw, 22px);
-    line-height: 1.65;
+    line-height: 1.45;
     color: var(--ink-2);
     text-wrap: pretty;
     padding-left: 26px;
@@ -532,7 +538,7 @@
     content: "";
     position: absolute;
     left: 0;
-    top: 0.85em;
+    top: 0.7em;
     width: 14px;
     height: 1px;
     background: var(--gold);
