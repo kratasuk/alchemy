@@ -683,20 +683,10 @@
   }
   .alc-included { display: flex; flex-direction: column; }
   .alc-included-row {
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    gap: 22px;
     padding: 24px 0;
     border-top: 1px solid var(--ink-hair);
-    align-items: start;
   }
   .alc-included-row:last-child { border-bottom: 1px solid var(--ink-hair); }
-  .alc-included-row .ico {
-    width: 32px; height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--gold);
-  }
-  .alc-included-row .ico svg { width: 100%; height: auto; }
   .alc-included-row .name {
     font-family: var(--serif);
     font-size: 22px;
@@ -745,6 +735,25 @@
     font-size: 15px;
     line-height: 1.55;
     color: var(--ink-soft);
+  }
+  .alc-entry-intro {
+    font-family: var(--sans);
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    max-width: 42ch;
+  }
+  .alc-entry-note {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    padding: 18px 0 0;
+    margin-top: 8px;
+    border-top: 1px solid var(--ink-hair);
+    max-width: 44ch;
   }
   .alc-how-cta { margin-top: 24px; }
   .alc-how-cta .btn {
@@ -1082,111 +1091,6 @@
     gap: 16px;
   }
 
-  /* ─── MODAL ─── */
-  .alc-modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(20, 17, 13, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .35s;
-  }
-  .alc-modal-overlay.open { opacity: 1; pointer-events: auto; }
-  .alc-modal {
-    background: var(--bg);
-    max-width: 560px;
-    width: 100%;
-    max-height: 90vh;
-    overflow-y: auto;
-    border-radius: 4px;
-    padding: 48px 40px;
-    position: relative;
-    transform: translateY(20px);
-    transition: transform .4s cubic-bezier(.2,.7,.2,1);
-  }
-  .alc-modal-overlay.open .alc-modal { transform: none; }
-  .alc-modal-close {
-    position: absolute;
-    top: 18px; right: 18px;
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    border: 1px solid var(--ink-hair);
-    background: transparent;
-    color: var(--ink);
-    font-family: var(--mono);
-    font-size: 14px;
-    cursor: pointer;
-    transition: background .2s, color .2s;
-  }
-  .alc-modal-close:hover { background: var(--ink); color: var(--paper); }
-  .alc-modal-eyebrow {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .alc-modal-eyebrow::before {
-    content: '';
-    width: 22px;
-    height: 1px;
-    background: var(--gold);
-  }
-  .alc-modal h3 {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 32px;
-    line-height: 1.1;
-    letter-spacing: -0.008em;
-    color: var(--ink);
-    margin-bottom: 14px;
-    text-wrap: balance;
-  }
-  .alc-modal p {
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    margin-bottom: 26px;
-  }
-  .alc-form { display: flex; flex-direction: column; gap: 18px; }
-  .alc-form label {
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .alc-form input,
-  .alc-form textarea {
-    font-family: var(--sans);
-    font-size: 15px;
-    padding: 14px 16px;
-    border: 1px solid var(--ink-hair);
-    border-radius: 2px;
-    background: var(--paper);
-    color: var(--ink);
-    transition: border-color .2s;
-    letter-spacing: 0;
-    text-transform: none;
-  }
-  .alc-form input:focus,
-  .alc-form textarea:focus { outline: none; border-color: var(--gold); }
-  .alc-form textarea { min-height: 110px; resize: vertical; }
-  .alc-form .btn { align-self: flex-start; margin-top: 8px; }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 1024px) {
@@ -1264,7 +1168,7 @@
         Для реализованных женщин,<br>которые умеют достигать результатов,<br>но устали жертвовать ради этого<br><em>своей женской природой.</em>
       </p>
       <div class="alc-hero-cta-row reveal in reveal-delay-3">
-        <button class="btn btn--light" data-apply>Подать заявку <span class="arrow">→</span></button>
+        <a class="btn btn--light" href="test.html">Подать заявку <span class="arrow">→</span></a>
       </div>
     </div>
   </div>
@@ -1382,7 +1286,7 @@
         <p>Если сейчас ваша цель – масштабно раскрыть свой женский потенциал, где ответственность, деньги и влияние идут рука об руку с чувственностью, глубиной и мягкостью, – то эта программа для вас.</p>
         <p>«Алхимия» – это <em>встреча силы, женственности и духовности,</em> благодаря которой жизнь обретает целостность, многомерность и глубину.</p>
         <div class="alc-about-cta">
-          <button class="btn btn--ghost" data-apply>Узнать, подходит ли программа вам <span class="arrow">→</span></button>
+          <a class="btn btn--ghost" href="test.html">Узнать, подходит ли программа вам <span class="arrow">→</span></a>
         </div>
       </div>
     </div>
@@ -1430,61 +1334,47 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">04 / Как проходит</span>
-        <h2 class="h-1">Что включено <em>и как войти</em></h2>
+        <h2 class="h-1">Ритм программы <em>и как Лиза собирает группу</em></h2>
       </div>
     </div>
     <div class="alc-how">
       <div class="alc-how-block reveal">
-        <h3>Что включено:</h3>
+        <h3>Ритм программы:</h3>
         <div class="alc-included">
           <div class="alc-included-row">
-            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9h18"/><circle cx="6.5" cy="7" r="0.5" fill="currentColor"/></svg></div>
-            <div>
-              <div class="name">14 занятий</div>
-              <div class="desc">Раз в неделю, в записи. Открываются по графику программы.</div>
-            </div>
+            <div class="name">Ежедневная практика 30–60 минут</div>
+            <div class="desc">Каждый день на 14 недель. Тело осваивает то, что нельзя выучить умом.</div>
           </div>
           <div class="alc-included-row">
-            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c0 4-4 7-9 7-1.4 0-2.7-.2-3.9-.6L3 20l1.7-4.3C3.6 14.4 3 13.2 3 12c0-4 4-7 9-7s9 3 9 7z"/></svg></div>
-            <div>
-              <div class="name">Работа в малой группе</div>
-              <div class="desc">Десятка под руководством выпускницы «Алхимии» – закрытое пространство для глубокой работы на все три месяца.</div>
-            </div>
+            <div class="name">14 живых встреч с Лизой</div>
+            <div class="desc">Раз в неделю – новая тема, ответы на вопросы, разбор практик в общем поле.</div>
           </div>
           <div class="alc-included-row">
-            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></div>
-            <div>
-              <div class="name">Живые разборы</div>
-              <div class="desc">Регулярные разборы Лизы – ответы на вопросы, разбор практик, навигация в общем поле.</div>
-            </div>
+            <div class="name">Закрытая малая группа</div>
+            <div class="desc">Десятка под руководством выпускницы «Алхимии». Закрытое пространство на все три месяца.</div>
           </div>
           <div class="alc-included-row">
-            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
-            <div>
-              <div class="name">Сопровождение куратора</div>
-              <div class="desc">Куратор поддерживает на пути: отвечает на вопросы, помогает не выпадать из ритма.</div>
-            </div>
+            <div class="name">Лиза в чате – все 14 недель</div>
+            <div class="desc">Лично пишет в общий чат от своего имени, не от имени куратора. Это не марафон с автоматическими рассылками.</div>
           </div>
         </div>
       </div>
       <div class="alc-how-block alc-how-block--card reveal reveal-delay-1">
-        <h3>Как войти:</h3>
+        <h3>Как Лиза собирает группу:</h3>
+        <p class="alc-entry-intro">Программа закрыта для произвольного входа. Группа – десять женщин. Лиза лично собеседует каждую кандидатку.</p>
         <div class="alc-apply-steps">
           <div class="alc-apply-step">
-            <div class="step-title">Шаг1: <em>Пройти тест</em></div>
-            <div class="step-desc">Чтобы понять, подходит ли программа вам.</div>
+            <div class="step-title">Шаг 1: <em>Диагностика</em></div>
+            <div class="step-desc">10 минут, 9 вопросов. В конце – персональный разбор от Лизы.</div>
           </div>
           <div class="alc-apply-step">
-            <div class="step-title">Шаг2: <em>Заполнить анкету</em></div>
-            <div class="step-desc">Расскажете о себе и о том, где сейчас.</div>
-          </div>
-          <div class="alc-apply-step">
-            <div class="step-title">Шаг3: <em>Пройти собеседование</em></div>
-            <div class="step-desc">Личный разговор с Лизой о вашем резонансе с программой.</div>
+            <div class="step-title">Шаг 2: <em>Собеседование с Лизой</em></div>
+            <div class="step-desc">60 минут, бесплатно. Это разговор, не продажа.</div>
           </div>
         </div>
+        <p class="alc-entry-note">Решение принимается с двух сторон. Не каждая кандидатка получает приглашение, и это часть метода.</p>
         <div class="alc-how-cta">
-          <button class="btn" data-apply>Подать заявку <span class="arrow">→</span></button>
+          <a class="btn" href="test.html">Подать заявку <span class="arrow">→</span></a>
         </div>
       </div>
     </div>
@@ -1538,7 +1428,7 @@
       </div>
     </div>
     <div class="alc-final-cta-row">
-      <button class="btn btn--light" data-apply>Заполнить анкету <span class="arrow">→</span></button>
+      <a class="btn btn--light" href="test.html">Заполнить анкету <span class="arrow">→</span></a>
       <a href="quiz.html" class="btn btn--ghost-light">Пройти тест сначала <span class="arrow">↓</span></a>
     </div>
     <div class="alc-final-fine">
@@ -1571,7 +1461,7 @@
       <ul>
         <li><a href="#voices">Отзывы</a></li>
         <li><a href="#faq">FAQ</a></li>
-        <li><a href="#apply">Подать заявку</a></li>
+        <li><a href="test.html">Подать заявку</a></li>
         <li><a href="index.html">Eliza Babanova</a></li>
       </ul>
     </div>
@@ -1581,35 +1471,6 @@
     <span>Программа · По собеседованию</span>
   </div>
 </footer>
-
-<!-- MODAL -->
-<div class="alc-modal-overlay" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="alc-modal" id="modal-body">
-    <button class="alc-modal-close" id="modal-close" aria-label="Закрыть">×</button>
-    <div id="modal-form">
-      <div class="alc-modal-eyebrow">Анкета · 8 вопросов · ~15 минут</div>
-      <h3>Расскажите, где вы сейчас.</h3>
-      <p>Лиза читает каждую анкету лично. Если есть резонанс – пригласит на собеседование. Если нет – ответит прямо.</p>
-      <form class="alc-form" id="apply-form">
-        <label>1. Имя<input type="text" name="name" required placeholder="Ваше имя"></label>
-        <label>2. Email<input type="email" name="email" required placeholder="vy@example.com"></label>
-        <label>3. Город / часовой пояс<input type="text" name="city" placeholder="Например, Лиссабон · UTC+1"></label>
-        <label>4. Чем занимаетесь<input type="text" name="role" required placeholder="Сфера, роль, краткий контекст"></label>
-        <label>5. Что вы уже построили – кратко<textarea name="built" rows="3" placeholder="Главные результаты, которыми гордитесь"></textarea></label>
-        <label>6. Где сейчас упираетесь<textarea name="stuck" rows="3" required placeholder="То, что повторяется и не решается обычными способами"></textarea></label>
-        <label>7. Опыт работы с собой<input type="text" name="exp" placeholder="Терапия, ретриты, практики – что было важным"></label>
-        <label>8. Что важно знать о вас, чтобы Лиза увидела вас точнее<textarea name="extra" rows="3" placeholder="Контекст, который не вписался в предыдущие вопросы"></textarea></label>
-        <button type="submit" class="btn">Отправить анкету <span class="arrow">→</span></button>
-      </form>
-    </div>
-    <div id="modal-sent" style="display:none;">
-      <div class="alc-modal-eyebrow">Анкета принята</div>
-      <h3>Спасибо. Лиза прочитает её лично.</h3>
-      <p>Ответ – в течение 48 часов. Если есть резонанс, придёт приглашение на собеседование. Если нет – короткое и прямое письмо. Никаких автоматических рассылок.</p>
-      <button class="btn btn--ghost" id="modal-sent-close">Закрыть</button>
-    </div>
-  </div>
-</div>
 
 <script>
 (function(){
@@ -1674,36 +1535,6 @@
   }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // ── modal ──
-  const modal = document.getElementById('modal');
-  const modalForm = document.getElementById('modal-form');
-  const modalSent = document.getElementById('modal-sent');
-  const openModal = () => {
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  };
-  const closeModal = () => {
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    setTimeout(() => {
-      modalForm.style.display = '';
-      modalSent.style.display = 'none';
-    }, 400);
-  };
-  document.querySelectorAll('[data-apply]').forEach(el => {
-    el.addEventListener('click', e => { e.preventDefault(); window.location.href = 'test.html'; });
-  });
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('modal-sent-close').addEventListener('click', closeModal);
-  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
-  document.getElementById('apply-form').addEventListener('submit', e => {
-    e.preventDefault();
-    modalForm.style.display = 'none';
-    modalSent.style.display = '';
-  });
 })();
 </script>
 </body>
