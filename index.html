@@ -402,74 +402,58 @@
   }
 
   /* ─── WHO FOR ─── */
-  .alc-whofor-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    background: transparent;
-    border: 0;
-  }
-  .alc-whofor-card {
-    background: var(--paper);
-    border-radius: 24px;
-    padding: 36px 36px 40px;
+  /* Editorial reading list — alternating illustration sides, transparent line-art, hairline gold dividers */
+  .alc-whofor-list {
+    max-width: 1040px;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 22px;
-    min-height: 480px;
-    position: relative;
-    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
-    transition: transform .25s, box-shadow .25s;
   }
-  .alc-whofor-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 44px rgba(28, 24, 20, 0.10), 0 2px 4px rgba(28, 24, 20, 0.05);
-  }
-  .alc-whofor-card .num { display: none; }
-  .alc-whofor-illu {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background: transparent;
-    border-radius: 2px;
+  .alc-whofor-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
+    gap: clamp(40px, 5vw, 80px);
+    padding: clamp(48px, 5vw, 72px) 0;
+    border-top: 1px solid rgba(154, 120, 56, 0.20);
   }
-  .alc-whofor-illu svg { width: 70%; height: auto; opacity: 0.78; }
-  .alc-whofor-illu img { width: 100%; height: 100%; object-fit: cover; }
-  .alc-whofor-title {
+  .alc-whofor-row:first-child { border-top: 0; padding-top: 0; }
+  .alc-whofor-row:nth-child(even) { flex-direction: row-reverse; }
+  .alc-whofor-text {
+    flex: 0 1 540px;
+    max-width: 540px;
+  }
+  .alc-whofor-name {
     font-family: var(--serif);
+    font-style: italic;
     font-weight: 400;
-    font-size: clamp(22px, 2vw, 28px);
-    line-height: 1.18;
-    letter-spacing: -0.005em;
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1.05;
+    letter-spacing: -0.012em;
     color: var(--ink);
-    text-wrap: balance;
+    margin-bottom: clamp(20px, 1.8vw, 28px);
   }
-  .alc-whofor-bullets {
-    list-style: none;
+  .alc-whofor-body {
+    font-family: var(--serif);
+    font-size: clamp(19px, 1.45vw, 22px);
+    line-height: 1.65;
+    color: var(--ink-2);
+    text-wrap: pretty;
+    max-width: 54ch;
+  }
+  .alc-whofor-illu {
+    flex: 0 0 auto;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 4px;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
-  .alc-whofor-bullets li {
-    font-family: var(--sans);
-    font-size: 17px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .alc-whofor-bullets li::before {
-    content: '✦';
-    color: var(--gold);
-    font-size: 14px;
-    line-height: 1.55;
-    flex-shrink: 0;
+  .alc-whofor-illu img {
+    height: 100%;
+    width: auto;
+    max-height: 320px;
+    min-height: 240px;
+    object-fit: contain;
   }
 
   /* ─── ABOUT ─── */
@@ -1094,7 +1078,6 @@
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 1024px) {
-    .alc-whofor-grid { grid-template-columns: repeat(2, 1fr); }
     .alc-about { grid-template-columns: 1fr; }
     .alc-about-photo { position: relative; top: 0; aspect-ratio: 4 / 3; max-width: 520px; }
     .alc-how { grid-template-columns: 1fr; gap: 48px; }
@@ -1135,8 +1118,14 @@
       text-shadow: 0 1px 12px rgba(0,0,0,0.4);
       margin-top: -8px;
     }
-    .alc-whofor-grid { grid-template-columns: 1fr; }
-    .alc-whofor-card { min-height: auto; padding: 36px 28px; }
+    .alc-whofor-row,
+    .alc-whofor-row:nth-child(even) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 28px;
+    }
+    .alc-whofor-text { flex-basis: auto; }
+    .alc-whofor-illu img { max-height: 220px; min-height: 0; }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
     .alc-week-right { padding: 32px 28px; }
@@ -1179,80 +1168,58 @@
   <div class="shell">
     <div class="section-head reveal">
       <div class="section-head-stack">
-        <span class="section-num">01 / Для кого</span>
         <h2 class="h-1">Премиальная программа для женщин, которые реализовались в обществе, но <em>истощили свой ресурс</em></h2>
       </div>
-      <p class="body" style="max-width:46ch; align-self:end;">Шесть знакомых ситуаций. Если хотя бы одна из них – про вас, читайте дальше.</p>
     </div>
-  </div>
-  <div class="shell-wide">
-    <div class="alc-whofor-grid">
+    <div class="alc-whofor-list">
 
-      <div class="alc-whofor-card reveal">
-        <div class="alc-whofor-illu">
-          <img src="images/whofor-01.png" alt="">
+      <article class="alc-whofor-row reveal">
+        <div class="alc-whofor-text">
+          <h3 class="alc-whofor-name">Руководите командой</h3>
+          <p class="alc-whofor-body">На вас стоит результат компании – стандарты, цифры, люди. Снаружи это позиция силы. Внутри давно перестало быть про работу: вы держите систему собой – нервной системой, здоровьем, личной жизнью. Главный сюжет здесь не «выгорание» – а то, что лидерство стоит вам ровно вас самой.</p>
         </div>
-        <h3 class="alc-whofor-title">Руководите командой</h3>
-        <ul class="alc-whofor-bullets">
-          <li>На вас ответственность за высокие результаты и стандарты компании</li>
-          <li>Вы платите за их поддержание своей энергией, здоровьем и личной жизнью</li>
-        </ul>
-      </div>
+        <div class="alc-whofor-illu"><img src="images/whofor-01.png" alt=""></div>
+      </article>
 
-      <div class="alc-whofor-card reveal">
-        <div class="alc-whofor-illu">
-          <img src="images/whofor-02.png" alt="">
+      <article class="alc-whofor-row reveal">
+        <div class="alc-whofor-text">
+          <h3 class="alc-whofor-name">Развиваете свой бизнес</h3>
+          <p class="alc-whofor-body">Вы хотите следующего масштаба – по выручке, влиянию, продукту. Но рост требует всё больше воли и даёт всё меньше отдачи. Бизнес поглощает жизнь: женственность сжимается под деловой бронёй, отношения и тело уходят на второй план. Вопрос – как масштабироваться, не платя собой.</p>
         </div>
-        <h3 class="alc-whofor-title">Развиваете свой бизнес</h3>
-        <ul class="alc-whofor-bullets">
-          <li>Вы хотите роста, развития и нового масштаба в своём деле</li>
-          <li>Но не хотите при этом терять свою женственность и жизнь вне работы</li>
-        </ul>
-      </div>
+        <div class="alc-whofor-illu"><img src="images/whofor-02.png" alt=""></div>
+      </article>
 
-      <div class="alc-whofor-card reveal">
-        <div class="alc-whofor-illu">
-          <img src="images/whofor-03.png" alt="">
+      <article class="alc-whofor-row reveal">
+        <div class="alc-whofor-text">
+          <h3 class="alc-whofor-name">Реализованы, но одиноки</h3>
+          <p class="alc-whofor-body">В деле у вас всё стабильно и видно: вес, доход, репутация. Вы знаете свою цену и не готовы её снижать в отношениях. Парадокс в том, что та же сила, что выстроила карьеру, в личной жизни становится барьером: встречаются либо те, кому нужно вас уменьшить, либо никто. Вопрос не «найти кого-то» – а двух регистров: уметь быть и сильной, и принимающей.</p>
         </div>
-        <h3 class="alc-whofor-title">Реализованы, но одиноки</h3>
-        <ul class="alc-whofor-bullets">
-          <li>Вы хотите встретить мужчину своего уровня и построить с ним глубокие отношения</li>
-          <li>Но не готовы упрощать себя, притворяться слабой и снижать свои стандарты</li>
-        </ul>
-      </div>
+        <div class="alc-whofor-illu"><img src="images/whofor-03.png" alt=""></div>
+      </article>
 
-      <div class="alc-whofor-card reveal">
-        <div class="alc-whofor-illu">
-          <img src="images/whofor-04.png" alt="">
+      <article class="alc-whofor-row reveal">
+        <div class="alc-whofor-text">
+          <h3 class="alc-whofor-name">Наставник для других</h3>
+          <p class="alc-whofor-body">К вам приходят за опорой: эксперт, учитель, лидер своей практики. Вы ведёте других не позицией, а собой. Цена этой роли – вы давно даёте с дефицита: ресурс на нуле, попросить опоры почти не у кого, все смотрят снизу вверх. Задача – восстановить базу так, чтобы давать с избытка.</p>
         </div>
-        <h3 class="alc-whofor-title">Наставник для других</h3>
-        <ul class="alc-whofor-bullets">
-          <li>Вы авторитет в своей сфере, ведёте за собой других личным примером</li>
-          <li>Но сейчас период, где ваш ресурс почти исчерпан и вам самой нужна опора</li>
-        </ul>
-      </div>
+        <div class="alc-whofor-illu"><img src="images/whofor-04.png" alt=""></div>
+      </article>
 
-      <div class="alc-whofor-card reveal">
-        <div class="alc-whofor-illu">
-          <img src="images/whofor-05.png" alt="">
+      <article class="alc-whofor-row reveal">
+        <div class="alc-whofor-text">
+          <h3 class="alc-whofor-name">Совмещаете семью и работу</h3>
+          <p class="alc-whofor-body">Вы держите несколько ролей – мама, жена, руководитель, иногда дочь стареющих родителей. Каждая требует присутствия, и за всеми буквально не остаётся места, где вы – просто вы, не функция. Сюжет здесь не «добавить заботу о себе» – а изменить устройство дня так, чтобы в нём был слой, где вы не производите ничего.</p>
         </div>
-        <h3 class="alc-whofor-title">Совмещаете семью и работу</h3>
-        <ul class="alc-whofor-bullets">
-          <li>Вы жонглируете ролями – мама, жена, руководитель, профессионал</li>
-          <li>Но за всеми этими ролями не остаётся времени и места для самой себя</li>
-        </ul>
-      </div>
+        <div class="alc-whofor-illu"><img src="images/whofor-05.png" alt=""></div>
+      </article>
 
-      <div class="alc-whofor-card reveal">
-        <div class="alc-whofor-illu">
-          <img src="images/whofor-06.png" alt="">
+      <article class="alc-whofor-row reveal">
+        <div class="alc-whofor-text">
+          <h3 class="alc-whofor-name">Выходите на новый виток</h3>
+          <p class="alc-whofor-body">У вас накоплен большой опыт – профессиональный, человеческий, женский – и знание, что пора делиться, занимать другое место. Но когда доходит до действия, что-то не сдвигается: страх «не попасть», ступор перед видимостью. Работа здесь не про мотивацию – про возвращение контакта со своим голосом и женской волей, которая идёт через резонанс, а не через давление.</p>
         </div>
-        <h3 class="alc-whofor-title">Выходите на новый виток</h3>
-        <ul class="alc-whofor-bullets">
-          <li>Вы накопили большой опыт и чувствуете, что пора этим делиться</li>
-          <li>Но когда дело доходит до того, чтобы проявляться, чего-то словно не хватает</li>
-        </ul>
-      </div>
+        <div class="alc-whofor-illu"><img src="images/whofor-06.png" alt=""></div>
+      </article>
 
     </div>
   </div>
@@ -1263,7 +1230,7 @@
   <div class="shell">
     <div class="section-head reveal">
       <div class="section-head-stack">
-        <span class="section-num">02 / О Лизе</span>
+        <span class="section-num">01 / О Лизе</span>
       </div>
     </div>
     <div class="alc-about">
@@ -1298,7 +1265,7 @@
   <div class="shell">
     <div class="section-head reveal">
       <div class="section-head-stack">
-        <span class="section-num">03 / Программа</span>
+        <span class="section-num">02 / Программа</span>
         <h2 class="h-1">За 14 недель <em>Алхимии</em> мы пересобираем три слоя жизни</h2>
       </div>
     </div>
@@ -1333,7 +1300,7 @@
   <div class="shell">
     <div class="section-head reveal">
       <div class="section-head-stack">
-        <span class="section-num">04 / Как проходит</span>
+        <span class="section-num">03 / Как проходит</span>
         <h2 class="h-1">Ритм программы <em>и как Лиза собирает группу</em></h2>
       </div>
     </div>
@@ -1386,7 +1353,7 @@
   <div class="shell">
     <div class="section-head reveal">
       <div class="section-head-stack">
-        <span class="section-num">05 / Отзывы</span>
+        <span class="section-num">04 / Отзывы</span>
         <h2 class="h-1"><em>Отзывы</em> участниц</h2>
       </div>
     </div>
@@ -1399,7 +1366,7 @@
   <div class="shell">
     <div class="section-head reveal">
       <div class="section-head-stack">
-        <span class="section-num">06 / FAQ</span>
+        <span class="section-num">05 / FAQ</span>
         <h2 class="h-1">Частые <em>вопросы</em></h2>
       </div>
     </div>
