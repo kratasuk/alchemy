@@ -187,6 +187,14 @@
   .section { padding: clamp(80px, 10vw, 160px) 0; }
   .section-deep { background: var(--bg-warm); }
   .section-paper { background: var(--paper); }
+  /* Section #whofor — long premium-statement H2; needs more breathing width
+     and a smaller cap than the default .h-1 so it lands as 3 balanced lines. */
+  #whofor .section-head .h-1 {
+    font-size: clamp(28px, 4vw, 56px);
+    line-height: 1.12;
+    max-width: 32ch;
+  }
+
   .section-layers { background: #4a3528; color: var(--paper); }
   .section-layers .section-num { color: var(--gold-bright); }
   .section-layers .h-1 { color: var(--paper); }
@@ -1268,7 +1276,7 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">01 / Для кого</span>
-        <h2 class="h-1">Премиальная программа для женщин,<br>которые реализовались в обществе,<br>но <em>истощили свой ресурс</em></h2>
+        <h2 class="h-1">Премиальная программа для женщин, которые реализовались в обществе, но <em>истощили свой ресурс</em></h2>
       </div>
       <p class="body" style="max-width:46ch; align-self:end;">Шесть знакомых ситуаций. Если хотя бы одна из них – про вас, читайте дальше.</p>
     </div>
