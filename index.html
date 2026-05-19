@@ -191,28 +191,38 @@
   .section-layers .section-num { color: var(--gold-bright); }
   .section-layers .h-1 { color: var(--paper); }
   .section-layers .h-1 em { color: var(--gold-bright); }
+  /* H2 in this section is left-aligned and shares the 820px grid with the layers below. */
+  .section-layers .section-head {
+    align-items: flex-start;
+    text-align: left;
+    max-width: 820px;
+    margin: 0 auto clamp(40px, 5vw, 64px);
+  }
+  .section-layers .section-head-stack { align-items: flex-start; }
+  .section-layers .section-head .h-1 {
+    max-width: none;
+    font-size: clamp(30px, 3.8vw, 52px);
+    line-height: 1.12;
+  }
 
   .alc-layers {
-    margin: clamp(60px, 8vw, 100px) auto 0;
+    margin: 0 auto;
     max-width: 820px;
     display: flex;
     flex-direction: column;
-    gap: clamp(56px, 6vw, 88px);
+    gap: clamp(44px, 5vw, 64px);
   }
-  .alc-layer {
-    position: relative;
-    padding-left: clamp(0px, 2vw, 32px);
-  }
+  .alc-layer { position: relative; }
   .alc-layer + .alc-layer {
     border-top: 1px solid rgba(200, 161, 96, 0.18);
-    padding-top: clamp(56px, 6vw, 88px);
+    padding-top: clamp(44px, 5vw, 64px);
   }
   .alc-layer-eyebrow {
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
     gap: 18px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .alc-layer-num {
     font-family: var(--mono);
@@ -224,7 +234,7 @@
   .alc-layer-title {
     font-family: var(--serif);
     font-style: italic;
-    font-size: clamp(32px, 3.4vw, 44px);
+    font-size: clamp(28px, 2.8vw, 38px);
     line-height: 1.05;
     color: var(--paper);
     letter-spacing: -0.005em;
@@ -235,7 +245,6 @@
     line-height: 1.55;
     color: rgba(250, 246, 238, 0.86);
     text-wrap: pretty;
-    max-width: 68ch;
   }
 
   .section-head {
@@ -1378,7 +1387,7 @@
     <div class="section-head reveal">
       <div class="section-head-stack">
         <span class="section-num">03 / Программа</span>
-        <h2 class="h-1">За 14 недель <em>Алхимии</em><br>мы пересобираем три слоя жизни</h2>
+        <h2 class="h-1">За 14 недель <em>Алхимии</em> мы пересобираем три слоя жизни</h2>
       </div>
     </div>
     <div class="alc-layers">
