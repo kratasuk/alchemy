@@ -653,11 +653,11 @@
   .alc-how-block h3 {
     font-family: var(--serif);
     font-style: italic;
-    font-size: clamp(24px, 2vw, 32px);
+    font-size: clamp(28px, 2.4vw, 38px);
     font-weight: 400;
     letter-spacing: -0.005em;
     color: var(--ink);
-    margin-bottom: 28px;
+    margin-bottom: 32px;
   }
   .alc-how-block--card {
     background: var(--paper);
@@ -674,7 +674,10 @@
     padding: 24px 0;
     border-top: 1px solid var(--ink-hair);
   }
-  .alc-included-row:last-child { border-bottom: 1px solid var(--ink-hair); }
+  .alc-included-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
   .alc-included-row .name {
     font-family: var(--serif);
     font-style: italic;
