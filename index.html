@@ -665,6 +665,10 @@
     padding: clamp(28px, 3vw, 44px);
     box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
   }
+  /* Align the left H3 with the right H3 (which is offset by the card's internal padding-top) */
+  .alc-how-block:not(.alc-how-block--card) {
+    padding-top: clamp(28px, 3vw, 44px);
+  }
   .alc-included { display: flex; flex-direction: column; }
   .alc-included-row {
     padding: 24px 0;
@@ -722,6 +726,14 @@
     line-height: 1.5;
     color: var(--ink-2);
     margin-top: 4px;
+  }
+  .alc-apply-step .step-duration {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 12px;
   }
   .alc-entry-intro {
     font-family: var(--serif);
@@ -1312,37 +1324,37 @@
         <h3>Как устроена программа:</h3>
         <div class="alc-included">
           <div class="alc-included-row">
+            <div class="name">14 занятий с Елизаветой</div>
+            <div class="desc">Раз в неделю – новая тема и практика.</div>
+          </div>
+          <div class="alc-included-row">
             <div class="name">Ежедневная практика</div>
-            <div class="desc">30–60 минут каждый день на 14 недель. Тело осваивает то, что нельзя выучить умом.</div>
+            <div class="desc">30–60 минут каждый день для формирования нового базового состояния.</div>
           </div>
           <div class="alc-included-row">
-            <div class="name">14 живых встреч с Лизой</div>
-            <div class="desc">Раз в неделю – новая тема и живой разбор практик в общем поле.</div>
+            <div class="name">Работа в малой группе с куратором</div>
+            <div class="desc">Глубокое общение и поддержка внутри группы 7–10 человек. Вас сопровождает выпускница прошлого потока.</div>
           </div>
           <div class="alc-included-row">
-            <div class="name">Закрытая малая группа</div>
-            <div class="desc">Десять женщин под руководством выпускницы программы. Закрытое пространство на все 14 недель.</div>
-          </div>
-          <div class="alc-included-row">
-            <div class="name">Лиза в общем чате</div>
-            <div class="desc">Лично пишет от своего имени, не от имени куратора. Не марафон с автоматическими рассылками.</div>
+            <div class="name">Живые разборы</div>
+            <div class="desc">Раз в месяц Елизавета проводит дополнительную встречу с разбором ваших вопросов.</div>
           </div>
         </div>
       </div>
       <div class="alc-how-block alc-how-block--card reveal reveal-delay-1">
         <h3>Как войти:</h3>
-        <p class="alc-entry-intro">Программа закрыта для произвольного входа. Группа – десять женщин, каждую кандидатку собеседует команда программы.</p>
         <div class="alc-apply-steps">
           <div class="alc-apply-step">
-            <div class="step-title">Шаг 1: <em>Диагностика</em></div>
-            <div class="step-desc">10 минут, 9 вопросов. В конце – персональный разбор от Лизы.</div>
+            <div class="step-title">Шаг 1: <em>Анкета</em></div>
+            <div class="step-desc">Ответьте на 9 коротких вопросов, чтобы получить персональный анализ, насколько вам подойдёт программа.</div>
+            <div class="step-duration">5–7 минут</div>
           </div>
           <div class="alc-apply-step">
             <div class="step-title">Шаг 2: <em>Собеседование</em></div>
-            <div class="step-desc">60 минут с командой программы, бесплатно. Разговор, не продажа.</div>
+            <div class="step-desc">Живая встреча с выпускницей прошлого потока, чтобы задать важные для вас вопросы и принять взаимное решение, стоит ли вам присоединяться к программе.</div>
+            <div class="step-duration">30–40 минут</div>
           </div>
         </div>
-        <p class="alc-entry-note">Решение принимается с двух сторон. Не каждая кандидатка получает приглашение – и это часть метода.</p>
         <div class="alc-how-cta">
           <a class="btn" href="test.html">Подать заявку <span class="arrow">→</span></a>
         </div>
