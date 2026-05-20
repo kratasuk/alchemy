@@ -124,28 +124,6 @@
     text-wrap: pretty;
   }
 
-  .bullets {
-    list-style: none;
-    margin: 36px 0 48px;
-    border-top: 1px solid var(--ink-hair);
-  }
-  .bullets li {
-    padding: 18px 0;
-    border-bottom: 1px solid var(--ink-hair);
-    display: flex;
-    gap: 16px;
-    font-size: 16px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-  .bullets .num {
-    font-family: var(--serif);
-    font-style: italic;
-    color: var(--gold);
-    font-size: 20px;
-    min-width: 24px;
-  }
-
   .btn {
     display: inline-flex;
     align-items: center;
@@ -191,7 +169,7 @@
     gap: 24px;
     align-items: center;
     flex-wrap: wrap;
-    margin-top: 16px;
+    margin-top: clamp(36px, 4vw, 56px);
   }
   .meta {
     font-family: var(--mono);
@@ -639,14 +617,9 @@
     <p class="lede">
       Девять вопросов о том, где вы сейчас. В конце увидите свой архетип и поймёте, что программа может дать именно вам.
     </p>
-    <ul class="bullets">
-      <li><span class="num">01</span><span>Займёт 2–3 минуты.</span></li>
-      <li><span class="num">02</span><span>Отвечайте честно – как есть, а не как хотелось бы.</span></li>
-      <li><span class="num">03</span><span>В конце – ваш архетип, разбор вашей исходной точки и следующий шаг.</span></li>
-    </ul>
     <div class="cta-row">
       <button class="btn" id="btn-start"><span class="btn-text">Начать</span> <span class="btn-arrow">→</span></button>
-      <span class="meta">2–3 минуты</span>
+      <span class="meta">5–7 минут</span>
     </div>
   </div>
 
