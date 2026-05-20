@@ -363,35 +363,6 @@
     margin-top: 8px;
   }
 
-  .submit-banner {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    background: var(--paper);
-    border: 1px solid rgba(154, 120, 56, 0.4);
-    border-radius: 14px;
-    padding: 18px 22px;
-    margin-bottom: 40px;
-  }
-  .submit-banner-icon {
-    flex-shrink: 0;
-    color: var(--gold);
-    font-size: 11px;
-    line-height: 1.55;
-  }
-  .submit-banner-text {
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--ink);
-  }
-  .submit-banner-text b { font-weight: 500; color: var(--ink); }
-  .submit-banner--error {
-    border-color: rgba(200, 60, 60, 0.4);
-    background: rgba(200, 60, 60, 0.05);
-  }
-  .submit-banner--error .submit-banner-icon { color: rgba(180, 50, 50, 0.9); }
-
   .btn.is-loading { opacity: 0.7; cursor: wait; }
 
   .q-actions {
@@ -501,29 +472,6 @@
   /* Personal letter — LLM-generated, replaces the 4 legacy blocks when present */
   .personal-letter {
     margin-bottom: 40px;
-  }
-  .personal-letter-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  .personal-letter-header .diamond {
-    font-size: 9px;
-    animation: pulse-diamond 1.6s ease-in-out infinite;
-  }
-  .personal-letter-header--done .diamond {
-    animation: none;
-    opacity: 0.6;
-  }
-  @keyframes pulse-diamond {
-    0%, 100% { opacity: 0.3; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1); }
   }
   .personal-letter p {
     font-family: var(--serif);
@@ -657,11 +605,6 @@
   <div class="screen result shell" id="screen-result">
     <div class="eyebrow">Ваш результат</div>
 
-    <div class="submit-banner" id="submit-banner" style="display:none;">
-      <span class="submit-banner-icon">◆</span>
-      <span class="submit-banner-text" id="submit-banner-text"></span>
-    </div>
-
     <div class="archetype-card">
       <div class="archetype-illu">
         <img id="r-image" src="" alt="">
@@ -673,10 +616,6 @@
     </div>
 
     <div class="personal-letter" id="personal-letter" style="display:none;">
-      <div class="personal-letter-header" id="personal-letter-header">
-        <span class="diamond">◆</span>
-        <span class="label" id="personal-letter-label">Лиза готовит ваш разбор…</span>
-      </div>
       <div class="personal-letter-body" id="personal-letter-body"></div>
     </div>
 
@@ -1208,8 +1147,6 @@ function validateContact() {
 });
 
 const contactErrorEl = document.getElementById('contact-error');
-const submitBanner = document.getElementById('submit-banner');
-const submitBannerText = document.getElementById('submit-banner-text');
 
 function setNextLoading(loading) {
   if (loading) {
@@ -1254,8 +1191,6 @@ function escapeHtml(s) {
 function makeLetterStream() {
   const letterEl = document.getElementById('personal-letter');
   const bodyEl = document.getElementById('personal-letter-body');
-  const headerEl = document.getElementById('personal-letter-header');
-  const labelEl = document.getElementById('personal-letter-label');
   const ctaEl = document.getElementById('result-cta');
   const legacyEl = document.getElementById('legacy-blocks');
 
@@ -1294,8 +1229,6 @@ function makeLetterStream() {
       if (tail) liveP.textContent = tail;
       else if (!liveP.textContent) liveP.remove();
       letterEl.classList.remove('is-streaming');
-      headerEl.classList.add('personal-letter-header--done');
-      labelEl.textContent = 'Ваш разбор';
       ctaEl.classList.remove('is-pending');
     },
     fail() {
@@ -1341,9 +1274,6 @@ function applySubmitSuccess(token, botUsername) {
   state.botUsername = botUsername || 'alchemysupportbot';
   const link = 'https://t.me/' + state.botUsername + '?start=' + encodeURIComponent(token);
   btnBook.setAttribute('href', link);
-  submitBanner.classList.remove('submit-banner--error');
-  submitBannerText.innerHTML = '<b>Анкета получена.</b> Менеджер Ольга свяжется с вами в течение часа. Прочитайте свой разбор ниже и нажмите «Написать менеджеру», когда будете готовы.';
-  submitBanner.style.display = 'flex';
   startLetterStream(token);
 }
 
