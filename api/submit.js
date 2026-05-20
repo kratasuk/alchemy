@@ -148,13 +148,36 @@ async function sendTgMessage(chatId, text, opts = {}) {
   return res.json();
 }
 
-async function appendToSheet(answers, archetypeId) {
+async function appendToSheet(answers, archetypeId, token) {
   if (!GSHEETS_WEBHOOK_URL) return;
+
+  const c = answers.contact || {};
+  const pains = (answers.pains || []).map((p) => PAIN_LABELS[p] || p).join(', ');
+
+  const payload = {
+    secret: process.env.GSHEETS_SECRET || '',
+    timestamp: new Date().toISOString(),
+    token,
+    name: c.name || '',
+    email: c.email || '',
+    telegram: c.telegram || '',
+    archetype: ARCHETYPES[archetypeId] || '',
+    profession: ROLE_PROF[answers.prof] || '',
+    stage: ETAP_LABELS[answers.etap] || '',
+    income: INCOME_LABELS[answers.income] || '',
+    relations: RELATIONS_LABELS[answers.relations] || '',
+    children: FAMILY_LABELS[answers.family] || '',
+    pains,
+    dream: answers.dream || '',
+    obstacles: answers.obstacles || '',
+    tried: answers.tried || ''
+  };
+
   try {
     await fetch(GSHEETS_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...answers, archetype: ARCHETYPES[archetypeId] || '' })
+      body: JSON.stringify(payload)
     });
   } catch (e) {
     console.error('Sheets append failed:', e.message);
@@ -187,7 +210,7 @@ export default async function handler(req, res) {
       console.error('TG notification failed:', tgResult[0].reason?.message || tgResult[0].reason);
     }
 
-    await appendToSheet(answers, archetypeId);
+    await appendToSheet(answers, archetypeId, token);
 
     return res.status(200).json({
       ok: true,
