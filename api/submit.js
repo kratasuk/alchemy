@@ -63,7 +63,8 @@ const PAIN_LABELS = {
   zhenstvennost: 'Потеря женственности',
   odinochestvo: 'Одиночество на уровне',
   zhonglirovanie: 'Перегруз ролями',
-  proyavitsya: 'Внутренний потолок'
+  proyavitsya: 'Внутренний потолок',
+  kontrol: 'Гиперконтроль'
 };
 
 function pickArchetype(a) {
