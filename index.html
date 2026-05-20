@@ -673,18 +673,19 @@
   .alc-included-row:last-child { border-bottom: 1px solid var(--ink-hair); }
   .alc-included-row .name {
     font-family: var(--serif);
-    font-size: 22px;
-    line-height: 1.2;
+    font-style: italic;
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.15;
     letter-spacing: -0.005em;
     color: var(--ink);
   }
   .alc-included-row .desc {
-    font-family: var(--sans);
-    font-size: 14.5px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    margin-top: 6px;
-    max-width: 42ch;
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.35vw, 20px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-top: 10px;
+    max-width: 46ch;
   }
   .alc-apply-steps {
     display: flex;
@@ -703,10 +704,11 @@
   .alc-apply-step:hover { background: var(--bg-warm); }
   .alc-apply-step .step-title {
     font-family: var(--serif);
-    font-size: clamp(20px, 1.6vw, 24px);
-    line-height: 1.2;
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.15;
     color: var(--ink);
-    font-weight: 500;
+    font-weight: 400;
+    letter-spacing: -0.005em;
   }
   .alc-apply-step .step-title em {
     font-style: italic;
@@ -715,29 +717,30 @@
     margin-left: 4px;
   }
   .alc-apply-step .step-desc {
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--ink-soft);
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.35vw, 20px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin-top: 4px;
   }
   .alc-entry-intro {
-    font-family: var(--sans);
-    font-size: 15.5px;
-    line-height: 1.65;
-    color: var(--ink-soft);
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.35vw, 20px);
+    line-height: 1.55;
+    color: var(--ink-2);
     margin-bottom: 28px;
-    max-width: 42ch;
+    max-width: 46ch;
   }
   .alc-entry-note {
     font-family: var(--serif);
     font-style: italic;
-    font-size: 16px;
+    font-size: clamp(17px, 1.3vw, 19px);
     line-height: 1.55;
     color: var(--ink-2);
-    padding: 18px 0 0;
+    padding: 20px 0 0;
     margin-top: 8px;
     border-top: 1px solid var(--ink-hair);
-    max-width: 44ch;
+    max-width: 46ch;
   }
   .alc-how-cta { margin-top: 24px; }
   .alc-how-cta .btn {
@@ -1309,37 +1312,37 @@
         <h3>Как устроена программа:</h3>
         <div class="alc-included">
           <div class="alc-included-row">
-            <div class="name">Ежедневная практика 30–60 минут</div>
-            <div class="desc">Каждый день на 14 недель. Тело осваивает то, что нельзя выучить умом.</div>
+            <div class="name">Ежедневная практика</div>
+            <div class="desc">30–60 минут каждый день на 14 недель. Тело осваивает то, что нельзя выучить умом.</div>
           </div>
           <div class="alc-included-row">
             <div class="name">14 живых встреч с Лизой</div>
-            <div class="desc">Раз в неделю – новая тема, ответы на вопросы, разбор практик в общем поле.</div>
+            <div class="desc">Раз в неделю – новая тема и живой разбор практик в общем поле.</div>
           </div>
           <div class="alc-included-row">
             <div class="name">Закрытая малая группа</div>
-            <div class="desc">Десятка под руководством выпускницы «Алхимии». Закрытое пространство на все три месяца.</div>
+            <div class="desc">Десять женщин под руководством выпускницы программы. Закрытое пространство на все 14 недель.</div>
           </div>
           <div class="alc-included-row">
-            <div class="name">Лиза в чате – все 14 недель</div>
-            <div class="desc">Лично пишет в общий чат от своего имени, не от имени куратора. Это не марафон с автоматическими рассылками.</div>
+            <div class="name">Лиза в общем чате</div>
+            <div class="desc">Лично пишет от своего имени, не от имени куратора. Не марафон с автоматическими рассылками.</div>
           </div>
         </div>
       </div>
       <div class="alc-how-block alc-how-block--card reveal reveal-delay-1">
         <h3>Как войти:</h3>
-        <p class="alc-entry-intro">Программа закрыта для произвольного входа. Группа – десять женщин. Лиза лично собеседует каждую кандидатку.</p>
+        <p class="alc-entry-intro">Программа закрыта для произвольного входа. Группа – десять женщин, Лиза лично собеседует каждую кандидатку.</p>
         <div class="alc-apply-steps">
           <div class="alc-apply-step">
             <div class="step-title">Шаг 1: <em>Диагностика</em></div>
             <div class="step-desc">10 минут, 9 вопросов. В конце – персональный разбор от Лизы.</div>
           </div>
           <div class="alc-apply-step">
-            <div class="step-title">Шаг 2: <em>Собеседование с Лизой</em></div>
-            <div class="step-desc">60 минут, бесплатно. Это разговор, не продажа.</div>
+            <div class="step-title">Шаг 2: <em>Собеседование</em></div>
+            <div class="step-desc">60 минут с Лизой, бесплатно. Разговор, не продажа.</div>
           </div>
         </div>
-        <p class="alc-entry-note">Решение принимается с двух сторон. Не каждая кандидатка получает приглашение, и это часть метода.</p>
+        <p class="alc-entry-note">Решение принимается с двух сторон. Не каждая кандидатка получает приглашение – и это часть метода.</p>
         <div class="alc-how-cta">
           <a class="btn" href="test.html">Подать заявку <span class="arrow">→</span></a>
         </div>
