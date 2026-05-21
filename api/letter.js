@@ -11,6 +11,64 @@ function sse(res, payload) {
   res.write(`data: ${JSON.stringify(payload)}\n\n`);
 }
 
+// Append the generated letter as content blocks inside the Notion card
+// that /api/submit created for this submission. Looked up by token →
+// page id mapping stored in Redis at submit time. Best-effort: failures
+// are logged but don't disrupt the SSE response.
+async function appendLetterToNotion(token, fullText) {
+  if (!process.env.NOTION_TOKEN) return;
+
+  let pageId;
+  try {
+    pageId = await redis.get(`notion-page:${token}`);
+  } catch (e) {
+    console.error('redis read notion-page failed:', e.message);
+    return;
+  }
+  if (!pageId) return;
+
+  const paragraphs = String(fullText || '')
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (!paragraphs.length) return;
+
+  const children = [
+    {
+      object: 'block',
+      type: 'heading_2',
+      heading_2: {
+        rich_text: [{ type: 'text', text: { content: 'Персональный разбор' } }]
+      }
+    },
+    ...paragraphs.map((p) => ({
+      object: 'block',
+      type: 'paragraph',
+      paragraph: {
+        rich_text: [{ type: 'text', text: { content: p.slice(0, 2000) } }]
+      }
+    }))
+  ];
+
+  try {
+    const response = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${process.env.NOTION_TOKEN}`,
+        'Notion-Version': '2022-06-28',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ children })
+    });
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.error('Notion letter append failed:', response.status, errBody.slice(0, 500));
+    }
+  } catch (e) {
+    console.error('Notion letter append exception:', e.message);
+  }
+}
+
 export default async function handler(req, res) {
   const token = (req.query?.token || '').toString().trim();
   if (!token) {
@@ -46,6 +104,7 @@ export default async function handler(req, res) {
   const userText = describeAnketa(answers, archetypeId) +
     '\n\nНапишите ей письмо-результат по правилам.';
 
+  let fullText = '';
   try {
     const stream = anthropic.messages.stream({
       model: 'claude-sonnet-4-6',
@@ -57,11 +116,16 @@ export default async function handler(req, res) {
 
     stream.on('text', (delta) => {
       const safe = delta.replace(/—/g, '–');
+      fullText += safe;
       sse(res, { type: 'text', text: safe });
     });
 
     await stream.finalMessage();
     sse(res, { type: 'done' });
+
+    // Push the completed letter into the matching Notion card. Awaited so
+    // the lambda doesn't terminate the in-flight request. Usually <1s.
+    await appendLetterToNotion(token, fullText);
   } catch (err) {
     console.error('letter stream failed:', err?.message || err);
     sse(res, { type: 'error', message: 'generation_failed' });
