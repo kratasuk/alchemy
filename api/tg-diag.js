@@ -36,5 +36,31 @@ export default async function handler(req, res) {
     out.getWebhookInfo_error = e.message;
   }
 
+  if (req.query?.action === 'setwebhook') {
+    const url = 'https://wmnalchemy.com/api/telegram-webhook';
+    try {
+      const setRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          url,
+          secret_token: process.env.TG_WEBHOOK_SECRET || undefined,
+          drop_pending_updates: true,
+          allowed_updates: ['message']
+        })
+      }).then((r) => r.json());
+      out.setWebhook = { target: url, response: setRes };
+    } catch (e) {
+      out.setWebhook_error = e.message;
+    }
+
+    try {
+      const wh2 = await fetch(`https://api.telegram.org/bot${token}/getWebhookInfo`).then((r) => r.json());
+      out.getWebhookInfo_after = wh2;
+    } catch (e) {
+      out.getWebhookInfo_after_error = e.message;
+    }
+  }
+
   return res.status(200).json(out);
 }
