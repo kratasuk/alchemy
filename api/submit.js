@@ -22,15 +22,15 @@ const ARCHETYPES = {
 const ROLE_PROF = {
   manager: 'Специалист в найме',
   top: 'Руководитель / топ-менеджер',
-  owner: 'Собственник, развивает бизнес',
-  expert: 'Эксперт, частная практика',
+  owner: 'Собственник – развивает бизнес',
+  expert: 'Эксперт – частная практика',
   transition: 'В переходе между ролями',
   family: 'В семейной фазе'
 };
 
 const ETAP_LABELS = {
   stable_growth: 'Стабильный рост',
-  new_level: 'Новый уровень — учится держать',
+  new_level: 'Новый уровень – учится держать',
   choice_point: 'Точка выбора',
   ceiling: 'Уперлась в потолок',
   not_main: 'Сейчас не главное'
@@ -45,10 +45,10 @@ const INCOME_LABELS = {
 };
 
 const RELATIONS_LABELS = {
-  married_good: 'В паре — хорошо',
-  married_issues: 'В паре — что-то не так',
+  married_good: 'В паре – хорошо',
+  married_issues: 'В паре – что-то не так',
   single_choice: 'Одна по выбору',
-  single_seeking: 'Одна, ищет',
+  single_seeking: 'Одна – ищет',
   recent_split: 'Недавно расставание'
 };
 
