@@ -25,7 +25,7 @@ const ROLE_PROF = {
   owner: 'Собственник – развивает бизнес',
   expert: 'Эксперт – частная практика',
   transition: 'В переходе между ролями',
-  family: 'В семейной фазе'
+  family: 'Не работает – фокус на семье'
 };
 
 const ETAP_LABELS = {
@@ -48,7 +48,7 @@ const RELATIONS_LABELS = {
   married_good: 'В паре – хорошо',
   married_issues: 'В паре – что-то не так',
   single_choice: 'Одна по выбору',
-  single_seeking: 'Одна – ищет',
+  single_seeking: 'Хотела бы встретить любовь – не получается',
   recent_split: 'Недавно расставание'
 };
 
