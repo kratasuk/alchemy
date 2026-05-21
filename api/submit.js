@@ -241,6 +241,18 @@ async function appendToNotion(answers, archetypeId, token) {
     if (!response.ok) {
       const errBody = await response.text();
       console.error('Notion append failed:', response.status, errBody.slice(0, 500));
+      return;
+    }
+    // Save the Notion page id keyed by submission token so /api/letter can
+    // append the generated letter back into the same card. TTL matches the
+    // anketa TTL (24h) — letter generation happens immediately after submit.
+    const data = await response.json();
+    if (data && data.id) {
+      try {
+        await redis.set(`notion-page:${token}`, data.id, { ex: 60 * 60 * 24 });
+      } catch (e) {
+        console.error('redis set notion-page failed:', e.message);
+      }
     }
   } catch (e) {
     console.error('Notion append exception:', e.message);
