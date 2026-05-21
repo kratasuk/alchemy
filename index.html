@@ -1183,20 +1183,21 @@
     .alc-whofor-row:nth-child(even) {
       grid-template-columns: 1fr;
       grid-template-areas:
-        "name"
         "illu"
+        "name"
         "body";
       row-gap: 14px;
       justify-items: start;
     }
     .alc-whofor-row .alc-whofor-illu {
-      justify-content: flex-start;
+      justify-self: center;
+      justify-content: center;
       width: 100%;
     }
     .alc-whofor-illu img {
-      max-height: 150px;
+      max-height: 180px;
       min-height: 0;
-      max-width: 220px;
+      max-width: 240px;
     }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
