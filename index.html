@@ -426,21 +426,30 @@
     display: flex;
     flex-direction: column;
   }
+  /* Desktop: text column (name + body stacked) on one side, illustration on the other,
+     alternating sides per row. Mobile: name → illustration → body, vertically. */
   .alc-whofor-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(0, 540px) auto;
+    grid-template-areas:
+      "name illu"
+      "body illu";
+    column-gap: clamp(40px, 5vw, 80px);
+    row-gap: clamp(20px, 1.8vw, 28px);
     align-items: center;
     justify-content: center;
-    gap: clamp(40px, 5vw, 80px);
     padding: clamp(48px, 5vw, 72px) 0;
     border-top: 1px solid rgba(154, 120, 56, 0.20);
   }
   .alc-whofor-row:first-child { border-top: 0; padding-top: 0; }
-  .alc-whofor-row:nth-child(even) { flex-direction: row-reverse; }
-  .alc-whofor-text {
-    flex: 0 1 540px;
-    max-width: 540px;
+  .alc-whofor-row:nth-child(even) {
+    grid-template-columns: auto minmax(0, 540px);
+    grid-template-areas:
+      "illu name"
+      "illu body";
   }
   .alc-whofor-name {
+    grid-area: name;
     font-family: var(--serif);
     font-style: italic;
     font-weight: 400;
@@ -448,25 +457,25 @@
     line-height: 1.05;
     letter-spacing: -0.012em;
     color: var(--ink);
-    margin-bottom: clamp(20px, 1.8vw, 28px);
+    align-self: end;
   }
   .alc-whofor-body {
+    grid-area: body;
     font-family: var(--serif);
     font-size: clamp(20px, 1.55vw, 24px);
     line-height: 1.45;
     color: var(--ink-2);
     text-wrap: pretty;
     max-width: 50ch;
+    align-self: start;
   }
   .alc-whofor-illu {
-    flex: 0 0 auto;
+    grid-area: illu;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
   }
   .alc-whofor-illu img {
-    height: 100%;
     width: auto;
     max-height: 320px;
     min-height: 240px;
@@ -1155,11 +1164,14 @@
     }
     .alc-whofor-row,
     .alc-whofor-row:nth-child(even) {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 28px;
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "name"
+        "illu"
+        "body";
+      row-gap: 20px;
+      justify-items: start;
     }
-    .alc-whofor-text { flex-basis: auto; }
     .alc-whofor-illu img { max-height: 220px; min-height: 0; }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
@@ -1209,50 +1221,38 @@
     <div class="alc-whofor-list">
 
       <article class="alc-whofor-row reveal">
-        <div class="alc-whofor-text">
-          <h3 class="alc-whofor-name">Руководите командой</h3>
+        <h3 class="alc-whofor-name">Руководите командой</h3>
           <p class="alc-whofor-body">На вас лежит ответственность за высокие результаты и стандарты компании. Но за их поддержание вам приходится платить своей энергией и временем для себя.</p>
-        </div>
         <div class="alc-whofor-illu"><img src="images/whofor-01.png" alt=""></div>
       </article>
 
       <article class="alc-whofor-row reveal">
-        <div class="alc-whofor-text">
-          <h3 class="alc-whofor-name">Развиваете свой бизнес</h3>
+        <h3 class="alc-whofor-name">Развиваете свой бизнес</h3>
           <p class="alc-whofor-body">Вы хотите роста, развития и нового масштаба в своём деле. Но не готовы жертвовать ради этого своей женственностью и жизнью вне работы.</p>
-        </div>
         <div class="alc-whofor-illu"><img src="images/whofor-02.png" alt=""></div>
       </article>
 
       <article class="alc-whofor-row reveal">
-        <div class="alc-whofor-text">
-          <h3 class="alc-whofor-name">Реализованы, но одиноки</h3>
+        <h3 class="alc-whofor-name">Реализованы, но одиноки</h3>
           <p class="alc-whofor-body">Вы хотите встретить мужчину своего уровня и построить с ним глубокие отношения. Но не готовы упрощать себя, притворяться слабой и снижать свои стандарты.</p>
-        </div>
         <div class="alc-whofor-illu"><img src="images/whofor-03.png" alt=""></div>
       </article>
 
       <article class="alc-whofor-row reveal">
-        <div class="alc-whofor-text">
-          <h3 class="alc-whofor-name">Наставник для других</h3>
+        <h3 class="alc-whofor-name">Наставник для других</h3>
           <p class="alc-whofor-body">Вы авторитет в своей сфере и ведёте за собой других личным примером. Но сейчас период, где ваш ресурс почти исчерпан, и вам самой нужна опора.</p>
-        </div>
         <div class="alc-whofor-illu"><img src="images/whofor-04.png" alt=""></div>
       </article>
 
       <article class="alc-whofor-row reveal">
-        <div class="alc-whofor-text">
-          <h3 class="alc-whofor-name">Совмещаете семью и работу</h3>
+        <h3 class="alc-whofor-name">Совмещаете семью и работу</h3>
           <p class="alc-whofor-body">Вы жонглируете ролями – мама, жена, руководитель, профессионал. Но за всеми этими ролями не остаётся времени и места для самой себя.</p>
-        </div>
         <div class="alc-whofor-illu"><img src="images/whofor-05.png" alt=""></div>
       </article>
 
       <article class="alc-whofor-row reveal">
-        <div class="alc-whofor-text">
-          <h3 class="alc-whofor-name">Выходите на новый виток</h3>
+        <h3 class="alc-whofor-name">Выходите на новый виток</h3>
           <p class="alc-whofor-body">Вы накопили большой опыт и чувствуете, что пора этим делиться. Но когда доходит до того, чтобы проявляться, чего-то словно не хватает.</p>
-        </div>
         <div class="alc-whofor-illu"><img src="images/whofor-06.png" alt=""></div>
       </article>
 
