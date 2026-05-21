@@ -108,8 +108,15 @@ export default async function handler(req, res) {
   try {
     const stream = anthropic.messages.stream({
       model: 'claude-sonnet-4-6',
-      max_tokens: 2000,
-      thinking: { type: 'disabled' },
+      max_tokens: 4000,
+      // Adaptive thinking: model decides when/how much to think before writing.
+      // For diagnostic letters this materially improves specificity (mechanism
+      // identification, scene concreteness) at the cost of ~5-15s extra
+      // time-to-first-token. Acceptable for premium UX with the streaming
+      // cursor; the 10s heartbeat keeps the SSE proxy from timing out.
+      // max_tokens raised to 4000 to leave room for thinking tokens above the
+      // 600-word letter ceiling.
+      thinking: { type: 'adaptive' },
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userText }]
     });
