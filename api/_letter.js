@@ -1,27 +1,19 @@
 // Prompt + anketa renderer for the personal letter LLM call.
 // Used by api/letter.js (SSE streaming endpoint).
 //
-// Prompt version: v2.0 (2026-05-22). Architecture changed from 7 movements to
-// 8 blocks (Headline → Recognition → Constraint → Bridge → What becomes
-// possible → Алхимия binder → Closing → Signature) with classified inputs:
-// archetype enum, readiness traffic light, contextual_param.
+// Prompt version: v2.2 (2026-05-22). Schema reshaped: stage_band removed,
+// single pain_points list replaced by separate work_pain + relationship_pain
+// multi-selects. Headline pattern unchanged (8 blocks minus signature),
+// archetype enum and readiness traffic light unchanged.
 
 // ── Quiz keys → english enum names matching the SYSTEM_PROMPT vocabulary
 const PROFESSION = {
-  manager: 'manager',
-  top: 'top',
-  owner: 'owner',
-  expert: 'expert',
-  transition: 'transition',
-  family: 'family'
-};
-
-const STAGE = {
-  stable_growth: 'stable_growth',
-  new_level: 'new_level',
-  choice_point: 'choice_point',
-  ceiling: 'ceiling',
-  not_main: 'not_main'
+  manager: 'manager',       // специалист в компании
+  top: 'top',               // руководитель в компании
+  owner: 'owner',           // развивает свой бизнес
+  expert: 'expert',         // эксперт, частная практика
+  transition: 'transition', // в переходе между ролями
+  family: 'family'          // фокус на семье, не работает
 };
 
 const INCOME = {
@@ -48,13 +40,22 @@ const FAMILY = {
   considering: 'considering'
 };
 
-const PAINS = {
-  istoshenie: 'exhaustion',
-  zhenstvennost: 'loss_of_femininity',
-  odinochestvo: 'loneliness_at_level',
-  zhonglirovanie: 'role_overload',
-  proyavitsya: 'inner_ceiling',
-  kontrol: 'hyper_control'
+// Q2 «Что сейчас сложнее всего в работе?» (multi, до 2)
+const WORK_PAIN = {
+  low_income: 'low_income',
+  overwork: 'overwork',
+  role_ceiling: 'role_ceiling',
+  operational_lock: 'operational_lock',
+  meaning_lost: 'meaning_lost'
+};
+
+// Q6 «Что сейчас сложнее всего в отношениях?» (multi, до 2)
+const RELATIONSHIP_PAIN = {
+  lack_intimacy: 'lack_intimacy',
+  low_passion: 'low_passion',
+  cannot_be_self: 'cannot_be_self',
+  no_peer_men: 'no_peer_men',
+  cannot_let_in: 'cannot_let_in'
 };
 
 // Archetype id (1-6) → enum slug used in SYSTEM_PROMPT §4.1 and §5.
@@ -75,14 +76,24 @@ function deriveReadiness(income) {
 }
 
 // SYSTEM_PROMPT §4.3: contextual_param priority doverie > serdechnost > intuition.
-// We derive from pains as a stable proxy when no free-form classifier is available.
-function deriveContextualParam(pains, relations) {
-  const list = Array.isArray(pains) ? pains : [];
-  if (list.includes('kontrol')) return 'doverie';
-  if (list.includes('odinochestvo') || relations === 'married_issues' || relations === 'recent_split') {
+// Derived from the new split pain lists + relationship status as stable proxy.
+function deriveContextualParam(workPains, relPains, relations) {
+  const work = Array.isArray(workPains) ? workPains : [];
+  const rel = Array.isArray(relPains) ? relPains : [];
+
+  // doverie — про неспособность отпустить контроль (operational_lock)
+  if (work.includes('operational_lock')) return 'doverie';
+
+  // serdechnost — про закрытость в близости (lack_intimacy, cannot_be_self,
+  // cannot_let_in) или нездоровая динамика в паре / недавний разрыв
+  const serdSignals = ['lack_intimacy', 'cannot_be_self', 'cannot_let_in', 'low_passion'];
+  if (rel.some((p) => serdSignals.includes(p)) || relations === 'married_issues' || relations === 'recent_split') {
     return 'serdechnost';
   }
-  if (list.includes('proyavitsya')) return 'intuition';
+
+  // intuition — потеря смысла, отрыв от собственного компаса
+  if (work.includes('meaning_lost')) return 'intuition';
+
   return 'none';
 }
 
@@ -141,15 +152,15 @@ readiness: enum                # green | yellow | red
 contextual_param: enum         # serdechnost | doverie | intuition | none
 
 # Сырые данные из квиза (для персонализации)
-profession: string             # Q1
-stage_band: string             # Q2 (этап дела, НЕ цитировать в письме)
-income_band: string            # Q3 (определил readiness, в тексте не упоминать)
-relationship: string           # Q4
-family_situation: string       # Q5
-pain_points: array<string>     # Q6 – выбранные боли
-past_tools: string             # Q7 – что пробовала
-dream: string                  # Q8 – свободный текст о мечте
-open_signal: string            # дополнительный свободный текст (препятствия)
+profession: string                  # Q1: manager | top | owner | expert | transition | family
+income_band: string                 # Q3 (определил readiness, в тексте не упоминать)
+relationship: string                # Q4: married_good | married_strained | single_chosen | single_seeking | divorce_recent
+family_situation: string            # Q5: kids_small | kids_school | kids_adult | no_kids | considering
+work_pain: array<string>            # Q2: low_income | overwork | role_ceiling | operational_lock | meaning_lost
+relationship_pain: array<string>    # Q6: lack_intimacy | low_passion | cannot_be_self | no_peer_men | cannot_let_in
+past_tools: string                  # Q9 – что пробовала (свободный текст)
+dream: string                       # Q7 – свободный текст о мечте
+open_signal: string                 # Q8 – препятствия (свободный текст)
 \`\`\`
 
 ---
@@ -164,10 +175,10 @@ open_signal: string            # дополнительный свободный
 |---|---|---|
 | Руководитель | manager / top | – |
 | Собственник | owner | – |
-| Реализованы_но_одиноки | – | Q6 содержит «одиночество на высоте» + Q4 в [single/divorce] |
+| Реализованы_но_одиноки | – | Q6 (relationship_pain) содержит \`no_peer_men\` или \`cannot_let_in\` + Q4 одна (single_chosen / single_seeking / divorce_recent) |
 | Наставник | expert | – |
-| Сплетающая | family ИЛИ (Q5 в [small/school] + Q6 с role_overload + Q1 ≠ owner) | – |
-| Новый_виток | – | open_signal содержит «всё хорошо», «хочу больше», «хочу делиться», «пора передавать» |
+| Сплетающая | family ИЛИ Q5 в [kids_small / kids_school] (даже при наличии профессии) | – |
+| Новый_виток | – | Q2 (work_pain) содержит \`meaning_lost\` ИЛИ \`role_ceiling\` на manager/top ИЛИ open_signal содержит «всё хорошо», «хочу больше», «хочу делиться», «пора передавать» |
 
 Overrides имеют приоритет над primary.
 
@@ -190,9 +201,9 @@ Overrides:
 
 | Параметр | Триггер |
 |---|---|
-| serdechnost | Q4 в [married_strained, divorce_recent] ИЛИ open: «закрылась», «броня», «отдалилась» |
-| doverie | open: «не могу остановиться», «всё развалится», «контроль», «микроменеджмент» |
-| intuition | open: «не слышу себя», «потеряла компас», «делаю как надо» |
+| serdechnost | Q6 содержит \`lack_intimacy / low_passion / cannot_be_self / cannot_let_in\` ИЛИ Q4 в [married_strained, divorce_recent] |
+| doverie | Q2 содержит \`operational_lock\` ИЛИ open: «не могу остановиться», «всё развалится», «контроль», «микроменеджмент» |
+| intuition | Q2 содержит \`meaning_lost\` ИЛИ open: «не слышу себя», «потеряла компас», «делаю как надо» |
 | none | если ни один не выражен |
 
 В письме contextual_param влияет на акцент в блоке Ограничения, не на структуру.
@@ -562,7 +573,7 @@ Structural program:
 
 1. Профиль её архетипа (§5)
 2. Её мечта (dream)
-3. Её препятствия (open_signal / pain_points)
+3. Её препятствия (open_signal / work_pain / relationship_pain)
 4. Методология Алхимии (§9, §5)
 
 Ничего сверх. Никаких «обычно у таких женщин…», «у всех в вашем положении…» без основания в её ответах.
@@ -608,7 +619,7 @@ Structural program:
 
 1. **Прочитай вход.** Идентифицируй: archetype, readiness, dream, open_signal, past_tools, contextual_param.
 2. **Найди её актуальный вопрос.** Используй таблицу §7 как опорную точку, но адаптируй под её формулировки.
-3. **Найди главный механизм её ограничения.** Один. Не несколько. Из §7 + её pain_points.
+3. **Найди главный механизм её ограничения.** Один. Не несколько. Из §7 + её work_pain + relationship_pain (это два отдельных списка, выбранных в Q2 и Q6).
 4. **Определи слой её прошлых инструментов.** Из §7 + её past_tools. Назови честно, не оценивай.
 5. **Трансформируй 3 элемента её мечты в ежедневные сцены.** Из её dream + §7. Конкретика: время суток, поведения, разговоры.
 6. **Подбери паттерн headline.** Дефолт из §6.2 или отклонение, если данные явно требуют.
@@ -708,9 +719,10 @@ Regex-чеки, которые ты обязан проходить:
 export function describeAnketa(answers, archetypeId) {
   const c = answers.contact || {};
   const name = c.name || '';
-  const painsEng = (answers.pains || []).map((p) => PAINS[p] || p);
+  const workPainsEng = (answers.work_pain || []).map((p) => WORK_PAIN[p] || p);
+  const relPainsEng = (answers.relationship_pain || []).map((p) => RELATIONSHIP_PAIN[p] || p);
   const readiness = deriveReadiness(answers.income);
-  const contextualParam = deriveContextualParam(answers.pains, answers.relations);
+  const contextualParam = deriveContextualParam(answers.work_pain, answers.relationship_pain, answers.relations);
 
   const dream = (answers.dream || '').trim();
   const obstacles = (answers.obstacles || '').trim();
@@ -727,11 +739,11 @@ export function describeAnketa(answers, archetypeId) {
     '',
     '# Сырые данные из квиза',
     `profession: ${PROFESSION[answers.prof] || ''}`,
-    `stage_band: ${STAGE[answers.etap] || ''}`,
     `income_band: ${INCOME[answers.income] || ''}`,
     `relationship: ${RELATIONSHIPS[answers.relations] || ''}`,
     `family_situation: ${FAMILY[answers.family] || ''}`,
-    `pain_points: [${painsEng.join(', ')}]`,
+    `work_pain: [${workPainsEng.join(', ')}]`,
+    `relationship_pain: [${relPainsEng.join(', ')}]`,
     `past_tools: ${tried}`,
     `dream: ${dream}`,
     `open_signal: ${obstacles}`,

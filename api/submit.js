@@ -20,20 +20,12 @@ const ARCHETYPES = {
 };
 
 const ROLE_PROF = {
-  manager: 'Специалист в найме',
-  top: 'Руководитель / топ-менеджер',
-  owner: 'Собственник – развивает бизнес',
+  top: 'Руководитель в компании',
+  manager: 'Специалист в компании',
+  owner: 'Развивает свой бизнес',
   expert: 'Эксперт – частная практика',
   transition: 'В переходе между ролями',
-  family: 'Не работает – фокус на семье'
-};
-
-const ETAP_LABELS = {
-  stable_growth: 'Стабильный рост',
-  new_level: 'Новый уровень – учится держать',
-  choice_point: 'Точка выбора',
-  ceiling: 'Уперлась в потолок',
-  not_main: 'Сейчас не главное'
+  family: 'Фокус на семье – не работает'
 };
 
 const INCOME_LABELS = {
@@ -46,46 +38,85 @@ const INCOME_LABELS = {
 
 const RELATIONS_LABELS = {
   married_good: 'В паре – хорошо',
-  married_issues: 'В паре – что-то не так',
-  single_choice: 'Одна по выбору',
-  single_seeking: 'Хотела бы встретить любовь – не получается',
-  recent_split: 'Недавно расставание'
+  married_issues: 'В паре – есть напряжение',
+  single_choice: 'Одна – свой выбор',
+  single_seeking: 'Хочет встретить близкого – пока не получается',
+  recent_split: 'Развод или расставание недавно'
 };
 
 const FAMILY_LABELS = {
   kids_small: 'Дети до 7 лет',
   kids_school: 'Дети школьники / подростки',
   kids_adult: 'Дети взрослые',
-  no_kids: 'Без детей',
-  considering: 'Думает / готовится'
+  no_kids: 'Детей нет',
+  considering: 'Беременна или планирует'
 };
 
-const PAIN_LABELS = {
-  istoshenie: 'Истощение',
-  zhenstvennost: 'Потеря женственности',
-  odinochestvo: 'Одиночество на уровне',
-  zhonglirovanie: 'Перегруз ролями',
-  proyavitsya: 'Внутренний потолок',
-  kontrol: 'Гиперконтроль'
+// Q2 «Что сейчас сложнее всего в работе?» (multi, до 2)
+const WORK_PAIN_LABELS = {
+  low_income: 'Низкий доход',
+  overwork: 'Работа на износ',
+  role_ceiling: 'Потолок в роли',
+  operational_lock: 'Всё держится на мне',
+  meaning_lost: 'Потерян смысл и драйв'
 };
 
+// Q6 «Что сейчас сложнее всего в отношениях?» (multi, до 2)
+const RELATIONSHIP_PAIN_LABELS = {
+  lack_intimacy: 'Нет доверия и близости',
+  low_passion: 'Мало страсти',
+  cannot_be_self: 'Не может быть собой',
+  no_peer_men: 'Не встречает равных',
+  cannot_let_in: 'Не может впустить'
+};
+
+// Архетип присваивается по сигналам Q1 (профессия) + Q2 (сложности в работе)
+// + Q4 (личная жизнь) + Q6 (сложности в отношениях) + Q5 (дети).
+// Логика — приоритетная: сначала сильные override-сигналы (одиночество на
+// уровне = архетип 3), потом профессионально-driven, потом edge cases.
 function pickArchetype(a) {
-  const pains = a.pains || [];
-  const primary = pains[0];
+  const workPains = a.work_pain || [];
+  const relPains = a.relationship_pain || [];
+  const primaryWork = workPains[0];
+  const primaryRel = relPains[0];
   const prof = a.prof;
   const rel = a.relations;
   const fam = a.family;
-  if (primary === 'odinochestvo') return 3;
-  if (primary === 'proyavitsya') return 6;
-  if (primary === 'zhonglirovanie') return 5;
+
+  // 1. Strongest override: одиночество «не встречаю равных» + одна → 3
+  const lonelinessSignals = ['no_peer_men', 'cannot_let_in'];
+  const singleStates = ['single_choice', 'single_seeking', 'recent_split'];
+  if (relPains.some((p) => lonelinessSignals.includes(p)) && singleStates.includes(rel)) {
+    return 3;
+  }
+
+  // 2. «Всё держится на мне» у собственника/эксперта → 2 (Собственник)
+  if (primaryWork === 'operational_lock' && (prof === 'owner' || prof === 'expert')) {
+    return prof === 'expert' ? 4 : 2;
+  }
+
+  // 3. Утрата смысла или потолок в роли у наёмника → 6 (Новый виток)
+  if (primaryWork === 'meaning_lost') return 6;
+  if (primaryWork === 'role_ceiling' && (prof === 'manager' || prof === 'top')) return 6;
+
+  // 4. Профессионально-driven основа
   if (prof === 'expert') return 4;
   if (prof === 'owner') return 2;
   if (prof === 'manager' || prof === 'top') return 1;
+
+  // 5. Семья / маленькие дети → 5 (Сплетающая)
   if (prof === 'family' || fam === 'kids_small' || fam === 'kids_school') return 5;
+
+  // 6. single_seeking без сильного сигнала → 3 (Реализованы_но_одиноки)
   if (rel === 'single_seeking') return 3;
+
+  // 7. Переход + нет сильного pull → 6
   if (prof === 'transition') return 6;
-  if (primary === 'istoshenie') return 1;
-  if (primary === 'zhenstvennost') return 2;
+
+  // 8. Fallbacks по primary work pain
+  if (primaryWork === 'overwork') return 1;
+  if (primaryWork === 'low_income') return 2;
+
   return 1;
 }
 
@@ -96,7 +127,8 @@ function escapeHtml(s) {
 function formatNotification(answers, archetypeId) {
   const c = answers.contact || {};
   const arch = ARCHETYPES[archetypeId] || 'Неопределён';
-  const pains = (answers.pains || []).map((p) => PAIN_LABELS[p] || p).join(', ');
+  const workPainStr = (answers.work_pain || []).map((p) => WORK_PAIN_LABELS[p] || p).join(', ');
+  const relPainStr = (answers.relationship_pain || []).map((p) => RELATIONSHIP_PAIN_LABELS[p] || p).join(', ');
 
   const tg = (c.telegram || '').trim();
   const tgLink = tg.startsWith('@')
@@ -111,11 +143,11 @@ function formatNotification(answers, archetypeId) {
 <b>Архетип:</b> ${escapeHtml(arch)}
 
 <b>Профессия:</b> ${escapeHtml(ROLE_PROF[answers.prof] || '—')}
-<b>Этап:</b> ${escapeHtml(ETAP_LABELS[answers.etap] || '—')}
 <b>Доход:</b> ${escapeHtml(INCOME_LABELS[answers.income] || '—')}
-<b>Отношения:</b> ${escapeHtml(RELATIONS_LABELS[answers.relations] || '—')}
+<b>Личная жизнь:</b> ${escapeHtml(RELATIONS_LABELS[answers.relations] || '—')}
 <b>Дети:</b> ${escapeHtml(FAMILY_LABELS[answers.family] || '—')}
-<b>Боли:</b> ${escapeHtml(pains || '—')}
+<b>Сложности в работе:</b> ${escapeHtml(workPainStr || '—')}
+<b>Сложности в отношениях:</b> ${escapeHtml(relPainStr || '—')}
 
 <b>Мечта:</b>
 ${escapeHtml(answers.dream || '—')}
@@ -154,7 +186,8 @@ async function appendToSheet(answers, archetypeId, token) {
   if (!GSHEETS_WEBHOOK_URL) return;
 
   const c = answers.contact || {};
-  const pains = (answers.pains || []).map((p) => PAIN_LABELS[p] || p).join(', ');
+  const workPainStr = (answers.work_pain || []).map((p) => WORK_PAIN_LABELS[p] || p).join(', ');
+  const relPainStr = (answers.relationship_pain || []).map((p) => RELATIONSHIP_PAIN_LABELS[p] || p).join(', ');
 
   const payload = {
     secret: process.env.GSHEETS_SECRET || '',
@@ -165,11 +198,11 @@ async function appendToSheet(answers, archetypeId, token) {
     telegram: c.telegram || '',
     archetype: ARCHETYPES[archetypeId] || '',
     profession: ROLE_PROF[answers.prof] || '',
-    stage: ETAP_LABELS[answers.etap] || '',
     income: INCOME_LABELS[answers.income] || '',
     relations: RELATIONS_LABELS[answers.relations] || '',
     children: FAMILY_LABELS[answers.family] || '',
-    pains,
+    work_pain: workPainStr,
+    relationship_pain: relPainStr,
     dream: answers.dream || '',
     obstacles: answers.obstacles || '',
     tried: answers.tried || ''
@@ -189,14 +222,20 @@ async function appendToSheet(answers, archetypeId, token) {
 // Notion CRM — creates a new page in the configured database for each anketa.
 // Database properties expected (see docs/notion-setup.md for exact setup):
 //   Имя (title) · Статус (select, default «Новая») · Email · Telegram (url)
-//   Архетип / Профессия / Этап / Доход / Отношения / Дети (select)
-//   Боли (multi_select) · Мечта / Препятствия / Что пробовала (rich_text)
-//   Токен (rich_text)
+//   Архетип / Профессия / Доход / Личная жизнь / Дети (select)
+//   Сложности в работе (multi_select) · Сложности в отношениях (multi_select)
+//   Мечта / Препятствия / Что пробовала (rich_text) · Токен (rich_text)
+//
+// IMPORTANT: schema changed 2026-05-22 — добавлены multi-select-свойства
+// «Сложности в работе» и «Сложности в отношениях», убрано «Этап», свойство
+// «Отношения» переименовано в «Личная жизнь». Старое свойство «Боли»
+// больше не используется. Обнови шапку базы вручную.
 async function appendToNotion(answers, archetypeId, token) {
   if (!NOTION_TOKEN || !NOTION_DATABASE_ID) return;
 
   const c = answers.contact || {};
-  const painsLabels = (answers.pains || []).map((p) => PAIN_LABELS[p] || p);
+  const workPainNames = (answers.work_pain || []).map((p) => WORK_PAIN_LABELS[p] || p);
+  const relPainNames = (answers.relationship_pain || []).map((p) => RELATIONSHIP_PAIN_LABELS[p] || p);
 
   const tg = (c.telegram || '').trim();
   const tgUrl = tg
@@ -216,11 +255,11 @@ async function appendToNotion(answers, archetypeId, token) {
   if (c.email) properties['Email'] = { email: c.email };
   if (tgUrl) properties['Telegram'] = { url: tgUrl };
   if (answers.prof) properties['Профессия'] = { select: { name: ROLE_PROF[answers.prof] || answers.prof } };
-  if (answers.etap) properties['Этап'] = { select: { name: ETAP_LABELS[answers.etap] || answers.etap } };
   if (answers.income) properties['Доход'] = { select: { name: INCOME_LABELS[answers.income] || answers.income } };
-  if (answers.relations) properties['Отношения'] = { select: { name: RELATIONS_LABELS[answers.relations] || answers.relations } };
+  if (answers.relations) properties['Личная жизнь'] = { select: { name: RELATIONS_LABELS[answers.relations] || answers.relations } };
   if (answers.family) properties['Дети'] = { select: { name: FAMILY_LABELS[answers.family] || answers.family } };
-  if (painsLabels.length) properties['Боли'] = { multi_select: painsLabels.map((name) => ({ name })) };
+  if (workPainNames.length) properties['Сложности в работе'] = { multi_select: workPainNames.map((name) => ({ name })) };
+  if (relPainNames.length) properties['Сложности в отношениях'] = { multi_select: relPainNames.map((name) => ({ name })) };
   if (answers.dream) properties['Мечта'] = { rich_text: richText(answers.dream) };
   if (answers.obstacles) properties['Препятствия'] = { rich_text: richText(answers.obstacles) };
   if (answers.tried) properties['Что пробовала'] = { rich_text: richText(answers.tried) };
