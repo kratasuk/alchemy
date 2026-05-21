@@ -2,7 +2,10 @@ import { Redis } from '@upstash/redis';
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT, describeAnketa } from './_letter.js';
 
-export const config = { maxDuration: 60 };
+// 300s (5 мин) — Vercel Pro tier max. Нужно потому что adaptive thinking
+// + v3-промпт (39K символов) + 600-словное письмо может занять до 90-120с
+// total. Heartbeat каждые 10с держит SSE-соединение живым.
+export const config = { maxDuration: 300 };
 
 const redis = Redis.fromEnv();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
