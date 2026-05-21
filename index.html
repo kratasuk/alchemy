@@ -1199,28 +1199,11 @@
       min-height: 0;
       max-width: 240px;
     }
-    /* Voices on mobile — stack as editorial vignettes, drop cards/scroll */
-    .alc-voices-grid {
-      flex-direction: column;
-      overflow: visible;
-      scroll-snap-type: none;
-      padding: 0;
-      margin: 0;
-      gap: 0;
-    }
+    /* Voices on mobile — keep horizontal scroll, just make cards wider */
     .alc-voice {
-      flex: 1 1 auto;
+      flex: 0 0 calc(100vw - 48px);
       min-height: 0;
-      background: transparent;
-      border-radius: 0;
-      box-shadow: none;
-      padding: 32px 0;
-      border-top: 1px solid rgba(154, 120, 56, 0.20);
-      gap: 18px;
     }
-    .alc-voice:first-child { border-top: 0; padding-top: 0; }
-    .alc-voice .quote-mark { display: none; }
-    .alc-voice .who { padding-top: 0; border-top: 0; }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
     .alc-week-right { padding: 32px 28px; }
