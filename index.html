@@ -1186,10 +1186,18 @@
         "name"
         "illu"
         "body";
-      row-gap: 20px;
+      row-gap: 14px;
       justify-items: start;
     }
-    .alc-whofor-illu img { max-height: 220px; min-height: 0; }
+    .alc-whofor-row .alc-whofor-illu {
+      justify-content: flex-start;
+      width: 100%;
+    }
+    .alc-whofor-illu img {
+      max-height: 150px;
+      min-height: 0;
+      max-width: 220px;
+    }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
     .alc-week-right { padding: 32px 28px; }
