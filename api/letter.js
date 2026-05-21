@@ -2,10 +2,10 @@ import { Redis } from '@upstash/redis';
 import Anthropic from '@anthropic-ai/sdk';
 import { SYSTEM_PROMPT, describeAnketa } from './_letter.js';
 
-// 300s (5 мин) — Vercel Pro tier max. Нужно потому что adaptive thinking
-// + v3-промпт (39K символов) + 600-словное письмо может занять до 90-120с
-// total. Heartbeat каждые 10с держит SSE-соединение живым.
-export const config = { maxDuration: 300 };
+// 90s — generous headroom over expected ~20-30s for a 350-500 word letter
+// without thinking. Was 60 (too tight when thinking enabled), then 300; this
+// is the goldilocks zone.
+export const config = { maxDuration: 90 };
 
 const redis = Redis.fromEnv();
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -111,15 +111,13 @@ export default async function handler(req, res) {
   try {
     const stream = anthropic.messages.stream({
       model: 'claude-sonnet-4-6',
-      max_tokens: 4000,
-      // Adaptive thinking: model decides when/how much to think before writing.
-      // For diagnostic letters this materially improves specificity (mechanism
-      // identification, scene concreteness) at the cost of ~5-15s extra
-      // time-to-first-token. Acceptable for premium UX with the streaming
-      // cursor; the 10s heartbeat keeps the SSE proxy from timing out.
-      // max_tokens raised to 4000 to leave room for thinking tokens above the
-      // 600-word letter ceiling.
-      thinking: { type: 'adaptive' },
+      max_tokens: 2500,
+      // Thinking disabled: v3 prompt (§5.5-5.9) provides ready-made mechanism
+      // formulations and paragraph templates, so the model has nothing left to
+      // "figure out". Adaptive thinking would just duplicate work the prompt
+      // already does, adding 30-50s of silence before the first token without
+      // measurable quality gain. Re-enable if quality regresses on real letters.
+      thinking: { type: 'disabled' },
       system: SYSTEM_PROMPT,
       messages: [{ role: 'user', content: userText }]
     });
