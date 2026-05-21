@@ -99,6 +99,17 @@
     height: 1px;
     background: var(--gold);
   }
+  /* Result meta: «22 мая 2026 · Анна» — date + name above the letter.
+     Quiet, mono-styled, half-tone — sets a personal tone without shouting. */
+  .result-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    margin-bottom: 36px;
+    text-transform: lowercase;
+  }
+  .result-meta:empty { display: none; }
   h1 {
     font-family: var(--serif);
     font-weight: 400;
@@ -512,7 +523,7 @@
   </div>
 
   <div class="screen result shell" id="screen-result">
-    <div class="eyebrow">Ваш результат</div>
+    <div class="result-meta" id="result-meta"></div>
 
     <div class="personal-letter" id="personal-letter" style="display:none;">
       <div class="personal-letter-body" id="personal-letter-body"></div>
@@ -951,11 +962,28 @@ function startLetterStream(token) {
   };
 }
 
+// Builds «22 мая 2026 · Анна» for the result-meta line above the letter.
+const RU_MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+                   'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+function buildResultMeta(name) {
+  const d = new Date();
+  const dateStr = d.getDate() + ' ' + RU_MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+  const cleanName = (name || '').trim();
+  return cleanName ? dateStr + ' · ' + cleanName : dateStr;
+}
+
 function applySubmitSuccess(token, botUsername) {
   state.token = token;
   state.botUsername = botUsername || 'alchemysupportbot';
   const link = 'https://t.me/' + state.botUsername + '?start=' + encodeURIComponent(token);
   btnBook.setAttribute('href', link);
+
+  const metaEl = document.getElementById('result-meta');
+  if (metaEl) {
+    const contact = state.answers.contact || {};
+    metaEl.textContent = buildResultMeta(contact.name);
+  }
+
   startLetterStream(token);
 }
 
