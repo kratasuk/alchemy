@@ -7,6 +7,8 @@ const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
 const TG_GROUP_CHAT_ID = process.env.TG_GROUP_CHAT_ID;
 const TG_BOT_USERNAME = process.env.TG_BOT_USERNAME || 'alchemysupportbot';
 const GSHEETS_WEBHOOK_URL = process.env.GSHEETS_WEBHOOK_URL;
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
 
 const ARCHETYPES = {
   1: 'Руководите командой',
@@ -184,6 +186,67 @@ async function appendToSheet(answers, archetypeId, token) {
   }
 }
 
+// Notion CRM — creates a new page in the configured database for each anketa.
+// Database properties expected (see docs/notion-setup.md for exact setup):
+//   Имя (title) · Статус (select, default «Новая») · Email · Telegram (url)
+//   Архетип / Профессия / Этап / Доход / Отношения / Дети (select)
+//   Боли (multi_select) · Мечта / Препятствия / Что пробовала (rich_text)
+//   Токен (rich_text)
+async function appendToNotion(answers, archetypeId, token) {
+  if (!NOTION_TOKEN || !NOTION_DATABASE_ID) return;
+
+  const c = answers.contact || {};
+  const painsLabels = (answers.pains || []).map((p) => PAIN_LABELS[p] || p);
+
+  const tg = (c.telegram || '').trim();
+  const tgUrl = tg
+    ? (tg.startsWith('http') ? tg : `https://t.me/${tg.replace(/^@/, '')}`)
+    : null;
+
+  // Notion's rich_text content cap is 2000 chars per item. Truncate defensively.
+  const richText = (s) => [{ text: { content: String(s || '').slice(0, 2000) } }];
+
+  const properties = {
+    'Имя': { title: [{ text: { content: c.name || '—' } }] },
+    'Статус': { select: { name: 'Новая' } },
+    'Архетип': { select: { name: ARCHETYPES[archetypeId] || 'Неопределён' } },
+    'Токен': { rich_text: richText(token) }
+  };
+
+  if (c.email) properties['Email'] = { email: c.email };
+  if (tgUrl) properties['Telegram'] = { url: tgUrl };
+  if (answers.prof) properties['Профессия'] = { select: { name: ROLE_PROF[answers.prof] || answers.prof } };
+  if (answers.etap) properties['Этап'] = { select: { name: ETAP_LABELS[answers.etap] || answers.etap } };
+  if (answers.income) properties['Доход'] = { select: { name: INCOME_LABELS[answers.income] || answers.income } };
+  if (answers.relations) properties['Отношения'] = { select: { name: RELATIONS_LABELS[answers.relations] || answers.relations } };
+  if (answers.family) properties['Дети'] = { select: { name: FAMILY_LABELS[answers.family] || answers.family } };
+  if (painsLabels.length) properties['Боли'] = { multi_select: painsLabels.map((name) => ({ name })) };
+  if (answers.dream) properties['Мечта'] = { rich_text: richText(answers.dream) };
+  if (answers.obstacles) properties['Препятствия'] = { rich_text: richText(answers.obstacles) };
+  if (answers.tried) properties['Что пробовала'] = { rich_text: richText(answers.tried) };
+
+  try {
+    const response = await fetch('https://api.notion.com/v1/pages', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${NOTION_TOKEN}`,
+        'Notion-Version': '2022-06-28',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        parent: { database_id: NOTION_DATABASE_ID },
+        properties
+      })
+    });
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.error('Notion append failed:', response.status, errBody.slice(0, 500));
+    }
+  } catch (e) {
+    console.error('Notion append exception:', e.message);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -210,7 +273,10 @@ export default async function handler(req, res) {
       console.error('TG notification failed:', tgResult[0].reason?.message || tgResult[0].reason);
     }
 
-    await appendToSheet(answers, archetypeId, token);
+    await Promise.allSettled([
+      appendToSheet(answers, archetypeId, token),
+      appendToNotion(answers, archetypeId, token)
+    ]);
 
     return res.status(200).json({
       ok: true,
