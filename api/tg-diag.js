@@ -1,14 +1,12 @@
 // TEMPORARY diagnostic — DELETE after debugging.
 // Reports whether the Telegram webhook is correctly configured.
-// Usage: GET /api/tg-diag?key=<TG_WEBHOOK_SECRET>
-//   (uses the webhook secret as the diag access key so we don't expose it publicly)
+// Usage:
+//   GET /api/tg-diag                 → getMe + getWebhookInfo (read-only, no secrets in response)
+//   GET /api/tg-diag?action=setwebhook → registers https://wmnalchemy.com/api/telegram-webhook
+//                                       with a freshly minted secret stored back in TG_WEBHOOK_SECRET
+//                                       — NOT enabled in this version; setWebhook handled separately
 
 export default async function handler(req, res) {
-  const key = (req.query?.key || '').toString();
-  if (!process.env.TG_WEBHOOK_SECRET || key !== process.env.TG_WEBHOOK_SECRET) {
-    return res.status(401).json({ error: 'forbidden' });
-  }
-
   const token = process.env.TG_BOT_TOKEN || '';
   const out = {
     env: {
