@@ -371,105 +371,9 @@
     align-items: center;
   }
 
-  .archetype-card {
-    display: flex;
-    align-items: center;
-    gap: clamp(24px, 4vw, 48px);
-    padding: clamp(24px, 3vw, 36px);
-    background: var(--paper);
-    border-radius: 24px;
-    margin-bottom: 40px;
-    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
-  }
-  .archetype-illu {
-    flex: 0 0 clamp(120px, 18vw, 200px);
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    border-radius: 16px;
-    background: var(--bg);
-  }
-  .archetype-illu img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-  .archetype-meta {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .archetype-label {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-  }
-  .archetype-name {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(28px, 3vw, 40px);
-    line-height: 1.1;
-    letter-spacing: -0.005em;
-    color: var(--ink);
-    text-wrap: balance;
-  }
-  @media (max-width: 600px) {
-    .archetype-card { flex-direction: column; align-items: flex-start; text-align: left; }
-    .archetype-illu { flex-basis: auto; width: 140px; }
-  }
-  .result-block {
-    margin-bottom: 40px;
-    padding-bottom: 0;
-    border-bottom: 0;
-  }
-  .result-block:last-of-type {
-    margin-bottom: 32px;
-  }
-  .result-label {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 14px;
-  }
-  .result-text {
-    font-family: var(--serif);
-    font-size: clamp(19px, 1.5vw, 23px);
-    line-height: 1.45;
-    color: var(--ink);
-    text-wrap: pretty;
-  }
-  /* Block 2 — Цена: italic emphasis, drama */
-  .result-block--cost .result-text {
-    font-style: italic;
-  }
-  /* Block 3 — Помощь: diamond turn-marker above, signals pivot from cost to hope */
-  .result-block--turn {
-    position: relative;
-    padding-top: 44px;
-    margin-top: 8px;
-  }
-  .result-block--turn::before {
-    content: "◆";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    line-height: 1;
-    color: var(--gold);
-  }
-  /* Block 4 — Готовность: muted reality-check, slightly smaller */
-  .result-block--sober .result-text {
-    color: var(--ink-soft);
-    font-size: clamp(17px, 1.4vw, 20px);
-  }
+  /* (Archetype card + legacy 4-block layout removed — letter is the only result.) */
 
-  /* Personal letter — LLM-generated, replaces the 4 legacy blocks when present */
+  /* Personal letter — LLM-generated, full content of the result screen. */
   .personal-letter {
     margin-bottom: 40px;
   }
@@ -483,6 +387,34 @@
   }
   .personal-letter p:last-child {
     margin-bottom: 0;
+  }
+  /* Headline of the letter — first paragraph wrapped in **bold** by the LLM. */
+  .personal-letter .letter-headline {
+    font-family: var(--serif);
+    font-size: clamp(26px, 2.4vw, 36px);
+    line-height: 1.2;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 1.4em;
+    text-wrap: balance;
+    letter-spacing: -0.005em;
+  }
+  .personal-letter strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .personal-letter em {
+    font-style: italic;
+    color: var(--ink-2);
+  }
+  /* Soft fallback message if the LLM stream fails. */
+  .letter-fallback p {
+    font-family: var(--serif);
+    font-size: clamp(19px, 1.5vw, 23px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-bottom: 32px;
   }
   /* Blinking cursor at the end of the last paragraph while streaming */
   .personal-letter.is-streaming p:last-child::after {
@@ -506,30 +438,8 @@
   }
 
   .result-cta {
-    background: var(--paper);
-    border-radius: 20px;
-    padding: 36px 40px;
     margin-top: 24px;
-    box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
     text-align: center;
-  }
-  .result-cta p {
-    font-family: var(--serif);
-    font-size: 19px;
-    line-height: 1.5;
-    color: var(--ink-2);
-    margin-bottom: 24px;
-    max-width: 44ch;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .result-cta p::before {
-    content: "";
-    display: block;
-    width: 32px;
-    height: 1px;
-    background: var(--gold);
-    margin: 0 auto 20px;
   }
 
   .retake {
@@ -545,7 +455,6 @@
     .option::before { left: 18px; }
     .option--check.selected::after { left: 22px; }
     .progress { margin-bottom: 36px; gap: 12px; }
-    .result-cta { padding: 28px 24px; }
     .btn { padding: 14px 22px; font-size: 11px; }
   }
 </style>
@@ -605,42 +514,16 @@
   <div class="screen result shell" id="screen-result">
     <div class="eyebrow">Ваш результат</div>
 
-    <div class="archetype-card">
-      <div class="archetype-illu">
-        <img id="r-image" src="" alt="">
-      </div>
-      <div class="archetype-meta">
-        <div class="archetype-label">Ваш архетип</div>
-        <div class="archetype-name" id="r-archetype"></div>
-      </div>
-    </div>
-
     <div class="personal-letter" id="personal-letter" style="display:none;">
       <div class="personal-letter-body" id="personal-letter-body"></div>
     </div>
 
-    <div class="legacy-blocks" id="legacy-blocks">
-      <div class="result-block result-block--mirror">
-        <div class="result-label">Ваша роль</div>
-        <div class="result-text" id="r-role"></div>
-      </div>
-      <div class="result-block result-block--cost">
-        <div class="result-label">Её цена</div>
-        <div class="result-text" id="r-cost"></div>
-      </div>
-      <div class="result-block result-block--turn">
-        <div class="result-label">Чем Алхимия может помочь</div>
-        <div class="result-text" id="r-help"></div>
-      </div>
-      <div class="result-block result-block--sober">
-        <div class="result-label">К чему быть готовой</div>
-        <div class="result-text" id="r-readiness"></div>
-      </div>
+    <div class="letter-fallback" id="letter-fallback" style="display:none;">
+      <p>Не удалось сгенерировать персональный разбор. Напишите нашей команде – мы свяжемся и пришлём всё лично.</p>
     </div>
 
     <div class="result-cta" id="result-cta">
-      <p>Если откликается – следующий шаг собеседование с Елизаветой. 60 минут, бесплатно.</p>
-      <a class="btn btn--gold" id="btn-book" href="#" target="_blank" rel="noopener"><span class="btn-text">Написать менеджеру</span> <span class="btn-arrow">→</span></a>
+      <a class="btn btn--gold" id="btn-book" href="#" target="_blank" rel="noopener"><span class="btn-text">Написать команде</span> <span class="btn-arrow">→</span></a>
     </div>
 
     <div class="retake">
@@ -756,218 +639,6 @@ const QUESTIONS = [
   }
 ];
 
-const ROLE_PROF = {
-  manager: 'Вы работаете специалистом в найме',
-  top: 'Вы – руководитель или топ-менеджер в компании',
-  owner: 'Вы – собственник своего бизнеса',
-  expert: 'Вы – эксперт с частной практикой',
-  transition: 'Вы в переходе между ролями',
-  family: 'Вы сейчас не работаете, фокус на семье'
-};
-
-const ROLE_ETAP = {
-  stable_growth: 'на этапе стабильного роста',
-  new_level: 'недавно вышли на новый уровень и учитесь его держать',
-  choice_point: 'в точке выбора: продолжать как было или иначе',
-  ceiling: 'упёрлись в потолок, который не пробивается прежними инструментами',
-  not_main: ''
-};
-
-function buildRole(a) {
-  const prof = ROLE_PROF[a.prof] || 'Каждая женщина приходит со своей точкой';
-  const etap = ROLE_ETAP[a.etap];
-  if (!etap || a.etap === 'not_main') return prof + '.';
-  return prof + ', ' + etap + '.';
-}
-
-function buildCost(a) {
-  const pains = a.pains || [];
-  const rel = a.relations;
-  const fam = a.family;
-  const primary = pains[0];
-  let cost = '';
-
-  switch (primary) {
-    case 'istoshenie':
-      cost = 'Энергии становится меньше, ресурс распределяется на пределе. То, что когда-то давало радость, теперь требует усилия.';
-      if (rel === 'married_issues') cost += ' Дома накапливается то, что не успеваете прожить.';
-      if (fam === 'kids_small' || fam === 'kids_school') cost += ' Дети получают вашу нагруженную версию, а не вас.';
-      break;
-    case 'zhenstvennost':
-      cost = 'Каждый шаг в масштаб даётся ценой женского – мягкости, тела, вкуса к жизни.';
-      if (rel === 'married_issues') cost += ' В отношениях это первым замечает партнёр.';
-      if (rel === 'single_seeking') cost += ' Мужчины вашего уровня не появляются – потому что та женщина, к которой можно прийти, недоступна даже вам самой.';
-      break;
-    case 'odinochestvo':
-      cost = 'Реализация состоялась – а рядом нет того, с кем её разделить. И встретить пока не получается, потому что вы не готовы упрощать себя и снижать стандарты.';
-      break;
-    case 'zhonglirovanie':
-      cost = 'Энергия распределяется между ролями – работа, дом, дети, партнёр. На себя саму места не остаётся.';
-      if (rel === 'married_issues') cost += ' И первой страдает близость в паре.';
-      break;
-    case 'proyavitsya':
-      cost = 'Внутренне вы готовы держать больший масштаб – но выходить публично на него что-то не пускает. Чужой рост идёт легко, свой – буксует.';
-      break;
-    case 'kontrol':
-      cost = 'Контроль перестал быть инструментом и стал способом существования. Отпустить страшно, удерживать дальше – невозможно.';
-      if (rel === 'married_issues') cost += ' В отношениях это считывается первым – близость отступает за рамку, которую вы держите.';
-      break;
-    default:
-      cost = 'У каждой роли есть своя цена – та, что женщина платит ресурсом, телом, отношениями или собой.';
-  }
-
-  if (pains.length > 1) {
-    const second = pains[1];
-    const secondMap = {
-      istoshenie: ' И на это накладывается общее истощение – несёте больше, чем выдерживает система.',
-      zhenstvennost: ' И параллельно – постепенная потеря женского в себе на пути к достижениям.',
-      odinochestvo: ' А рядом нет того, с кем можно было бы это разделить.',
-      zhonglirovanie: ' И всё это – на фоне многих ролей, в которых вы себя не успеваете найти.',
-      proyavitsya: ' А выход из этой точки в большую публичную работу пока не складывается.',
-      kontrol: ' И всё это удерживается вашим контролем – который сам давно перестал быть выбором.'
-    };
-    if (secondMap[second]) cost += secondMap[second];
-  }
-  return cost;
-}
-
-const PAIN_WEEKS_TEXT = {
-  istoshenie: 'недели 1-я (нервная система), 3-я (опора на Землю), 5-я (женская воля) и 6-я (управление вниманием)',
-  zhenstvennost: 'недели 2-я (деконцентрация и интуиция), 4-я (сакральные практики), 8-я (наслаждение и красота) и 10-я (открытие сердца)',
-  odinochestvo: 'недели 9-я (полярность мужского и женского), 10-я (открытие сердца) и 12-я (реализация в паре)',
-  zhonglirovanie: 'недели 1-я (нервная система), 7-я (циклы), 8-я (наслаждение как топливо) и 13-я (жизнь как алхимия)',
-  proyavitsya: 'недели 5-я (женская воля), 6-я (внимание), 8-я (видимость и наслаждение) и 11-я (доверие жизни)',
-  kontrol: 'недели 1-я (нервная система), 2-я (деконцентрация), 11-я (доверие жизни и выход из контроля) и 13-я (жизнь как алхимия)'
-};
-
-function buildHelp(a) {
-  const pains = a.pains || [];
-  if (pains.length === 0) {
-    return 'Программа работает на всех уровнях – от нервной системы до публичной жизни. На собеседовании Елизавета увидит, какие из 14 недель особенно отзовутся именно вам.';
-  }
-  if (pains.length === 1) {
-    return 'Программа работает на всех уровнях – от нервной системы до публичной жизни, – но для вашей точки особенно отзовутся ' + PAIN_WEEKS_TEXT[pains[0]] + '.';
-  }
-  return 'Программа работает на всех уровнях – от нервной системы до публичной жизни, – но для вашей точки особенно отзовутся ' + PAIN_WEEKS_TEXT[pains[0]] + '. И ' + PAIN_WEEKS_TEXT[pains[1]] + ' – для второго слоя того, что вы несёте.';
-}
-
-const ARCHETYPES = {
-  1: { name: 'Руководите командой',          image: 'images/whofor-01.png' },
-  2: { name: 'Развиваете свой бизнес',       image: 'images/whofor-02.png' },
-  3: { name: 'Реализованы, но одиноки',      image: 'images/whofor-03.png' },
-  4: { name: 'Наставник для других',         image: 'images/whofor-04.png' },
-  5: { name: 'Совмещаете семью и работу',    image: 'images/whofor-05.png' },
-  6: { name: 'Выходите на новый виток',      image: 'images/whofor-06.png' }
-};
-
-/*
- * pickArchetype — assignment matrix (audit ALC-17, 2026-05-18)
- *
- *                  istoshenie  zhenstvennost  odinochestvo  zhonglirovanie  proyavitsya
- *   manager          1             1              3             5             6
- *   top              1             1              3             5             6
- *   owner            2             2              3             5             6
- *   expert           4             4              3             5             6
- *   transition       6             6              3             5             6
- *   family           5             5              3             5             6
- *
- * Logic (priority order):
- *   1. Pain-primary trio (odinochestvo→3, proyavitsya→6, zhonglirovanie→5)
- *      overrides everything else — these pains define the archetype.
- *   2. For pains istoshenie/zhenstvennost, archetype is profession-driven:
- *      expert→4, owner→2, manager/top→1.
- *   3. Edge cases by life-phase: family-prof or kids_small/school→5;
- *      rel=single_seeking→3; transition-prof→6.
- *   4. Final fallback by pain: istoshenie→1, zhenstvennost→2, else 1.
- *
- * No mismatches found — all 30 prof×pain cells map to a defensible
- * archetype. Edge cells (manager/top + zhenstvennost → 1 «Руководите
- * командой») fall back to professional identity because zhenstvennost
- * is felt across many archetypes and prof is the disambiguator.
- */
-function pickArchetype(a) {
-  const pains = a.pains || [];
-  const primary = pains[0];
-  const prof = a.prof;
-  const rel = a.relations;
-  const fam = a.family;
-
-  // Pain-driven first (the strongest signal)
-  if (primary === 'odinochestvo') return 3;
-  if (primary === 'proyavitsya') return 6;
-  if (primary === 'zhonglirovanie') return 5;
-
-  // Profession-driven for remaining pains
-  if (prof === 'expert') return 4;
-  if (prof === 'owner') return 2;
-  if (prof === 'manager' || prof === 'top') return 1;
-
-  // Edge cases (transition / family)
-  if (prof === 'family' || fam === 'kids_small' || fam === 'kids_school') return 5;
-  if (rel === 'single_seeking') return 3;
-  if (prof === 'transition') return 6;
-
-  // Fallback: by remaining pain
-  if (primary === 'istoshenie') return 1;
-  if (primary === 'zhenstvennost') return 2;
-  return 1;
-}
-
-/* ALC-17 audit harness — runs in browser console only if DEBUG=true.
- * Verifies the 30-cell prof×pain matrix above against pickArchetype output. */
-const DEBUG = false;
-if (DEBUG) {
-  const profs = ['manager', 'top', 'owner', 'expert', 'transition', 'family'];
-  const pains = ['istoshenie', 'zhenstvennost', 'odinochestvo', 'zhonglirovanie', 'proyavitsya'];
-  const expected = {
-    'manager|istoshenie': 1, 'manager|zhenstvennost': 1, 'manager|odinochestvo': 3, 'manager|zhonglirovanie': 5, 'manager|proyavitsya': 6,
-    'top|istoshenie':     1, 'top|zhenstvennost':     1, 'top|odinochestvo':     3, 'top|zhonglirovanie':     5, 'top|proyavitsya':     6,
-    'owner|istoshenie':   2, 'owner|zhenstvennost':   2, 'owner|odinochestvo':   3, 'owner|zhonglirovanie':   5, 'owner|proyavitsya':   6,
-    'expert|istoshenie':  4, 'expert|zhenstvennost':  4, 'expert|odinochestvo':  3, 'expert|zhonglirovanie':  5, 'expert|proyavitsya':  6,
-    'transition|istoshenie': 6, 'transition|zhenstvennost': 6, 'transition|odinochestvo': 3, 'transition|zhonglirovanie': 5, 'transition|proyavitsya': 6,
-    'family|istoshenie':  5, 'family|zhenstvennost':  5, 'family|odinochestvo':  3, 'family|zhonglirovanie':  5, 'family|proyavitsya':  6
-  };
-  let mismatches = 0;
-  console.group('ALC-17 archetype audit');
-  for (const p of profs) for (const x of pains) {
-    const actual = pickArchetype({ prof: p, pains: [x] });
-    const exp = expected[p + '|' + x];
-    const ok = actual === exp;
-    if (!ok) mismatches++;
-    console.log((ok ? '✓' : '✗'), p + ' × ' + x, '→', actual, '(expected', exp + ')');
-  }
-  console.log(mismatches === 0 ? 'All 30 cells match.' : mismatches + ' mismatches.');
-  console.groupEnd();
-}
-
-function buildReadiness(a) {
-  // experience is multi-select (array). Pick highest-priority entry for the
-  // map lookup. Priority: liza_grad > therapy > somatic > practices > starter.
-  let exp = a.experience;
-  if (Array.isArray(exp)) {
-    const priority = ['liza_grad', 'therapy', 'somatic', 'practices', 'starter'];
-    exp = priority.find(p => exp.includes(p)) || exp[0];
-  }
-  const rdy = a.readiness;
-  const map = {
-    'liza_grad|ready': 'У вас есть и опыт работы с собой, и готовность к практике. Методологию Елизаветы вы узнаете сразу – первые недели не уйдут на адаптацию, можно идти глубже с самого начала.',
-    'liza_grad|struggle': 'Опыт у вас есть – методологию узнаете сразу. Но ежедневная регулярность сейчас в вопросе. Это место для обсуждения на собеседовании.',
-    'liza_grad|unsure': 'Опыт у вас есть – но регулярная ежедневная практика сейчас под большим вопросом. Прежде чем принимать решение, важно честно посмотреть, есть ли в графике место для серьёзной работы.',
-    'therapy|ready': 'Психотерапия и коучинг дают базу – в Алхимии вы быстро увидите, как ваш опыт ложится в новую систему. Первые недели – освоение методологии. Дальше – глубже.',
-    'therapy|struggle': 'У вас есть база, но ежедневная регулярная практика – другой уровень обязательства. На собеседовании важно обсудить, реалистично ли встроить 30–60 минут в день именно сейчас.',
-    'therapy|unsure': 'База у вас есть, но без ежедневной практики Алхимия не работает. Если в графике пока нет этих 30–60 минут – возможно, не сейчас.',
-    'somatic|ready': 'Телесные практики дают вам базу – тело уже умеет слушать. В Алхимии вы быстро узнаете похожие принципы и углубитесь в их женский слой.',
-    'somatic|struggle': 'Опыт телесной работы у вас есть – это огромный плюс. Но ежедневная регулярная работа – другой уровень. На собеседовании важно обсудить, как это встроится в график.',
-    'somatic|unsure': 'База телесных практик у вас есть, но без ежедневности результат будет ограничен. Прежде чем решать, важно посмотреть, есть ли в графике место для серьёзной работы.',
-    'practices|ready': 'Какой-то опыт есть, и есть готовность – это хорошая стартовая точка. В первые недели будет погружение в методологию, и вы увидите, как разрозненные практики собираются в систему.',
-    'practices|struggle': 'Опыт есть, но не системный. И с регулярностью пока сложно. Это важно прямо проговорить на собеседовании – иногда самое время начать, иногда лучше сначала навести порядок в графике.',
-    'practices|unsure': 'Без ежедневной регулярной работы Алхимия не работает. Прежде чем принимать решение, посмотрите на свой график – если 30–60 минут сейчас не найти, лучше отложить набор.',
-    'starter|ready': 'Это ваш первый серьёзный заход в такую работу. В первые недели будет адаптация – программа потребует переоценки того, как вы привыкли действовать. Дайте себе на это пространство.',
-    'starter|struggle': 'Это первый серьёзный заход в работу с собой, и регулярность пока в вопросе. Это серьёзное обучение телу – без ежедневной практики оно не происходит. Обсудим на собеседовании, ваше ли это сейчас время.',
-    'starter|unsure': 'Первый серьёзный заход и неуверенность с регулярностью – это много сразу. Возможно, имеет смысл начать с одной частной консультации с Елизаветой – посмотреть на свою точку и решить шаг за шагом.'
-  };
-  return map[exp + '|' + rdy] || 'На собеседовании Елизавета посмотрит вашу ситуацию и скажет, ваше ли это время для программы.';
-}
 
 const state = { idx: 0, answers: {} };
 
@@ -1114,19 +785,6 @@ function renderQuestion() {
   btnBack.disabled = state.idx === 0;
 }
 
-function renderResult() {
-  const archId = pickArchetype(state.answers);
-  const arch = ARCHETYPES[archId];
-  document.getElementById('r-archetype').textContent = arch.name;
-  const img = document.getElementById('r-image');
-  img.src = arch.image;
-  img.alt = arch.name;
-  document.getElementById('r-role').textContent = buildRole(state.answers);
-  document.getElementById('r-cost').textContent = buildCost(state.answers);
-  document.getElementById('r-help').textContent = buildHelp(state.answers);
-  document.getElementById('r-readiness').textContent = buildReadiness(state.answers);
-}
-
 btnStart.addEventListener('click', () => {
   state.idx = 0;
   renderQuestion();
@@ -1188,19 +846,44 @@ function escapeHtml(s) {
 // Renders streaming text into the letter body. Splits buffer on \n\n
 // boundaries so a complete paragraph becomes its own <p>; the trailing
 // (unfinished) fragment stays in a "live" paragraph until the next break.
+//
+// Paragraphs are processed for minimal markdown:
+//   **text** → <strong>   *text* → <em>
+// A paragraph that is *entirely* **bold** becomes the .letter-headline (h2-equivalent).
+// The live (in-progress) paragraph stays as plain text until it's committed —
+// this avoids flicker from half-formed ** pairs during streaming.
+function escapeLetterHtml(s) {
+  return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+}
+function renderInlineMarkdown(s) {
+  let out = escapeLetterHtml(s);
+  out = out.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // single * for italic — must not match leftover ** parts
+  out = out.replace(/(^|[^*])\*(?!\*)([^*\n]+?)\*(?!\*)/g, '$1<em>$2</em>');
+  return out;
+}
+function commitParagraph(p, trimmed) {
+  const headlineMatch = trimmed.match(/^\*\*([\s\S]+)\*\*$/);
+  if (headlineMatch && !headlineMatch[1].includes('**')) {
+    p.classList.add('letter-headline');
+    p.innerHTML = renderInlineMarkdown(headlineMatch[1]);
+  } else {
+    p.innerHTML = renderInlineMarkdown(trimmed);
+  }
+}
+
 function makeLetterStream() {
   const letterEl = document.getElementById('personal-letter');
   const bodyEl = document.getElementById('personal-letter-body');
   const ctaEl = document.getElementById('result-cta');
-  const legacyEl = document.getElementById('legacy-blocks');
+  const fallbackEl = document.getElementById('letter-fallback');
 
   letterEl.style.display = 'block';
   letterEl.classList.add('is-streaming');
-  legacyEl.style.display = 'none';
+  if (fallbackEl) fallbackEl.style.display = 'none';
   ctaEl.classList.add('is-pending');
 
   let buffer = '';
-  let committedParas = [];
   let liveP = document.createElement('p');
   bodyEl.appendChild(liveP);
 
@@ -1213,20 +896,19 @@ function makeLetterStream() {
       for (const completed of parts) {
         const trimmed = completed.trim();
         if (trimmed) {
-          liveP.textContent = trimmed;
-          committedParas.push(liveP);
+          commitParagraph(liveP, trimmed);
           liveP = document.createElement('p');
           bodyEl.appendChild(liveP);
         }
       }
+      // Live paragraph stays as raw text — we render markdown only on commit
+      // to avoid flicker when ** is half-typed.
       liveP.textContent = liveText;
       buffer = liveText;
-      // Scroll the letter into view smoothly so the user follows as it writes
-      // without us yanking the page on every chunk.
     },
     done() {
       const tail = buffer.trim();
-      if (tail) liveP.textContent = tail;
+      if (tail) commitParagraph(liveP, tail);
       else if (!liveP.textContent) liveP.remove();
       letterEl.classList.remove('is-streaming');
       ctaEl.classList.remove('is-pending');
@@ -1234,7 +916,7 @@ function makeLetterStream() {
     fail() {
       letterEl.classList.remove('is-streaming');
       letterEl.style.display = 'none';
-      legacyEl.style.display = 'block';
+      if (fallbackEl) fallbackEl.style.display = 'block';
       ctaEl.classList.remove('is-pending');
     }
   };
@@ -1299,7 +981,6 @@ btnNext.addEventListener('click', async () => {
   try {
     const data = await submitAnketa();
     progressFill.style.width = '100%';
-    renderResult();
     applySubmitSuccess(data.token, data.botUsername);
     try { localStorage.setItem('alchemy_test_answers', JSON.stringify(state.answers)); } catch (e) {}
     showScreen('result');
