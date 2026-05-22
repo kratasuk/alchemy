@@ -832,7 +832,7 @@
   .alc-voices-grid::-webkit-scrollbar-track { background: transparent; }
   .alc-voices-grid::-webkit-scrollbar-thumb { background: var(--ink-hair); border-radius: 4px; }
   .alc-voice {
-    flex: 0 0 clamp(260px, 22vw, 320px);
+    flex: 0 0 clamp(300px, 26vw, 380px);
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
@@ -856,14 +856,16 @@
   .alc-voice-body {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    padding: 26px 24px 24px;
+    gap: 22px;
+    padding: 30px 28px 28px;
     flex: 1;
   }
+  /* Quote — matches landing body type (Cormorant Garamond, 22–24px),
+     italic for testimonial convention. */
   .alc-voice .text {
     font-family: var(--serif);
     font-style: italic;
-    font-size: clamp(17px, 1.1vw, 19px);
+    font-size: clamp(20px, 1.45vw, 23px);
     line-height: 1.45;
     color: var(--ink-2);
     flex: 1;
@@ -873,23 +875,22 @@
   .alc-voice .who {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     padding-top: 22px;
     border-top: 1px solid var(--ink-hair);
     font-family: var(--sans);
-    font-size: 13px;
   }
   .alc-voice .who strong {
     font-family: var(--sans);
     font-weight: 500;
-    font-size: 15px;
+    font-size: 17px;
     color: var(--ink);
     letter-spacing: 0;
   }
   .alc-voice .who .role {
     color: var(--ink-soft);
-    font-size: 13px;
-    letter-spacing: 0.02em;
+    font-size: 15px;
+    letter-spacing: 0.01em;
   }
 
   /* ─── FAQ ─── */
@@ -1197,28 +1198,27 @@
       min-height: 0;
       max-width: 240px;
     }
-    /* Voices on mobile — keep horizontal scroll. Card 72vw so the user
-       sees the next card peeking from the edge. Photo stays 1:1 (matches
-       source crops, no risk of cutting hats/hair). Text bumped 18-19px
-       for comfortable reading on phone. */
+    /* Voices on mobile — keep horizontal scroll. Card 78vw so user sees
+       next card peeking. Type matches landing body conventions:
+       serif italic quote 21px, sans name 17px, sans role 15px. */
     .alc-voice {
-      flex: 0 0 72vw;
-      max-width: 300px;
+      flex: 0 0 78vw;
+      max-width: 340px;
       min-height: 0;
     }
     .alc-voice-body {
-      padding: 24px 22px 22px;
-      gap: 18px;
+      padding: 26px 24px 24px;
+      gap: 20px;
     }
     .alc-voice .text {
-      font-size: 18px;
-      line-height: 1.5;
+      font-size: 21px;
+      line-height: 1.45;
     }
     .alc-voice .who strong {
-      font-size: 16px;
+      font-size: 17px;
     }
     .alc-voice .who .role {
-      font-size: 14px;
+      font-size: 15px;
     }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
