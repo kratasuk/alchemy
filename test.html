@@ -406,6 +406,26 @@
   .personal-letter p:last-child {
     margin-bottom: 0;
   }
+  /* Closing paragraph («Если хочется понять, подойдёт ли Алхимия…») gets
+     a left-aligned gold hairline above it to visually separate the
+     «invitation» from the letter body. Applied only after streaming
+     completes — during streaming, the live paragraph would temporarily
+     look like the closing. */
+  .personal-letter:not(.is-streaming) p:last-child {
+    margin-top: 56px;
+    padding-top: 36px;
+    position: relative;
+    color: var(--ink-2);
+  }
+  .personal-letter:not(.is-streaming) p:last-child::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 1px;
+    background: var(--gold);
+  }
   /* Headline of the letter — first paragraph wrapped in **bold** by the LLM. */
   .personal-letter .letter-headline {
     font-family: var(--serif);
