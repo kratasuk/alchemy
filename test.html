@@ -1003,11 +1003,19 @@ function buildResultMeta(name) {
   return cleanName ? dateStr + ' · ' + cleanName : dateStr;
 }
 
-function applySubmitSuccess(token, botUsername) {
+function applySubmitSuccess(token, botUsername, readiness) {
   state.token = token;
   state.botUsername = botUsername || 'alchemysupportbot';
   const link = 'https://t.me/' + state.botUsername + '?start=' + encodeURIComponent(token);
   btnBook.setAttribute('href', link);
+
+  // Button label depends on readiness (set by /api/submit per income bracket):
+  // GREEN/YELLOW → invite to peer meeting ("Записаться на встречу")
+  // RED → soft individual review ("Написать команде")
+  const labelEl = btnBook.querySelector('.btn-text');
+  if (labelEl) {
+    labelEl.textContent = readiness === 'red' ? 'Написать команде' : 'Записаться на встречу';
+  }
 
   const metaEl = document.getElementById('result-meta');
   if (metaEl) {
@@ -1040,7 +1048,7 @@ btnNext.addEventListener('click', async () => {
   try {
     const data = await submitAnketa();
     progressFill.style.width = '100%';
-    applySubmitSuccess(data.token, data.botUsername);
+    applySubmitSuccess(data.token, data.botUsername, data.readiness);
     try { localStorage.setItem('alchemy_test_answers', JSON.stringify(state.answers)); } catch (e) {}
     showScreen('result');
   } catch (err) {
