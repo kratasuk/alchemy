@@ -832,66 +832,64 @@
   .alc-voices-grid::-webkit-scrollbar-track { background: transparent; }
   .alc-voices-grid::-webkit-scrollbar-thumb { background: var(--ink-hair); border-radius: 4px; }
   .alc-voice {
-    flex: 0 0 clamp(280px, 30vw, 380px);
+    flex: 0 0 clamp(320px, 30vw, 400px);
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 36px 32px 28px;
     background: var(--paper);
     border-radius: 24px;
+    overflow: hidden;
     box-shadow: 0 8px 32px rgba(28, 24, 20, 0.06), 0 1px 2px rgba(28, 24, 20, 0.04);
-    min-height: 320px;
   }
-  .alc-voice .quote-mark {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 48px;
-    line-height: 0.4;
-    color: #4a3528;
-    height: 24px;
-    letter-spacing: -0.05em;
+  .alc-voice-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--ink-hair);
+  }
+  .alc-voice-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .alc-voice-body {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 32px 30px 28px;
+    flex: 1;
   }
   .alc-voice .text {
     font-family: var(--serif);
-    font-size: clamp(22px, 1.55vw, 24px);
+    font-style: italic;
+    font-size: clamp(20px, 1.4vw, 22px);
     line-height: 1.45;
     color: var(--ink-2);
     flex: 1;
     text-wrap: pretty;
+    margin: 0;
   }
   .alc-voice .who {
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    gap: 4px;
     padding-top: 22px;
     border-top: 1px solid var(--ink-hair);
     font-family: var(--sans);
-    font-size: 14px;
-    color: var(--ink-soft);
-  }
-  .alc-voice .who::before {
-    content: '';
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #4a3528;
-    flex-shrink: 0;
+    font-size: 13px;
   }
   .alc-voice .who strong {
     font-family: var(--sans);
     font-weight: 500;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--ink);
-    text-transform: none;
     letter-spacing: 0;
-    display: inline;
-    margin: 0;
   }
-  .alc-voice .who strong::after {
-    content: ', ';
-    font-weight: 400;
+  .alc-voice .who .role {
     color: var(--ink-soft);
+    font-size: 13px;
+    letter-spacing: 0.02em;
   }
 
   /* ─── FAQ ─── */
@@ -1513,11 +1511,11 @@
 (function(){
   // ── data ──
   const voices = [
-    { text: 'Executive MBA по женственности – структурно, глубоко, трансформирующе и при этом очень практично.', name: 'Татьяна', who: 'Топ-менеджер · 47 лет' },
-    { text: 'Открыли второй филиал, месячный доход вырос в пять раз. Это не тактика – это структурное изменение в том, кем я была.', name: 'Антонина', who: 'Владелец клиники · 43 года' },
-    { text: 'Впервые за четыре года мой чек вырос в десять раз. Я набрала мини-вип-группу под своё сопровождение – и просто была к этому готова.', name: 'Анна', who: 'Наставник · 41 год' },
-    { text: 'Я не отлетела – я облегчилась. Энергия ушла из головы и спустилась в тело, где она всегда была нужна. Я вернулась в себя.', name: 'Екатерина', who: 'Преподаватель вокала · 44 года' },
-    { text: 'Я ждала Алхимию три года. И как только Елизавета объявила о наборе, я знала – мне сюда. Не было ни грамма сомнений.', name: 'Ирина', who: 'Предпринимательница · 38 лет' }
+    { photo: 'images/voice-tatyana.jpg',  text: 'Эта программа – Executive MBA по женственности. Структурно, глубоко, трансформирующе и при этом очень практично.', name: 'Татьяна Г.', who: 'HR, консультант' },
+    { photo: 'images/voice-antonina.jpg', text: 'Мы открыли второй филиал клиники, месячный доход вырос в пять раз. И это произошло не за счёт тактики. Произошла внутренняя трансформация.', name: 'Антонина С.', who: 'Со-основатель клиники' },
+    { photo: 'images/voice-anna.jpg',     text: 'Впервые за четыре года мой чек вырос в десять раз. Я набрала вип-группу под своё сопровождение. Раньше не была к этому готова.', name: 'Анна Г.', who: 'Бизнес-коуч, риск менеджер' },
+    { photo: 'images/voice-irina.jpg',    text: 'Я ждала Алхимию три года. И как только Елизавета объявила о наборе, я знала – мне сюда. Не было ни грамма сомнений.', name: 'Ирина Ч.', who: 'Журналист, бизнес-психолог' },
+    { photo: 'images/voice-natalya.jpg',  text: 'Энергия ушла из головы и спустилась в тело, где она всегда была нужна. Я вернулась к себе настоящей.', name: 'Наталья Б.', who: 'Предприниматель' }
   ];
 
   const faq = [
@@ -1538,9 +1536,16 @@
   // ── render voices ──
   document.getElementById('voices-grid').innerHTML = voices.map(v => `
     <div class="alc-voice reveal">
-      <div class="quote-mark">"</div>
-      <p class="text">${v.text}</p>
-      <div class="who"><strong>${v.name}</strong>${v.who}</div>
+      <div class="alc-voice-photo">
+        <img src="${v.photo}" alt="${v.name}" loading="lazy">
+      </div>
+      <div class="alc-voice-body">
+        <p class="text">${v.text}</p>
+        <div class="who">
+          <strong>${v.name}</strong>
+          <span class="role">${v.who}</span>
+        </div>
+      </div>
     </div>`).join('');
 
   // ── render faq ──
