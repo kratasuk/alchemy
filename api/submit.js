@@ -313,6 +313,15 @@ export default async function handler(req, res) {
   }
 
   const archetypeId = pickArchetype(answers);
+  // Readiness traffic light from income — needed by frontend to pick the
+  // right CTA button label (GREEN/YELLOW → «Записаться на встречу»,
+  // RED → «Написать команде»).
+  const readiness = (function () {
+    const inc = answers.income;
+    if (inc === 'under_100') return 'red';
+    if (inc === '100_300') return 'yellow';
+    return 'green';
+  })();
   const token = shortToken();
 
   try {
@@ -336,7 +345,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       ok: true,
       token,
-      botUsername: TG_BOT_USERNAME
+      botUsername: TG_BOT_USERNAME,
+      readiness
     });
   } catch (err) {
     console.error('submit error:', err);
