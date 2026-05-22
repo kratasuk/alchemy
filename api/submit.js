@@ -62,12 +62,15 @@ const WORK_PAIN_LABELS = {
 };
 
 // Q6 «Что сейчас сложнее всего в отношениях?» (multi, до 2)
+// `all_good` — особый сигнал «отношений нет боли», не pain. Влияет на промпт:
+// абзац про отношения в письме переключается с «что станет лучше» на «эта
+// зона уже работает».
 const RELATIONSHIP_PAIN_LABELS = {
   lack_intimacy: 'Нет доверия и близости',
   low_passion: 'Мало страсти',
   cannot_be_self: 'Не может быть собой',
   no_peer_men: 'Не встречает равных',
-  cannot_let_in: 'Не может впустить'
+  all_good: 'В отношениях всё хорошо'
 };
 
 // Архетип присваивается по сигналам Q1 (профессия) + Q2 (сложности в работе)
@@ -84,7 +87,8 @@ function pickArchetype(a) {
   const fam = a.family;
 
   // 1. Strongest override: одиночество «не встречаю равных» + одна → 3
-  const lonelinessSignals = ['no_peer_men', 'cannot_let_in'];
+  // (cannot_let_in убран в v3.1 — заменён на all_good, который не pain)
+  const lonelinessSignals = ['no_peer_men'];
   const singleStates = ['single_choice', 'single_seeking', 'recent_split'];
   if (relPains.some((p) => lonelinessSignals.includes(p)) && singleStates.includes(rel)) {
     return 3;
