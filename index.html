@@ -1197,10 +1197,28 @@
       min-height: 0;
       max-width: 240px;
     }
-    /* Voices on mobile — keep horizontal scroll, just make cards wider */
+    /* Voices on mobile — keep horizontal scroll. Card 72vw so the user
+       sees the next card peeking from the edge. Photo stays 1:1 (matches
+       source crops, no risk of cutting hats/hair). Text bumped 18-19px
+       for comfortable reading on phone. */
     .alc-voice {
-      flex: 0 0 calc(100vw - 48px);
+      flex: 0 0 72vw;
+      max-width: 300px;
       min-height: 0;
+    }
+    .alc-voice-body {
+      padding: 24px 22px 22px;
+      gap: 18px;
+    }
+    .alc-voice .text {
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .alc-voice .who strong {
+      font-size: 16px;
+    }
+    .alc-voice .who .role {
+      font-size: 14px;
     }
     .alc-week { grid-template-columns: 1fr; }
     .alc-week-left { padding: 32px 28px; }
