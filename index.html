@@ -1079,9 +1079,11 @@
   }
 
   /* ─── FOOTER ─── */
+  /* Footer reduced to a single legal row (оферта · политика · ООО)
+     in v4.7 per Anton — big brand/contact/CTA blocks removed. */
   .alc-footer {
     background: var(--bg-warm);
-    padding: 80px var(--gutter) 36px;
+    padding: 32px var(--gutter);
   }
   .alc-footer-inner {
     max-width: var(--maxw);
@@ -1137,10 +1139,11 @@
     gap: 16px;
   }
   /* Legal row — small text/links at the very bottom, right-aligned cluster
-     with three items: оферта · политика · юр.лицо. */
+     with three items: оферта · политика · юр.лицо.
+     Since v4.7 it's the entire footer content (margin: 0). */
   .alc-footer-legal {
     max-width: var(--maxw);
-    margin: 12px auto 0;
+    margin: 0 auto;
     display: flex;
     justify-content: flex-end;
     gap: clamp(20px, 4vw, 56px);
@@ -1483,69 +1486,11 @@
   </div>
 </section>
 
-<!-- FINAL -->
-<section class="alc-final" id="apply">
-  <div class="alc-final-inner reveal">
-    <span class="alc-final-eyebrow">Следующий шаг</span>
-    <h2 class="alc-final-title">Расскажите, где вы&nbsp;сейчас. <br>Точно.</h2>
-    <p class="alc-final-text">Анкета – пятнадцать минут. Восемь вопросов о том, что вы уже построили и где сейчас упираетесь. Елизавета читает каждую лично и отвечает в течение 48&nbsp;часов. Если есть резонанс – пригласит на собеседование. Если нет – скажет прямо.</p>
-    <div class="alc-final-steps" aria-hidden="true">
-      <div class="alc-final-step">
-        <span class="n">1</span>
-        <span class="lbl">Тест<span class="here">4 минуты</span></span>
-      </div>
-      <div class="alc-final-step">
-        <span class="n">2</span>
-        <span class="lbl">Анкета<span class="here">вы здесь →</span></span>
-      </div>
-      <div class="alc-final-step">
-        <span class="n">3</span>
-        <span class="lbl">Собеседование<span class="here">с Елизаветой лично</span></span>
-      </div>
-    </div>
-    <div class="alc-final-cta-row">
-      <a class="btn btn--light" href="test.html">Заполнить анкету <span class="arrow">→</span></a>
-      <a href="quiz.html" class="btn btn--ghost-light">Пройти тест сначала <span class="arrow">↓</span></a>
-    </div>
-    <div class="alc-final-fine">
-      <span>15 минут</span><span class="dot">·</span>
-      <span>Елизавета читает лично</span><span class="dot">·</span>
-      <span>Ответ в 48 часов</span><span class="dot">·</span>
-      <span>Без автоматических рассылок</span>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
+<!-- FOOTER — minimal: only legal links + company name. Final CTA section
+     and the bigger brand/program/contact block were removed per Anton's
+     request — landing has CTAs in earlier sections; the footer is now
+     just the legal footer line. -->
 <footer class="alc-footer">
-  <div class="alc-footer-inner">
-    <div class="alc-footer-brand">
-      <div class="brand"><span class="brand-wordmark"><span class="brand-name">АЛХИМИЯ ЖЕНЩИНЫ</span></span></div>
-      <p>Программа Елизаветы Бабановой. 14 недель работы с нервной системой, телом и женской природой – для тех, кто умеет достигать и хочет делать это, не теряя себя.</p>
-    </div>
-    <div class="alc-footer-col">
-      <h4>Программа</h4>
-      <ul>
-        <li><a href="#whofor">Для кого</a></li>
-        <li><a href="#about">О Елизавете</a></li>
-        <li><a href="#weeks">14 недель</a></li>
-        <li><a href="#how">Как проходит</a></li>
-      </ul>
-    </div>
-    <div class="alc-footer-col">
-      <h4>Контакт</h4>
-      <ul>
-        <li><a href="#voices">Отзывы</a></li>
-        <li><a href="#faq">FAQ</a></li>
-        <li><a href="test.html">Подать заявку</a></li>
-        <li><a href="index.html">Eliza Babanova</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="alc-footer-base">
-    <span>© 2026 Eliza Babanova · Алхимия Женщины</span>
-    <span>Программа · По собеседованию</span>
-  </div>
   <div class="alc-footer-legal">
     <a href="oferta.html">Публичная оферта</a>
     <a href="privacy.html">Политика конфиденциальности</a>
