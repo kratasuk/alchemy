@@ -944,7 +944,9 @@
   }
 
   /* ─── FINAL ─── */
-  .alc-final, .alc-footer { display: none; }
+  /* Старое правило `.alc-final, .alc-footer { display: none; }`
+     удалено в v4.7 — оно осталось от прошлой итерации дизайна
+     и прятало финальную секцию + футер целиком. */
   .alc-final-original {
     background: var(--night);
     color: var(--paper);
