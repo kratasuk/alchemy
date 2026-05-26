@@ -106,24 +106,24 @@
     hanging-punctuation: first last;
   }
 
-  /* Pull-quote — dark-cocoa card with gold hairlines top + bottom,
-     italic serif text in cream, with an emphasized closing phrase in
-     gold accent. Used for the key emotional/turning-point sentences. */
+  /* Pull-quote — italic serif with thin gold hairlines top + bottom,
+     key phrase in gold accent. Background stays the page's paper cream;
+     only typography + hairlines do the work. */
   .story-section .story-quote {
     margin: 56px 0;
-    padding: clamp(40px, 5vw, 64px) clamp(32px, 4vw, 56px);
-    background: #4a3528;
-    border-top: 1px solid rgba(200, 161, 96, 0.55);
-    border-bottom: 1px solid rgba(200, 161, 96, 0.55);
+    padding: clamp(36px, 4.5vw, 56px) 0;
+    background: transparent;
+    border-top: 1px solid rgba(154, 120, 56, 0.45);
+    border-bottom: 1px solid rgba(154, 120, 56, 0.45);
     font-family: var(--serif);
     font-style: italic;
     font-size: clamp(22px, 1.85vw, 28px);
     line-height: 1.45;
-    color: #f3ece0;
+    color: var(--ink);
     text-wrap: pretty;
   }
   .story-section .story-quote em {
-    color: #c8a160;
+    color: var(--gold);
     font-style: italic;
   }
 
