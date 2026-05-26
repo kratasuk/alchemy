@@ -22,9 +22,7 @@ const PULL_QUOTES = new Map([
   ['Если бы моя жизнь сейчас закончилась – чем я по-настоящему горжусь и что ещё хочу успеть улучшить?',
    'Если бы моя жизнь сейчас закончилась – *чем я по-настоящему горжусь и что ещё хочу успеть улучшить?*'],
   ['Я поняла: следующий уровень счастья для меня – отношения, где я желанная женщина.',
-   'Я поняла: следующий уровень счастья для меня – *отношения, где я желанная женщина.*'],
-  ['Она не заставила меня стать какой-то другой женщиной. Она помогла мне вернуться к себе настоящей.',
-   'Она не заставила меня стать какой-то другой женщиной. *Она помогла мне вернуться к себе настоящей.*']
+   'Я поняла: следующий уровень счастья для меня – *отношения, где я желанная женщина.*']
 ]);
 
 // After these paragraphs, emit an extra <img>. Paragraph text → image path.
@@ -50,14 +48,8 @@ function buildArticle() {
   // Project rule: em-dash → en-dash (everywhere, including in dialogue)
   text = text.replace(/—/g, '–');
 
-  // Strip inline image placeholder markers [a]-[e] that appear in the middle
-  // or end of lines (Google Docs footnote-style refs to embedded images).
-  // Use [ \t] not \s so we don't accidentally swallow line breaks and merge
-  // adjacent paragraphs.
-  text = text.replace(/[ \t]*\[[a-e]\][ \t]*/g, ' ').replace(/[ \t]+$/gm, '');
-
-  // Drop image placeholder lines [a]/[b]/[c]/[d]/[e] standalone
-  // and footnote URL refs at the very end
+  // Drop footnote URL refs first ([a]https://… lines) BEFORE the inline
+  // [a]-[e] strip would erase the prefix and leave a stray URL paragraph.
   text = text.split('\n').filter(l => {
     const t = l.trim();
     if (/^\[[a-z]\]$/.test(t)) return false;
@@ -65,6 +57,12 @@ function buildArticle() {
     if (/^Вкладка \d+$/.test(t)) return false;
     return true;
   }).join('\n');
+
+  // Strip inline image placeholder markers [a]-[e] that appear in the middle
+  // or end of lines (Google Docs footnote-style refs to embedded images).
+  // Use [ \t] not \s so we don't accidentally swallow line breaks and merge
+  // adjacent paragraphs.
+  text = text.replace(/[ \t]*\[[a-e]\][ \t]*/g, ' ').replace(/[ \t]+$/gm, '');
 
   const lines = text.split('\n').map(l => l.trim());
 
@@ -106,6 +104,53 @@ function buildArticle() {
 
     if (/^─+$/.test(line)) { i++; continue; }
 
+    // Finale block: a unified hairline-bordered styled statement at the end.
+    // [[finale]]
+    // line 1
+    // *line 2 in gold*
+    // attr lines …
+    // [[/finale]]
+    if (line === '[[finale]]') {
+      i++;
+      const finaleLines = [];
+      while (i < lines.length && lines[i] !== '[[/finale]]') {
+        if (lines[i]) finaleLines.push(lines[i]);
+        i++;
+      }
+      if (i < lines.length && lines[i] === '[[/finale]]') i++;
+      current.blocks.push({ type: 'finale', lines: finaleLines });
+      continue;
+    }
+
+    // Figure-pair block: two images side-by-side with captions
+    // [[figure-pair]]
+    // img: /path.jpg
+    // caption: …
+    // img: /path.jpg
+    // caption: …
+    // [[/figure-pair]]
+    if (line === '[[figure-pair]]') {
+      i++;
+      const items = [];
+      let cur = null;
+      while (i < lines.length && lines[i] !== '[[/figure-pair]]') {
+        const l = lines[i];
+        const mImg = l.match(/^img:\s*(.+)$/);
+        const mCap = l.match(/^caption:\s*(.+)$/);
+        if (mImg) {
+          if (cur) items.push(cur);
+          cur = { src: mImg[1].trim(), caption: '' };
+        } else if (mCap && cur) {
+          cur.caption = mCap[1].trim();
+        }
+        i++;
+      }
+      if (cur) items.push(cur);
+      if (i < lines.length && lines[i] === '[[/figure-pair]]') i++;
+      current.blocks.push({ type: 'figure-pair', items });
+      continue;
+    }
+
     // Bullet list start: line begins with "*"
     if (/^\*\s+/.test(line)) {
       const items = [];
@@ -132,6 +177,14 @@ function buildArticle() {
         i++;
       }
       if (items.length) current.blocks.push({ type: 'closing-list', items });
+      continue;
+    }
+
+    // Subheading: line starts with ► glyph (inside a section, between h2 and body)
+    if (/^►\s*/.test(line)) {
+      const subhead = line.replace(/^►\s*/, '').trim();
+      current.blocks.push({ type: 'h3', text: subhead });
+      i++;
       continue;
     }
 
@@ -236,6 +289,32 @@ function buildArticle() {
   }
   .story-section h2:first-child { margin-top: 0; }
 
+  /* Subheading inside a section — between h2 and body paragraphs.
+     Visually smaller than h2, no border-top reset; gold accent dot on the left. */
+  .story-section h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(22px, 1.75vw, 26px);
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 48px 0 18px;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+    position: relative;
+    padding-left: 18px;
+  }
+  .story-section h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
   /* Section divider – subtle gold hairline above heading */
   .story-section + .story-section h2 {
     padding-top: 64px;
@@ -272,6 +351,64 @@ function buildArticle() {
   .story-section .story-quote em {
     color: var(--gold);
     font-style: italic;
+  }
+
+  /* Finale block — unified italic statement with gold hairlines top + bottom.
+     Every line shares the same size and style for a continuous read. */
+  .story-section .story-finale {
+    margin: 64px 0 24px;
+    padding: clamp(40px, 5vw, 60px) 0;
+    border-top: 1px solid rgba(154, 120, 56, 0.45);
+    border-bottom: 1px solid rgba(154, 120, 56, 0.45);
+    text-align: center;
+  }
+  .story-section .story-finale p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 1.7vw, 26px);
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 8px 0;
+    text-wrap: pretty;
+  }
+  .story-section .story-finale p em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* Figure-pair: two images side-by-side with italic serif captions below. */
+  .story-section .story-figure-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 48px 0;
+  }
+  .story-section .story-figure-pair figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .story-section .story-figure-pair img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    background: #0a0d10;
+  }
+  .story-section .story-figure-pair figcaption {
+    margin-top: 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.15vw, 18px);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .story-section .story-figure-pair {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
   }
 
   /* Inline image inside an article section (rendered via IMAGE_AFTER map). */
@@ -357,6 +494,24 @@ function buildArticle() {
           const src = IMAGE_AFTER.get(block.text);
           out.push(`<figure class="story-image"><img src="${src}" alt="" loading="lazy"></figure>`);
         }
+      } else if (block.type === 'h3') {
+        out.push(`<h3>${escapeHtml(block.text)}</h3>`);
+      } else if (block.type === 'finale') {
+        out.push(`<div class="story-finale">`);
+        for (const ln of block.lines) {
+          const html = escapeHtml(ln).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+          out.push(`  <p>${html}</p>`);
+        }
+        out.push(`</div>`);
+      } else if (block.type === 'figure-pair') {
+        out.push(`<div class="story-figure-pair">`);
+        for (const it of block.items) {
+          out.push(`  <figure>`);
+          out.push(`    <img src="${it.src}" alt="" loading="lazy">`);
+          if (it.caption) out.push(`    <figcaption>${escapeHtml(it.caption)}</figcaption>`);
+          out.push(`  </figure>`);
+        }
+        out.push(`</div>`);
       } else if (block.type === 'ul') {
         out.push(`<ul class="story-contrast">`);
         for (const item of block.items) {
