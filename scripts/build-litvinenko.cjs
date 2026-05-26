@@ -491,6 +491,14 @@ function buildArticle() {
     .story-back { margin-bottom: 36px; }
     .story-title { font-size: clamp(28px, 8vw, 36px); }
     .story-hero img { aspect-ratio: 4 / 3; }
+    /* Bump type ~10% across the board on mobile for comfortable reading. */
+    .story-section p { font-size: 22px; line-height: 1.6; }
+    .story-section h2 { font-size: 28px; }
+    .story-section h3 { font-size: 23px; }
+    .story-section .story-quote { font-size: 24px; line-height: 1.45; }
+    .story-section .story-finale p { font-size: 23px; line-height: 1.5; }
+    .story-section ul.story-contrast li { font-size: 21px; }
+    .story-section .story-figure-pair figcaption { font-size: 17px; }
   }`);
   out.push(`</style>`);
   out.push(`</head>`);
