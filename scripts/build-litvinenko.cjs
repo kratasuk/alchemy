@@ -135,6 +135,14 @@ function buildArticle() {
       continue;
     }
 
+    // Subheading: line starts with ► glyph (inside a section, between h2 and body)
+    if (/^►\s*/.test(line)) {
+      const subhead = line.replace(/^►\s*/, '').trim();
+      current.blocks.push({ type: 'h3', text: subhead });
+      i++;
+      continue;
+    }
+
     // Standalone short italicized-style sentence (pull quote candidate):
     // detect short impactful sentences. For now treat everything as <p>.
     current.blocks.push({ type: 'p', text: line });
@@ -235,6 +243,32 @@ function buildArticle() {
     text-wrap: balance;
   }
   .story-section h2:first-child { margin-top: 0; }
+
+  /* Subheading inside a section — between h2 and body paragraphs.
+     Visually smaller than h2, no border-top reset; gold accent dot on the left. */
+  .story-section h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-style: italic;
+    font-size: clamp(22px, 1.75vw, 26px);
+    line-height: 1.3;
+    color: var(--ink);
+    margin: 48px 0 18px;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+    position: relative;
+    padding-left: 18px;
+  }
+  .story-section h3::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
 
   /* Section divider – subtle gold hairline above heading */
   .story-section + .story-section h2 {
@@ -357,6 +391,8 @@ function buildArticle() {
           const src = IMAGE_AFTER.get(block.text);
           out.push(`<figure class="story-image"><img src="${src}" alt="" loading="lazy"></figure>`);
         }
+      } else if (block.type === 'h3') {
+        out.push(`<h3>${escapeHtml(block.text)}</h3>`);
       } else if (block.type === 'ul') {
         out.push(`<ul class="story-contrast">`);
         for (const item of block.items) {
