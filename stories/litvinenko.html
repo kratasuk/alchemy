@@ -154,6 +154,29 @@
     font-style: italic;
   }
 
+  /* Finale block — unified italic statement with gold hairlines top + bottom.
+     Every line shares the same size and style for a continuous read. */
+  .story-section .story-finale {
+    margin: 64px 0 24px;
+    padding: clamp(40px, 5vw, 60px) 0;
+    border-top: 1px solid rgba(154, 120, 56, 0.45);
+    border-bottom: 1px solid rgba(154, 120, 56, 0.45);
+    text-align: center;
+  }
+  .story-section .story-finale p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 1.7vw, 26px);
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 8px 0;
+    text-wrap: pretty;
+  }
+  .story-section .story-finale p em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
   /* Figure-pair: two images side-by-side with italic serif captions below. */
   .story-section .story-figure-pair {
     display: grid;
@@ -376,8 +399,7 @@
 </section>
 <section class="story-section">
 <h2>Кому Алхимия НЕ подойдёт</h2>
-<p>Скажу честно, кому будет тяжело. Тому, кто не готов быть честным с</p>
-<p>собой. Главный инструмент здесь – твоя честность; не готова смотреть на себя без иллюзий – мозг придумает удобные объяснения, и ничего не сдвинется.</p>
+<p>Скажу честно, кому будет тяжело. Тому, кто не готов быть честным с собой. Главный инструмент здесь – твоя честность; не готова смотреть на себя без иллюзий – мозг придумает удобные объяснения, и ничего не сдвинется.</p>
 <p>И ещё слово «алхимия» настораживает – кажется, это про эзотерику и «магию». Когда я рассказывала знакомым, первый вопрос был: «Ты там что, что-то химичишь?» На деле это телесные практики и работа с состоянием – то, что помогает услышать себя. Ищешь чудеса – не сюда. Ищешь рабочие инструменты для своего состояния – добро пожаловать.</p>
 </section>
 <section class="story-section">
@@ -388,20 +410,13 @@
 <p>Для меня это было очень ценно.</p>
 <p>«Елизавета не просто давала знания. Она делилась прожитым опытом. И при этом оставляла свободу: попробуйте, почувствуйте, возьмите то, что подходит именно вам».</p>
 <p>В этом и была сила программы.</p>
-<blockquote class="story-quote">Она не заставила меня стать какой-то другой женщиной. <em>Она помогла мне вернуться к себе настоящей.</em></blockquote>
-<p>А к женщине, которая может быть:</p>
-<ul class="story-attrs">
-  <li>Сильной и расслабленной одновременно.</li>
-  <li>Реализованной – и живой.</li>
-  <li>Умной – и чувствующей.</li>
-  <li>В бизнесе – и в любви.</li>
-  <li>В движении – и в доверии.</li>
-</ul>
-<p>https://drive.google.com/file/d/1fIXHNgerBmuWCRHX5PpMCCFGoeW6fxbJ/view?usp=drive_link</p>
-<p>https://drive.google.com/file/d/14ucyhwq28q_anxg1vnsbzsVqKb80RkPG/view?usp=drive_link</p>
-<p>https://drive.google.com/file/d/1M5JH-Eiw1wzqJUJ4ZFVF0Qgq6jwkOrbQ/view?usp=drive_link</p>
-<p>https://drive.google.com/file/d/1HnQdni6GsW2gVTdTuRK9yZaXDreVr7jY/view?usp=drive_link</p>
-<p>https://drive.google.com/file/d/1hrKJGhxR1zfQ1fR8yu3USTD9FppHFDQL/view?usp=drive_link</p>
+<div class="story-finale">
+  <p>Она не заставила меня стать какой-то другой женщиной.</p>
+  <p><em>Она помогла мне вернуться к себе настоящей:</em></p>
+  <p>Сильной и расслабленной одновременно.</p>
+  <p>Реализованной – и живой. Умной – и чувствующей.</p>
+  <p>В бизнесе – и в любви. В движении – и в доверии.</p>
+</div>
 </section>
 </main>
 </body>

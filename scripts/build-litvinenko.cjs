@@ -22,9 +22,7 @@ const PULL_QUOTES = new Map([
   ['Если бы моя жизнь сейчас закончилась – чем я по-настоящему горжусь и что ещё хочу успеть улучшить?',
    'Если бы моя жизнь сейчас закончилась – *чем я по-настоящему горжусь и что ещё хочу успеть улучшить?*'],
   ['Я поняла: следующий уровень счастья для меня – отношения, где я желанная женщина.',
-   'Я поняла: следующий уровень счастья для меня – *отношения, где я желанная женщина.*'],
-  ['Она не заставила меня стать какой-то другой женщиной. Она помогла мне вернуться к себе настоящей.',
-   'Она не заставила меня стать какой-то другой женщиной. *Она помогла мне вернуться к себе настоящей.*']
+   'Я поняла: следующий уровень счастья для меня – *отношения, где я желанная женщина.*']
 ]);
 
 // After these paragraphs, emit an extra <img>. Paragraph text → image path.
@@ -50,14 +48,8 @@ function buildArticle() {
   // Project rule: em-dash → en-dash (everywhere, including in dialogue)
   text = text.replace(/—/g, '–');
 
-  // Strip inline image placeholder markers [a]-[e] that appear in the middle
-  // or end of lines (Google Docs footnote-style refs to embedded images).
-  // Use [ \t] not \s so we don't accidentally swallow line breaks and merge
-  // adjacent paragraphs.
-  text = text.replace(/[ \t]*\[[a-e]\][ \t]*/g, ' ').replace(/[ \t]+$/gm, '');
-
-  // Drop image placeholder lines [a]/[b]/[c]/[d]/[e] standalone
-  // and footnote URL refs at the very end
+  // Drop footnote URL refs first ([a]https://… lines) BEFORE the inline
+  // [a]-[e] strip would erase the prefix and leave a stray URL paragraph.
   text = text.split('\n').filter(l => {
     const t = l.trim();
     if (/^\[[a-z]\]$/.test(t)) return false;
@@ -65,6 +57,12 @@ function buildArticle() {
     if (/^Вкладка \d+$/.test(t)) return false;
     return true;
   }).join('\n');
+
+  // Strip inline image placeholder markers [a]-[e] that appear in the middle
+  // or end of lines (Google Docs footnote-style refs to embedded images).
+  // Use [ \t] not \s so we don't accidentally swallow line breaks and merge
+  // adjacent paragraphs.
+  text = text.replace(/[ \t]*\[[a-e]\][ \t]*/g, ' ').replace(/[ \t]+$/gm, '');
 
   const lines = text.split('\n').map(l => l.trim());
 
@@ -105,6 +103,24 @@ function buildArticle() {
     }
 
     if (/^─+$/.test(line)) { i++; continue; }
+
+    // Finale block: a unified hairline-bordered styled statement at the end.
+    // [[finale]]
+    // line 1
+    // *line 2 in gold*
+    // attr lines …
+    // [[/finale]]
+    if (line === '[[finale]]') {
+      i++;
+      const finaleLines = [];
+      while (i < lines.length && lines[i] !== '[[/finale]]') {
+        if (lines[i]) finaleLines.push(lines[i]);
+        i++;
+      }
+      if (i < lines.length && lines[i] === '[[/finale]]') i++;
+      current.blocks.push({ type: 'finale', lines: finaleLines });
+      continue;
+    }
 
     // Figure-pair block: two images side-by-side with captions
     // [[figure-pair]]
@@ -337,6 +353,29 @@ function buildArticle() {
     font-style: italic;
   }
 
+  /* Finale block — unified italic statement with gold hairlines top + bottom.
+     Every line shares the same size and style for a continuous read. */
+  .story-section .story-finale {
+    margin: 64px 0 24px;
+    padding: clamp(40px, 5vw, 60px) 0;
+    border-top: 1px solid rgba(154, 120, 56, 0.45);
+    border-bottom: 1px solid rgba(154, 120, 56, 0.45);
+    text-align: center;
+  }
+  .story-section .story-finale p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 1.7vw, 26px);
+    line-height: 1.55;
+    color: var(--ink);
+    margin: 8px 0;
+    text-wrap: pretty;
+  }
+  .story-section .story-finale p em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
   /* Figure-pair: two images side-by-side with italic serif captions below. */
   .story-section .story-figure-pair {
     display: grid;
@@ -457,6 +496,13 @@ function buildArticle() {
         }
       } else if (block.type === 'h3') {
         out.push(`<h3>${escapeHtml(block.text)}</h3>`);
+      } else if (block.type === 'finale') {
+        out.push(`<div class="story-finale">`);
+        for (const ln of block.lines) {
+          const html = escapeHtml(ln).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+          out.push(`  <p>${html}</p>`);
+        }
+        out.push(`</div>`);
       } else if (block.type === 'figure-pair') {
         out.push(`<div class="story-figure-pair">`);
         for (const it of block.items) {
