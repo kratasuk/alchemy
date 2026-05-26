@@ -217,6 +217,9 @@ function buildArticle() {
   out.push(`<link rel="canonical" href="${STORY_URL}">`);
   // Open Graph — used by Telegram, WhatsApp, Slack, Facebook etc.
   out.push(`<meta property="og:type" content="article">`);
+  // Empty-looking site_name suppresses Telegram's domain-derived label
+  // («Wmnalchemy») above the title. Zero-width space passes non-empty checks.
+  out.push(`<meta property="og:site_name" content="​">`);
   out.push(`<meta property="og:url" content="${STORY_URL}">`);
   out.push(`<meta property="og:title" content="${escapeHtml(OG_TITLE)}">`);
   out.push(`<meta property="og:description" content="${escapeHtml(OG_DESCRIPTION)}">`);
