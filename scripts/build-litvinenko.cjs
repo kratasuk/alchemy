@@ -28,8 +28,11 @@ const PULL_QUOTES = new Map([
 ]);
 
 // After these paragraphs, emit an extra <img>. Paragraph text → image path.
+// Match is against the cleaned-up paragraph text (after inline [a-e] strip,
+// em-dash → en-dash, trim).
 const IMAGE_AFTER = new Map([
-  ['Вот туда мне хотелось.', '/images/story-evgenia-couple.jpg']
+  ['Вот туда мне хотелось.', '/images/story-evgenia-couple.jpg'],
+  ['С Елизаветой я с 2018 года: прошла многие её программы, была куратором на некоторых – и видела, какая она в работе, в жизни.', '/images/story-evgenia-group.jpg']
 ]);
 
 function escapeHtml(s) {
@@ -46,6 +49,12 @@ function buildArticle() {
 
   // Project rule: em-dash → en-dash (everywhere, including in dialogue)
   text = text.replace(/—/g, '–');
+
+  // Strip inline image placeholder markers [a]-[e] that appear in the middle
+  // or end of lines (Google Docs footnote-style refs to embedded images).
+  // Use [ \t] not \s so we don't accidentally swallow line breaks and merge
+  // adjacent paragraphs.
+  text = text.replace(/[ \t]*\[[a-e]\][ \t]*/g, ' ').replace(/[ \t]+$/gm, '');
 
   // Drop image placeholder lines [a]/[b]/[c]/[d]/[e] standalone
   // and footnote URL refs at the very end
