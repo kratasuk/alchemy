@@ -1,0 +1,379 @@
+// Converts stories/src/litvinenko.txt → stories/litvinenko.html.
+// Run: `node scripts/build-litvinenko.js` from repo root.
+// Replaces em-dash → en-dash, drops [a]-[e] image placeholders,
+// parses section headings (lines followed by ─────), and supports:
+//   • PULL_QUOTES — full-sentence matches → blockquote with gold accent
+//   • IMAGE_AFTER — paragraph text → emit <img> immediately after that line
+
+const fs = require('node:fs');
+const path = require('node:path');
+
+const SOURCE_TXT = path.join(__dirname, '..', 'stories', 'src', 'litvinenko.txt');
+const OUT_HTML = path.join(__dirname, '..', 'stories', 'litvinenko.html');
+
+const SITE_TITLE = 'История выпускницы – Алхимия Женщины';
+const BACK_HREF = '/';
+const BACK_TEXT = '← Алхимия Женщины';
+const HERO_IMAGE = '/images/story-evgenia.jpg';
+
+// Pull-quote map (full-sentence text → marked-up version with *gold accent*).
+// Wrap the gold-accent fragment in *asterisks* to mark it inline.
+const PULL_QUOTES = new Map([
+  ['Если бы моя жизнь сейчас закончилась – чем я по-настоящему горжусь и что ещё хочу успеть улучшить?',
+   'Если бы моя жизнь сейчас закончилась – *чем я по-настоящему горжусь и что ещё хочу успеть улучшить?*'],
+  ['Я поняла: следующий уровень счастья для меня – отношения, где я желанная женщина.',
+   'Я поняла: следующий уровень счастья для меня – *отношения, где я желанная женщина.*'],
+  ['Она не заставила меня стать какой-то другой женщиной. Она помогла мне вернуться к себе настоящей.',
+   'Она не заставила меня стать какой-то другой женщиной. *Она помогла мне вернуться к себе настоящей.*']
+]);
+
+// After these paragraphs, emit an extra <img>. Paragraph text → image path.
+const IMAGE_AFTER = new Map([
+  ['Вот туда мне хотелось.', '/images/story-evgenia-couple.jpg']
+]);
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function buildArticle() {
+  let text = fs.readFileSync(SOURCE_TXT, 'utf8');
+
+  // BOM
+  text = text.replace(/^﻿/, '');
+
+  // Project rule: em-dash → en-dash (everywhere, including in dialogue)
+  text = text.replace(/—/g, '–');
+
+  // Drop image placeholder lines [a]/[b]/[c]/[d]/[e] standalone
+  // and footnote URL refs at the very end
+  text = text.split('\n').filter(l => {
+    const t = l.trim();
+    if (/^\[[a-z]\]$/.test(t)) return false;
+    if (/^\[[a-z]\]https?:\/\//.test(t)) return false;
+    if (/^Вкладка \d+$/.test(t)) return false;
+    return true;
+  }).join('\n');
+
+  const lines = text.split('\n').map(l => l.trim());
+
+  // Parse: title = first non-blank line
+  let cursor = 0;
+  while (cursor < lines.length && !lines[cursor]) cursor++;
+  const title = lines[cursor++];
+
+  // Following lines until "Я была сильной…" are intro paragraphs.
+  // The intro section has a stylistic lead-in line «Когда я пришла…» —
+  // we promote it to an h2 like the explicit ─── headings.
+  const PROMOTED_INTRO_HEADING = 'Когда я пришла в «Алхимию Женщины», у меня не было ощущения, что моя жизнь разваливается';
+
+  const sections = []; // each: { heading, blocks: [...] }
+  let current = { heading: null, blocks: [] };
+
+  function flush() {
+    if (current.heading || current.blocks.length) sections.push(current);
+    current = { heading: null, blocks: [] };
+  }
+
+  let i = cursor;
+  while (i < lines.length) {
+    const line = lines[i];
+    const next = lines[i + 1] || '';
+
+    if (!line) { i++; continue; }
+
+    // Heading detection: line followed by ─── separator
+    const isHeadingViaSeparator = /^─+$/.test(next);
+    const isHeadingViaIntroPromote = line === PROMOTED_INTRO_HEADING;
+
+    if (isHeadingViaSeparator || isHeadingViaIntroPromote) {
+      flush();
+      current.heading = line;
+      i += isHeadingViaSeparator ? 2 : 1;
+      continue;
+    }
+
+    if (/^─+$/.test(line)) { i++; continue; }
+
+    // Bullet list start: line begins with "*"
+    if (/^\*\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\*\s+/.test(lines[i])) {
+        items.push(lines[i].replace(/^\*\s+/, ''));
+        i++;
+      }
+      current.blocks.push({ type: 'ul', items });
+      continue;
+    }
+
+    // The closing list "Сильной и расслабленной…" — short colon-and-attrs lines
+    // We detect by: line ends with "может быть:" → next lines are items
+    if (/может быть:$/.test(line)) {
+      current.blocks.push({ type: 'p', text: line });
+      i++;
+      const items = [];
+      while (i < lines.length && lines[i] && !/^─+$/.test(lines[i])) {
+        // Stop if next is a heading (line followed by ─── or matches intro promote)
+        if (i + 1 < lines.length && /^─+$/.test(lines[i+1])) break;
+        if (lines[i] === PROMOTED_INTRO_HEADING) break;
+        // These items are short sentences without periods often
+        items.push(lines[i]);
+        i++;
+      }
+      if (items.length) current.blocks.push({ type: 'closing-list', items });
+      continue;
+    }
+
+    // Standalone short italicized-style sentence (pull quote candidate):
+    // detect short impactful sentences. For now treat everything as <p>.
+    current.blocks.push({ type: 'p', text: line });
+    i++;
+  }
+  flush();
+
+  // Render
+  const out = [];
+  out.push(`<!doctype html>`);
+  out.push(`<html lang="ru">`);
+  out.push(`<head>`);
+  out.push(`<meta charset="utf-8">`);
+  out.push(`<meta name="viewport" content="width=device-width, initial-scale=1">`);
+  out.push(`<title>${escapeHtml(SITE_TITLE)}</title>`);
+  out.push(`<meta name="description" content="${escapeHtml(title)}">`);
+  out.push(`<meta name="robots" content="noindex">`);
+  out.push(`<link rel="icon" type="image/svg+xml" href="/images/favicon.svg">`);
+  out.push(`<link rel="preconnect" href="https://fonts.googleapis.com">`);
+  out.push(`<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`);
+  out.push(`<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">`);
+  out.push(`<style>`);
+  out.push(`  :root {
+    --bg: #f3ece0;
+    --paper: #faf6ee;
+    --ink: #1c1814;
+    --ink-2: #2a241e;
+    --ink-soft: rgba(28, 24, 20, 0.66);
+    --ink-faint: rgba(28, 24, 20, 0.42);
+    --ink-hair: rgba(28, 24, 20, 0.14);
+    --gold: #9a7838;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .story-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px clamp(20px, 5vw, 56px) 96px;
+  }
+  .story-back {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-bottom: 56px;
+    padding: 4px 0;
+    transition: color .2s;
+  }
+  .story-back:hover { color: var(--ink); }
+
+  .story-title {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(34px, 4vw, 52px);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  /* Hero image – wide, sits between title and the first section */
+  .story-hero {
+    width: 100%;
+    margin: 36px 0 56px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .story-hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  .story-section {
+    margin-bottom: 48px;
+  }
+  .story-section h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(26px, 2.4vw, 32px);
+    line-height: 1.25;
+    color: var(--ink);
+    margin: 64px 0 28px;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  .story-section h2:first-child { margin-top: 0; }
+
+  /* Section divider – subtle gold hairline above heading */
+  .story-section + .story-section h2 {
+    padding-top: 64px;
+    border-top: 1px solid rgba(154, 120, 56, 0.25);
+  }
+
+  .story-section p {
+    font-family: var(--serif);
+    font-size: clamp(20px, 1.5vw, 22px);
+    line-height: 1.65;
+    color: var(--ink-2);
+    margin-bottom: 22px;
+    text-wrap: pretty;
+    hanging-punctuation: first last;
+  }
+
+  /* Pull-quote — italic serif with thin gold hairlines top + bottom,
+     key phrase in gold accent. Same column width as body text;
+     no horizontal padding or margin. */
+  .story-section .story-quote {
+    margin-block: 56px;
+    margin-inline: 0;
+    padding-block: clamp(36px, 4.5vw, 56px);
+    padding-inline: 0;
+    background: transparent;
+    border-top: 1px solid rgba(154, 120, 56, 0.45);
+    border-bottom: 1px solid rgba(154, 120, 56, 0.45);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 1.85vw, 28px);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+  .story-section .story-quote em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* Inline image inside an article section (rendered via IMAGE_AFTER map). */
+  .story-section .story-image {
+    margin: 48px 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .story-section .story-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Bullet list with contrast (Не X → А Y) */
+  .story-section ul.story-contrast {
+    list-style: none;
+    margin: 28px 0;
+    padding: 24px 28px;
+    background: var(--paper);
+    border-radius: 12px;
+    border-left: 2px solid var(--gold);
+  }
+  .story-section ul.story-contrast li {
+    font-family: var(--serif);
+    font-size: clamp(19px, 1.4vw, 21px);
+    line-height: 1.55;
+    color: var(--ink-2);
+    padding: 8px 0;
+    text-wrap: pretty;
+  }
+  .story-section ul.story-contrast li + li {
+    border-top: 1px solid rgba(154, 120, 56, 0.15);
+  }
+
+  /* Closing list (Сильной и расслабленной…) */
+  .story-section ul.story-attrs {
+    list-style: none;
+    margin: 24px 0;
+    padding: 0;
+  }
+  .story-section ul.story-attrs li {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(22px, 1.7vw, 26px);
+    line-height: 1.4;
+    color: var(--ink);
+    padding: 6px 0;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .story-page { padding: 30px 22px 72px; }
+    .story-back { margin-bottom: 36px; }
+    .story-title { font-size: clamp(28px, 8vw, 36px); }
+    .story-hero img { aspect-ratio: 4 / 3; }
+  }`);
+  out.push(`</style>`);
+  out.push(`</head>`);
+  out.push(`<body>`);
+  out.push(`<main class="story-page">`);
+  out.push(`<a class="story-back" href="${BACK_HREF}">${escapeHtml(BACK_TEXT)}</a>`);
+  out.push(`<h1 class="story-title">${escapeHtml(title)}</h1>`);
+  out.push(`<div class="story-hero"><img src="${HERO_IMAGE}" alt=""></div>`);
+
+  for (const section of sections) {
+    out.push(`<section class="story-section">`);
+    if (section.heading) {
+      out.push(`<h2>${escapeHtml(section.heading)}</h2>`);
+    }
+    for (const block of section.blocks) {
+      if (block.type === 'p') {
+        if (PULL_QUOTES.has(block.text)) {
+          // Convert *gold accent* → <em> (rendered as gold-color italic).
+          const marked = PULL_QUOTES.get(block.text);
+          const html = escapeHtml(marked).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+          out.push(`<blockquote class="story-quote">${html}</blockquote>`);
+        } else {
+          out.push(`<p>${escapeHtml(block.text)}</p>`);
+        }
+        // Emit an inline image right after this paragraph if registered.
+        if (IMAGE_AFTER.has(block.text)) {
+          const src = IMAGE_AFTER.get(block.text);
+          out.push(`<figure class="story-image"><img src="${src}" alt="" loading="lazy"></figure>`);
+        }
+      } else if (block.type === 'ul') {
+        out.push(`<ul class="story-contrast">`);
+        for (const item of block.items) {
+          out.push(`  <li>${escapeHtml(item)}</li>`);
+        }
+        out.push(`</ul>`);
+      } else if (block.type === 'closing-list') {
+        out.push(`<ul class="story-attrs">`);
+        for (const item of block.items) {
+          out.push(`  <li>${escapeHtml(item)}</li>`);
+        }
+        out.push(`</ul>`);
+      }
+    }
+    out.push(`</section>`);
+  }
+
+  out.push(`</main>`);
+  out.push(`</body>`);
+  out.push(`</html>`);
+
+  return out.join('\n');
+}
+
+const html = buildArticle();
+const outDir = 'stories';
+if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+fs.writeFileSync(path.join(outDir, 'litvinenko.html'), html);
+console.log('Wrote stories/litvinenko.html, len:', html.length);
