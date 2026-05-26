@@ -335,9 +335,9 @@ function buildArticle() {
      key phrase in gold accent. Same column width as body text;
      no horizontal padding or margin. */
   .story-section .story-quote {
-    margin-block: 56px;
+    margin-block: 48px;
     margin-inline: 0;
-    padding-block: clamp(36px, 4.5vw, 56px);
+    padding-block: clamp(30px, 3.8vw, 48px);
     padding-inline: 0;
     background: transparent;
     border-top: 1px solid rgba(154, 120, 56, 0.45);
@@ -356,11 +356,11 @@ function buildArticle() {
   /* Finale block — unified italic statement with gold hairlines top + bottom.
      Every line shares the same size and style for a continuous read. */
   .story-section .story-finale {
-    margin: 64px 0 24px;
-    padding: clamp(40px, 5vw, 60px) 0;
+    margin: 54px 0 20px;
+    padding: clamp(34px, 4.25vw, 51px) 0;
     border-top: 1px solid rgba(154, 120, 56, 0.45);
     border-bottom: 1px solid rgba(154, 120, 56, 0.45);
-    text-align: center;
+    text-align: left;
   }
   .story-section .story-finale p {
     font-family: var(--serif);
@@ -368,7 +368,7 @@ function buildArticle() {
     font-size: clamp(22px, 1.7vw, 26px);
     line-height: 1.55;
     color: var(--ink);
-    margin: 8px 0;
+    margin: 7px 0;
     text-wrap: pretty;
   }
   .story-section .story-finale p em {
@@ -381,7 +381,7 @@ function buildArticle() {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    margin: 48px 0;
+    margin: 41px 0;
   }
   .story-section .story-figure-pair figure {
     margin: 0;
@@ -413,7 +413,7 @@ function buildArticle() {
 
   /* Inline image inside an article section (rendered via IMAGE_AFTER map). */
   .story-section .story-image {
-    margin: 48px 0;
+    margin: 41px 0;
     border-radius: 8px;
     overflow: hidden;
   }
@@ -426,8 +426,8 @@ function buildArticle() {
   /* Bullet list with contrast (Не X → А Y) */
   .story-section ul.story-contrast {
     list-style: none;
-    margin: 28px 0;
-    padding: 24px 28px;
+    margin: 24px 0;
+    padding: 20px 28px;
     background: var(--paper);
     border-radius: 12px;
     border-left: 2px solid var(--gold);
