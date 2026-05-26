@@ -893,26 +893,8 @@
     letter-spacing: 0.01em;
   }
 
-  /* Story card — instead of photo, a serif mark glyph; with a CTA link
-     at the bottom that goes to the full article page (stories/...). */
-  .alc-voice--story .alc-voice-mark {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--paper);
-    border-bottom: 1px solid var(--ink-hair);
-  }
-  .alc-voice--story .alc-voice-mark span {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(80px, 8vw, 120px);
-    line-height: 1;
-    color: var(--gold);
-    letter-spacing: -0.05em;
-    transform: translateY(-8px);
-  }
+  /* Story card uses the same photo layout as testimonials, plus a
+     gold-underlined «Читать всю историю →» link at the bottom. */
   .alc-voice--story .alc-voice-body { gap: 18px; }
   .alc-voice-cta {
     display: inline-block;
@@ -1545,9 +1527,9 @@
     { photo: 'images/voice-anna.jpg',     text: 'Впервые за четыре года я смогла поднять чек на свои услуги и набрала вип-группу под своё сопровождение. Раньше не была к этому готова.', name: 'Анна Г.', who: 'Риск-менеджер' },
     { photo: 'images/voice-irina.jpg',    text: 'Я ждала Алхимию три года. И как только Елизавета объявила о наборе, я знала – мне сюда. Не было ни грамма сомнений.', name: 'Ирина Ч.', who: 'Журналист, бизнес-психолог' },
     { photo: 'images/voice-natalya.jpg',  text: 'Энергия ушла из головы и спустилась в тело, где она всегда была нужна. Я вернулась к себе настоящей.', name: 'Наталья Б.', who: 'Предприниматель' },
-    // Story card — has full long-form article. No photo yet (pending).
-    // Rendered with a different layout: «»-mark instead of photo + CTA-link.
-    { story: 'stories/litvinenko.html', text: 'После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем.', name: 'Литвиненко', who: 'Выпускница' }
+    // Story card — has full long-form article + a hero photo. Renders
+    // like a regular voice card, plus a «Читать всю историю →» CTA link.
+    { story: 'stories/litvinenko.html', photo: 'images/story-evgenia.jpg', text: 'После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем.', name: 'Евгения Л.', who: 'Предприниматель' }
   ];
 
   const faq = [
@@ -1571,9 +1553,13 @@
   //  - story card (v.story present): mark glyph + pull-quote + author + CTA link
   document.getElementById('voices-grid').innerHTML = voices.map(v => {
     if (v.story) {
+      // Story card — same layout as testimonial (photo + quote + author),
+      // plus a «Читать всю историю →» CTA link at the bottom.
       return `
         <div class="alc-voice alc-voice--story reveal">
-          <div class="alc-voice-mark"><span>«»</span></div>
+          <div class="alc-voice-photo">
+            <img src="${v.photo}" alt="${v.name}" loading="lazy">
+          </div>
           <div class="alc-voice-body">
             <p class="text">${v.text}</p>
             <div class="who">

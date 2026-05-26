@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>История Литвиненко – Алхимия Женщины</title>
+<title>История выпускницы – Алхимия Женщины</title>
 <meta name="description" content="После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем">
 <meta name="robots" content="noindex">
 <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
@@ -33,9 +33,9 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .story-page {
-    max-width: 720px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 56px clamp(20px, 5vw, 56px) 96px;
+    padding: 40px clamp(20px, 5vw, 56px) 96px;
   }
   .story-back {
     display: inline-block;
@@ -50,24 +50,6 @@
   }
   .story-back:hover { color: var(--ink); }
 
-  .story-eyebrow {
-    font-family: var(--sans);
-    font-size: 11px;
-    letter-spacing: 0.24em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 28px;
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .story-eyebrow::before {
-    content: '';
-    width: 22px;
-    height: 1px;
-    background: var(--gold);
-  }
-
   .story-title {
     font-family: var(--serif);
     font-weight: 500;
@@ -80,16 +62,25 @@
   }
   .story-attribution {
     font-family: var(--sans);
-    font-size: 14px;
-    color: var(--ink-soft);
-    letter-spacing: 0.02em;
-    margin-bottom: 64px;
-    padding-bottom: 32px;
-    border-bottom: 1px solid var(--ink-hair);
-  }
-  .story-attribution strong {
+    font-size: 15px;
     color: var(--ink);
+    letter-spacing: 0;
+    margin-bottom: 36px;
     font-weight: 500;
+  }
+  /* Hero image — wide, sits between attribution and the first section */
+  .story-hero {
+    width: 100%;
+    margin-bottom: 56px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .story-hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
   }
 
   .story-section {
@@ -121,17 +112,6 @@
     margin-bottom: 22px;
     text-wrap: pretty;
     hanging-punctuation: first last;
-  }
-
-  /* Lead/intro paragraph in first section gets a drop cap */
-  .story-section:nth-of-type(1) > p:first-of-type::first-letter {
-    font-family: var(--serif);
-    font-weight: 500;
-    float: left;
-    font-size: 4.5em;
-    line-height: 0.9;
-    padding: 6px 12px 0 0;
-    color: var(--ink);
   }
 
   /* Bullet list with contrast (Не X → А Y) */
@@ -172,22 +152,19 @@
   }
 
   @media (max-width: 640px) {
-    .story-page { padding: 36px 22px 72px; }
+    .story-page { padding: 30px 22px 72px; }
     .story-back { margin-bottom: 36px; }
     .story-title { font-size: clamp(28px, 8vw, 36px); }
-    .story-section:nth-of-type(1) > p:first-of-type::first-letter {
-      font-size: 3.5em;
-      padding: 4px 10px 0 0;
-    }
+    .story-hero img { aspect-ratio: 4 / 3; }
   }
 </style>
 </head>
 <body>
 <main class="story-page">
 <a class="story-back" href="/">← Алхимия Женщины</a>
-<div class="story-eyebrow">История выпускницы</div>
 <h1 class="story-title">После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем</h1>
-<div class="story-attribution"><strong>Литвиненко</strong> · Выпускница «Алхимии Женщины»</div>
+<div class="story-attribution">Евгения Л.</div>
+<div class="story-hero"><img src="/images/story-evgenia.jpg" alt="Евгения Л."></div>
 <section class="story-section">
 <h2>Когда я пришла в «Алхимию Женщины», у меня не было ощущения, что моя жизнь разваливается</h2>
 <p>Наоборот, если смотреть снаружи, всё выглядело хорошо: семья, 25 лет брака, дети, свои проекты, бизнес, развивающая студия, опыт в женских трансформациях и предпринимательстве. Я умела запускать, вести, собирать людей, создавать смыслы, держать ответственность, доводить до результата.</p>
