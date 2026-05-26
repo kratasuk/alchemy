@@ -113,6 +113,7 @@ output-value string (see Литвиненко example for «Я стала смо
 - Pull-quote: Cormorant italic 22–28px, gold hairlines top+bottom, full column width (no inset)
 - Finale block: same as pull-quote but left-aligned and shared style across all lines
 - Decorative inserts (quote, finale, figure-pair, image, contrast-list) use ~15%-tighter vertical margins than feels default
+- **Mobile (≤640px) bumps font sizes ~10%** because `clamp()` minimums land too small for comfortable Cormorant reading on phones. Inside `@media (max-width: 640px)`: body 22px / line-height 1.6, h2 28, h3 23, pull-quote 24, finale 23, contrast 21, figcaption 17.
 
 ### Required `<head>` meta — Telegram/social preview
 
