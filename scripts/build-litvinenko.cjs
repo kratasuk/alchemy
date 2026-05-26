@@ -106,6 +106,35 @@ function buildArticle() {
 
     if (/^─+$/.test(line)) { i++; continue; }
 
+    // Figure-pair block: two images side-by-side with captions
+    // [[figure-pair]]
+    // img: /path.jpg
+    // caption: …
+    // img: /path.jpg
+    // caption: …
+    // [[/figure-pair]]
+    if (line === '[[figure-pair]]') {
+      i++;
+      const items = [];
+      let cur = null;
+      while (i < lines.length && lines[i] !== '[[/figure-pair]]') {
+        const l = lines[i];
+        const mImg = l.match(/^img:\s*(.+)$/);
+        const mCap = l.match(/^caption:\s*(.+)$/);
+        if (mImg) {
+          if (cur) items.push(cur);
+          cur = { src: mImg[1].trim(), caption: '' };
+        } else if (mCap && cur) {
+          cur.caption = mCap[1].trim();
+        }
+        i++;
+      }
+      if (cur) items.push(cur);
+      if (i < lines.length && lines[i] === '[[/figure-pair]]') i++;
+      current.blocks.push({ type: 'figure-pair', items });
+      continue;
+    }
+
     // Bullet list start: line begins with "*"
     if (/^\*\s+/.test(line)) {
       const items = [];
@@ -308,6 +337,41 @@ function buildArticle() {
     font-style: italic;
   }
 
+  /* Figure-pair: two images side-by-side with italic serif captions below. */
+  .story-section .story-figure-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 48px 0;
+  }
+  .story-section .story-figure-pair figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .story-section .story-figure-pair img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    background: #0a0d10;
+  }
+  .story-section .story-figure-pair figcaption {
+    margin-top: 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.15vw, 18px);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .story-section .story-figure-pair {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+
   /* Inline image inside an article section (rendered via IMAGE_AFTER map). */
   .story-section .story-image {
     margin: 48px 0;
@@ -393,6 +457,15 @@ function buildArticle() {
         }
       } else if (block.type === 'h3') {
         out.push(`<h3>${escapeHtml(block.text)}</h3>`);
+      } else if (block.type === 'figure-pair') {
+        out.push(`<div class="story-figure-pair">`);
+        for (const it of block.items) {
+          out.push(`  <figure>`);
+          out.push(`    <img src="${it.src}" alt="" loading="lazy">`);
+          if (it.caption) out.push(`    <figcaption>${escapeHtml(it.caption)}</figcaption>`);
+          out.push(`  </figure>`);
+        }
+        out.push(`</div>`);
       } else if (block.type === 'ul') {
         out.push(`<ul class="story-contrast">`);
         for (const item of block.items) {

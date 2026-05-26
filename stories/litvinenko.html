@@ -154,6 +154,41 @@
     font-style: italic;
   }
 
+  /* Figure-pair: two images side-by-side with italic serif captions below. */
+  .story-section .story-figure-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 48px 0;
+  }
+  .story-section .story-figure-pair figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .story-section .story-figure-pair img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    background: #0a0d10;
+  }
+  .story-section .story-figure-pair figcaption {
+    margin-top: 14px;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(16px, 1.15vw, 18px);
+    line-height: 1.45;
+    color: var(--ink-soft);
+    text-wrap: pretty;
+  }
+  @media (max-width: 640px) {
+    .story-section .story-figure-pair {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+
   /* Inline image inside an article section (rendered via IMAGE_AFTER map). */
   .story-section .story-image {
     margin: 48px 0;
@@ -307,8 +342,16 @@
 <h3>Тело и состояние – то, что можно измерить</h3>
 <p>Я каждый день отслеживаю свое состояние и активность по фитнес-трекеру WHOOP. Был день, когда я неважно себя чувствовала и показатель восстановления упал совсем низко. Сделала практику – и увидела, как он пошёл вверх.</p>
 <p>Дальше – закономерность: не сделала практику – одни показатели, сделала – восстановление выше, сон лучше, ночью уходит стресс, которого раньше я в своих данных даже не замечала.</p>
-<p>Показывает рекордное восстановление 84% (четверг Thu). В среду (Wed) удалось поднять восстановление с 27% до 64% во время лечения.</p>
-<p>Здесь показывает, что помолодела после проделанных практик :)</p>
+<div class="story-figure-pair">
+  <figure>
+    <img src="/images/story-evgenia-whoop-recovery.jpg" alt="" loading="lazy">
+    <figcaption>Во вторник сделала практику и со среды пошло качественное восстановление</figcaption>
+  </figure>
+  <figure>
+    <img src="/images/story-evgenia-whoop-age.jpg" alt="" loading="lazy">
+    <figcaption>Здесь показывает, что после практик помолодела почти на 2 года</figcaption>
+  </figure>
+</div>
 <p>Из приятного – постройнела без диеты и без зала. Просто исчезла привычка заедать напряжение, потому что напряжения не стало. Сами собой ушли и пищевые привычки: перешла на вегетарианство, отказалась от новостей.</p>
 <p>«Наше тело действительно уникально и как важно к нему подобрать нужные ключики. А у нас на “Алхимии” их целая связка»</p>
 <h3>Возможности, на которые раньше не смела замахнуться</h3>
