@@ -18,8 +18,8 @@ const HERO_IMAGE = '/images/story-evgenia.jpg';
 const SITE_ORIGIN = 'https://wmnalchemy.com';
 const STORY_URL = `${SITE_ORIGIN}/stories/litvinenko.html`;
 const OG_IMAGE = `${SITE_ORIGIN}${HERO_IMAGE}`;
-const OG_TITLE = 'После 25 лет вместе мы вышли на новый уровень близости с мужем';
-const OG_DESCRIPTION = 'История выпускницы Алхимии Женщины. Евгения – о том, как перестала быть «номером один» дома и вернулась к мужу как женщина, а не как руководитель.';
+const OG_TITLE = 'После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем';
+const OG_DESCRIPTION = 'История Евгении – о том, как она перестала быть «руководителем» дома, перестроила свои отношения и научилась притягивать, а не проталкивать.';
 
 // Pull-quote map (full-sentence text → marked-up version with *gold accent*).
 // Wrap the gold-accent fragment in *asterisks* to mark it inline.
@@ -217,7 +217,6 @@ function buildArticle() {
   out.push(`<link rel="canonical" href="${STORY_URL}">`);
   // Open Graph — used by Telegram, WhatsApp, Slack, Facebook etc.
   out.push(`<meta property="og:type" content="article">`);
-  out.push(`<meta property="og:site_name" content="Алхимия Женщины">`);
   out.push(`<meta property="og:url" content="${STORY_URL}">`);
   out.push(`<meta property="og:title" content="${escapeHtml(OG_TITLE)}">`);
   out.push(`<meta property="og:description" content="${escapeHtml(OG_DESCRIPTION)}">`);
