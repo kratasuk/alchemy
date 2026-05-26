@@ -1523,13 +1523,13 @@
 (function(){
   // ── data ──
   const voices = [
+    // Story card — long-form article, lives at the start so it lands first
+    // in the scroll. Same layout as testimonials + a «Читать всю историю» link.
+    { story: 'stories/litvinenko.html', photo: 'images/story-evgenia.jpg', text: 'После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем.', name: 'Евгения Л.', who: 'Предприниматель' },
     { photo: 'images/voice-tatyana.jpg',  text: 'Эта программа – Executive MBA по женственности. Структурно, глубоко, трансформирующе и при этом очень практично.', name: 'Татьяна Г.', who: 'HR, консультант' },
     { photo: 'images/voice-anna.jpg',     text: 'Впервые за четыре года я смогла поднять чек на свои услуги и набрала вип-группу под своё сопровождение. Раньше не была к этому готова.', name: 'Анна Г.', who: 'Риск-менеджер' },
     { photo: 'images/voice-irina.jpg',    text: 'Я ждала Алхимию три года. И как только Елизавета объявила о наборе, я знала – мне сюда. Не было ни грамма сомнений.', name: 'Ирина Ч.', who: 'Журналист, бизнес-психолог' },
-    { photo: 'images/voice-natalya.jpg',  text: 'Энергия ушла из головы и спустилась в тело, где она всегда была нужна. Я вернулась к себе настоящей.', name: 'Наталья Б.', who: 'Предприниматель' },
-    // Story card — has full long-form article + a hero photo. Renders
-    // like a regular voice card, plus a «Читать всю историю →» CTA link.
-    { story: 'stories/litvinenko.html', photo: 'images/story-evgenia.jpg', text: 'После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем.', name: 'Евгения Л.', who: 'Предприниматель' }
+    { photo: 'images/voice-natalya.jpg',  text: 'Энергия ушла из головы и спустилась в тело, где она всегда была нужна. Я вернулась к себе настоящей.', name: 'Наталья Б.', who: 'Предприниматель' }
   ];
 
   const faq = [
