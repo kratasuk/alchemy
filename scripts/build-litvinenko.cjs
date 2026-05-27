@@ -343,10 +343,9 @@ function buildArticle() {
     background: var(--gold);
   }
 
-  /* Section divider – subtle gold hairline above heading */
+  /* Section break — generous top spacing only, no hairline rule. */
   .story-section + .story-section h2 {
     padding-top: 64px;
-    border-top: 1px solid rgba(154, 120, 56, 0.25);
   }
 
   .story-section p {
