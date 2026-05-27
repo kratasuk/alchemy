@@ -324,22 +324,22 @@ function buildArticle() {
     font-family: var(--serif);
     font-weight: 500;
     font-style: italic;
-    font-size: clamp(22px, 1.75vw, 26px);
+    font-size: clamp(26px, 2.15vw, 30px);
     line-height: 1.3;
     color: var(--ink);
     margin: 48px 0 18px;
     letter-spacing: -0.005em;
     text-wrap: balance;
     position: relative;
-    padding-left: 18px;
+    padding-left: 22px;
   }
   .story-section h3::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.55em;
-    width: 8px;
-    height: 8px;
+    top: 0.5em;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--gold);
   }
@@ -535,7 +535,7 @@ function buildArticle() {
     /* Mobile sizes — PT Serif body sits well at 18-19px with line-height 1.6. */
     .story-section p { font-size: 19px; line-height: 1.6; }
     .story-section h2 { font-size: 28px; }
-    .story-section h3 { font-size: 23px; }
+    .story-section h3 { font-size: 26px; }
     .story-section .story-quote { font-size: 22px; line-height: 1.5; }
     .story-section .story-finale p { font-size: 21px; line-height: 1.55; }
     .story-section ul.story-contrast li { font-size: 18px; }
