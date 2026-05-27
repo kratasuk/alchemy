@@ -311,7 +311,7 @@ function buildArticle() {
     font-size: clamp(26px, 2.4vw, 32px);
     line-height: 1.25;
     color: var(--ink);
-    margin: 64px 0 28px;
+    margin: 54px 0 24px;
     letter-spacing: -0.005em;
     text-wrap: balance;
   }
@@ -345,7 +345,7 @@ function buildArticle() {
 
   /* Section break — generous top spacing only, no hairline rule. */
   .story-section + .story-section h2 {
-    padding-top: 64px;
+    padding-top: 54px;
   }
 
   .story-section p {
