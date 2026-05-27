@@ -362,9 +362,9 @@ function buildArticle() {
      key phrase in gold accent. Same column width as body text;
      no horizontal padding or margin. */
   .story-section .story-quote {
-    margin-block: 48px;
+    margin-block: 43px;
     margin-inline: 0;
-    padding-block: clamp(30px, 3.8vw, 48px);
+    padding-block: clamp(27px, 3.4vw, 43px);
     padding-inline: 0;
     background: transparent;
     border-top: 1px solid rgba(154, 120, 56, 0.45);
@@ -383,8 +383,8 @@ function buildArticle() {
   /* Finale block — unified italic statement with gold hairlines top + bottom.
      Every line shares the same size and style for a continuous read. */
   .story-section .story-finale {
-    margin: 54px 0 20px;
-    padding: clamp(34px, 4.25vw, 51px) 0;
+    margin: 49px 0 18px;
+    padding: clamp(31px, 3.85vw, 46px) 0;
     border-top: 1px solid rgba(154, 120, 56, 0.45);
     border-bottom: 1px solid rgba(154, 120, 56, 0.45);
     text-align: left;
