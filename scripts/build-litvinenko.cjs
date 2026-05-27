@@ -15,6 +15,8 @@ const SITE_TITLE = 'История выпускницы – Алхимия Же�
 const BACK_HREF = '/';
 const BACK_TEXT = '← Алхимия Женщины';
 const HERO_IMAGE = '/images/story-evgenia.jpg';
+const CTA_HREF = '/test.html';
+const CTA_TEXT = 'Узнайте, подходит ли Алхимия вам';
 const SITE_ORIGIN = 'https://wmnalchemy.com';
 const STORY_URL = `${SITE_ORIGIN}/stories/litvinenko.html`;
 const OG_IMAGE = `${SITE_ORIGIN}${HERO_IMAGE}`;
@@ -486,6 +488,41 @@ function buildArticle() {
     text-align: center;
   }
 
+  /* End-of-article CTA — pill button matching landing-page .btn style.
+     Lives outside .story-section so it doesn't inherit section margins. */
+  .story-cta-row {
+    margin: 56px 0 0;
+    text-align: center;
+  }
+  .story-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 17px 26px 17px 28px;
+    border-radius: 999px;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    text-decoration: none;
+    transition: transform .25s cubic-bezier(.2,.7,.2,1), background .25s, color .25s, border-color .25s;
+    white-space: nowrap;
+  }
+  .story-cta:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    transform: translateY(-1px);
+  }
+  .story-cta .arrow {
+    display: inline-block;
+    transition: transform .25s;
+  }
+  .story-cta:hover .arrow { transform: translateX(4px); }
+
   @media (max-width: 640px) {
     .story-page { padding: 30px 22px 72px; }
     .story-back { margin-bottom: 36px; }
@@ -499,6 +536,8 @@ function buildArticle() {
     .story-section .story-finale p { font-size: 23px; line-height: 1.5; }
     .story-section ul.story-contrast li { font-size: 21px; }
     .story-section .story-figure-pair figcaption { font-size: 17px; }
+    /* CTA: wrap text so the longer headline fits on narrow screens */
+    .story-cta { white-space: normal; padding: 16px 24px; line-height: 1.35; max-width: 100%; }
   }`);
   out.push(`</style>`);
   out.push(`</head>`);
@@ -562,6 +601,11 @@ function buildArticle() {
     }
     out.push(`</section>`);
   }
+
+  // End-of-article CTA — sends reader to the diagnostic quiz.
+  out.push(`<div class="story-cta-row">`);
+  out.push(`  <a class="story-cta" href="${CTA_HREF}">${escapeHtml(CTA_TEXT)} <span class="arrow">→</span></a>`);
+  out.push(`</div>`);
 
   out.push(`</main>`);
   out.push(`</body>`);
