@@ -24,7 +24,7 @@
 <link rel="icon" type="image/svg+xml" href="/images/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@400;500;600&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #f3ece0;
@@ -36,6 +36,7 @@
     --ink-hair: rgba(28, 24, 20, 0.14);
     --gold: #9a7838;
     --serif: 'Cormorant Garamond', Georgia, serif;
+    --serif-body: 'PT Serif', Georgia, Cambria, 'Times New Roman', serif;
     --sans: 'Inter Tight', -apple-system, sans-serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -137,13 +138,14 @@
   }
 
   .story-section p {
-    font-family: var(--sans);
+    font-family: var(--serif-body);
     font-weight: 400;
-    font-size: clamp(17px, 1.25vw, 18px);
-    line-height: 1.7;
+    font-size: clamp(18px, 1.35vw, 19px);
+    line-height: 1.6;
     color: var(--ink-2);
     margin-bottom: 20px;
     text-wrap: pretty;
+    hanging-punctuation: first last;
   }
 
   /* Pull-quote — italic serif with thin gold hairlines top + bottom,
@@ -248,10 +250,10 @@
     border-left: 2px solid var(--gold);
   }
   .story-section ul.story-contrast li {
-    font-family: var(--sans);
+    font-family: var(--serif-body);
     font-weight: 400;
-    font-size: clamp(16px, 1.15vw, 17px);
-    line-height: 1.6;
+    font-size: clamp(17px, 1.25vw, 18px);
+    line-height: 1.55;
     color: var(--ink-2);
     padding: 8px 0;
     text-wrap: pretty;
@@ -316,13 +318,13 @@
     .story-back { margin-bottom: 36px; }
     .story-title { font-size: clamp(28px, 8vw, 36px); }
     .story-hero img { aspect-ratio: 4 / 3; }
-    /* Mobile sizes — Inter body needs less of a bump than Cormorant did. */
-    .story-section p { font-size: 18px; line-height: 1.65; }
+    /* Mobile sizes — PT Serif body sits well at 18-19px with line-height 1.6. */
+    .story-section p { font-size: 19px; line-height: 1.6; }
     .story-section h2 { font-size: 28px; }
     .story-section h3 { font-size: 23px; }
     .story-section .story-quote { font-size: 24px; line-height: 1.45; }
     .story-section .story-finale p { font-size: 23px; line-height: 1.5; }
-    .story-section ul.story-contrast li { font-size: 17px; }
+    .story-section ul.story-contrast li { font-size: 18px; }
     .story-section .story-figure-pair figcaption { font-size: 17px; }
     /* CTA: wrap text so the longer headline fits on narrow screens */
     .story-cta { white-space: normal; padding: 16px 24px; line-height: 1.35; max-width: 100%; }
