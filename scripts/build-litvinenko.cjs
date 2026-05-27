@@ -239,9 +239,9 @@ function buildArticle() {
   out.push(`  :root {
     --bg: #f3ece0;
     --paper: #faf6ee;
-    --ink: #1c1814;
-    --ink-2: #2a241e;
-    --ink-soft: rgba(28, 24, 20, 0.66);
+    --ink: #15110d;
+    --ink-2: #1c1814;
+    --ink-soft: rgba(21, 17, 13, 0.72);
     --ink-faint: rgba(28, 24, 20, 0.42);
     --ink-hair: rgba(28, 24, 20, 0.14);
     --gold: #9a7838;
