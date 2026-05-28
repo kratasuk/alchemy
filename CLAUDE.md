@@ -183,6 +183,40 @@ Story cards render with the «Читать всю историю →» gold-unde
 It's a generated file. Hand-edits get blown away on next build. Edit
 the source `.txt` or the build script.
 
+### Notion CMS path (Phase 1 — manual trigger)
+
+For stories authored by Liza's team (not by Anton in the IDE), the new
+flow is **Notion → `build-from-notion.cjs` → repo → Vercel**:
+
+1. Employee writes the story in the «Истории выпускниц» Notion database
+   (one row per story). Schema + markup conventions are documented in
+   `docs/notion-stories-setup.md`. Required Vercel env vars:
+   `NOTION_TOKEN` (reuse the existing anketa integration) and
+   `NOTION_STORIES_DB_ID` (the database UUID).
+2. Employee flips `Status` to `Ready to publish` and pings.
+3. Anton runs: `node scripts/build-from-notion.cjs <slug>`. The script:
+   - Looks up the page by Slug in Notion
+   - Downloads hero + all inline images into `/images/story-<slug>-*.jpg`
+   - Walks Notion blocks → IR → renders HTML via `scripts/lib/render-story.cjs`
+   - Writes `stories/<slug>.html`
+   - PATCHes the Notion page: Status → Published, Published at → today,
+     Story URL → live URL.
+4. Anton commits + pushes; Vercel deploys.
+
+Pass `--dry-run` to skip the Notion status update (useful for previews).
+`--all-ready` builds every page currently in `Ready to publish` state in
+one go.
+
+The shared renderer at `scripts/lib/render-story.cjs` is the single
+source of truth for the HTML structure + CSS. Both `build-litvinenko.cjs`
+(txt-source) and `build-from-notion.cjs` (Notion-source) parse their
+own input into the same IR and hand it to the renderer.
+
+**Phase 2 (later)**: replace the manual `node scripts/build-from-notion.cjs`
+trigger with a Vercel cron + GitHub API write so the employee can
+fully self-serve from Notion. Skeleton already exists in
+`api/_sync-stories.js` (TODO).
+
 ## Voices section (`index.html`)
 - 5 cards in carousel — Евгения first (story card with «Читать всю историю →» link), then Татьяна, Анна, Ирина, Наталья
 - Антонина С. testimonial removed (PR #103) — image still on disk at `images/voice-antonina.jpg`
