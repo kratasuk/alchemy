@@ -247,6 +247,43 @@ function guessImageExtension(url) {
   return m ? `.${m[1].toLowerCase()}` : '.jpg';
 }
 
+// Read width/height from a JPEG/PNG file header. Returns null on unsupported.
+function getImageDimensions(filePath) {
+  let fd;
+  try {
+    fd = fs.openSync(filePath, 'r');
+    const head = Buffer.alloc(65536);
+    const n = fs.readSync(fd, head, 0, 65536, 0);
+    const buf = head.slice(0, n);
+    // PNG: \x89 P N G \r \n \x1a \n   then 4-byte length + IHDR + width + height
+    if (buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) {
+      return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+    }
+    // JPEG: FF D8 followed by markers; find an SOFn marker.
+    if (buf[0] === 0xff && buf[1] === 0xd8) {
+      let i = 2;
+      while (i < buf.length - 9) {
+        if (buf[i] !== 0xff) { i++; continue; }
+        const marker = buf[i + 1];
+        // SOF0..3, SOF5..7, SOF9..11, SOF13..15 carry dimensions.
+        const isSOF = (marker >= 0xc0 && marker <= 0xcf) &&
+          marker !== 0xc4 && marker !== 0xc8 && marker !== 0xcc;
+        if (isSOF) {
+          return { width: buf.readUInt16BE(i + 7), height: buf.readUInt16BE(i + 5) };
+        }
+        // Skip the segment payload.
+        const segLen = buf.readUInt16BE(i + 2);
+        i += 2 + segLen;
+      }
+    }
+    return null;
+  } catch (e) {
+    return null;
+  } finally {
+    if (fd) try { fs.closeSync(fd); } catch (e) {}
+  }
+}
+
 // ---------- Property extraction ----------
 
 function readProp(page, name) {
@@ -280,7 +317,9 @@ async function buildOne(page, { dryRun }) {
   const heroExt = guessImageExtension(heroUrl);
   const heroLocalName = `story-${slug}-hero${heroExt}`;
   const heroLocalPath = `/images/${heroLocalName}`;
-  await downloadFile(heroUrl, path.join(IMAGES_DIR, heroLocalName));
+  const heroFullPath = path.join(IMAGES_DIR, heroLocalName);
+  await downloadFile(heroUrl, heroFullPath);
+  const heroDims = getImageDimensions(heroFullPath);
 
   const blocks = await fetchAllChildren(page.id);
   const sections = await blocksToIR(blocks, slug);
@@ -291,6 +330,7 @@ async function buildOne(page, { dryRun }) {
     ogTitle,
     ogDescription,
     heroImage: heroLocalPath,
+    heroImageDimensions: heroDims || undefined,
     heroAlt: heroineName ? `${heroineName}, выпускница Алхимии Женщины` : 'Выпускница Алхимии Женщины',
     sections,
   };

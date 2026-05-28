@@ -175,8 +175,14 @@ function buildIR() {
   };
 }
 
-const ir = buildIR();
-const html = renderStoryHtml(ir);
-fs.mkdirSync(path.dirname(OUT_HTML), { recursive: true });
-fs.writeFileSync(OUT_HTML, html);
-console.log(`Wrote ${path.relative(process.cwd(), OUT_HTML)}, len: ${html.length}`);
+// Export the parser so other scripts (e.g. one-off Notion seeding) can reuse it.
+module.exports = { buildIR, PULL_QUOTES, IMAGE_AFTER };
+
+// Only run as a CLI when invoked directly.
+if (require.main === module) {
+  const ir = buildIR();
+  const html = renderStoryHtml(ir);
+  fs.mkdirSync(path.dirname(OUT_HTML), { recursive: true });
+  fs.writeFileSync(OUT_HTML, html);
+  console.log(`Wrote ${path.relative(process.cwd(), OUT_HTML)}, len: ${html.length}`);
+}
