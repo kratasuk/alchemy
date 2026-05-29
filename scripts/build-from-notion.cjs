@@ -63,6 +63,41 @@ function fetchJson(url, { method = 'GET', body } = {}) {
   });
 }
 
+// If the downloaded image is large (PNG > 1MB or any image > 800KB), re-encode
+// to JPEG q85 via `sips` (macOS built-in). Returns the (possibly new) path
+// and extension. No-op on Linux or if sips is unavailable.
+function maybeCompressImage(filePath) {
+  try {
+    const stats = fs.statSync(filePath);
+    const ext = path.extname(filePath).toLowerCase();
+    const isPng = ext === '.png';
+    const tooBig = isPng ? stats.size > 1_000_000 : stats.size > 800_000;
+    if (!tooBig) return { path: filePath, changed: false };
+    const { execSync } = require('node:child_process');
+    try { execSync('which sips', { stdio: 'pipe' }); }
+    catch (e) { return { path: filePath, changed: false }; }
+    // For PNGs, convert to .jpg (smaller). For JPEGs, re-encode in place.
+    if (isPng) {
+      const newPath = filePath.replace(/\.png$/i, '.jpg');
+      execSync(`sips -s format jpeg -s formatOptions 85 "${filePath}" --out "${newPath}"`, { stdio: 'pipe' });
+      fs.unlinkSync(filePath);
+      const newSize = fs.statSync(newPath).size;
+      console.log(`  compressed ${path.basename(filePath)} (${(stats.size/1024).toFixed(0)}KB) → ${path.basename(newPath)} (${(newSize/1024).toFixed(0)}KB)`);
+      return { path: newPath, changed: true };
+    } else {
+      const tmp = filePath + '.tmp';
+      execSync(`sips -s formatOptions 80 "${filePath}" --out "${tmp}"`, { stdio: 'pipe' });
+      fs.renameSync(tmp, filePath);
+      const newSize = fs.statSync(filePath).size;
+      console.log(`  recompressed ${path.basename(filePath)} (${(stats.size/1024).toFixed(0)}KB → ${(newSize/1024).toFixed(0)}KB)`);
+      return { path: filePath, changed: false };
+    }
+  } catch (e) {
+    console.warn(`  compress skipped: ${e.message}`);
+    return { path: filePath, changed: false };
+  }
+}
+
 function downloadFile(url, destPath) {
   return new Promise((resolve, reject) => {
     const u = new URL(url);
@@ -164,8 +199,10 @@ async function blocksToIR(blocks, slug) {
         if (!src) break;
         const ext = guessImageExtension(src);
         const fname = `story-${slug}-inline-${imgIdx}${ext}`;
-        const localPath = `/images/${fname}`;
-        await downloadFile(src, path.join(IMAGES_DIR, fname));
+        const fullPath = path.join(IMAGES_DIR, fname);
+        await downloadFile(src, fullPath);
+        const compressed = maybeCompressImage(fullPath);
+        const localPath = '/images/' + path.basename(compressed.path);
         current.blocks.push({ type: 'image', src: localPath, alt: richTextToPlain(b.image.caption || []) });
         break;
       }
@@ -198,8 +235,10 @@ async function blocksToIR(blocks, slug) {
               if (!src) continue;
               const ext = guessImageExtension(src);
               const fname = `story-${slug}-pair-${imgIdx}${ext}`;
-              const localPath = `/images/${fname}`;
-              await downloadFile(src, path.join(IMAGES_DIR, fname));
+              const fullPath = path.join(IMAGES_DIR, fname);
+              await downloadFile(src, fullPath);
+              const compressed = maybeCompressImage(fullPath);
+              const localPath = '/images/' + path.basename(compressed.path);
               if (pendingImg) items.push(pendingImg);
               pendingImg = { src: localPath, caption: richTextToPlain(c.image.caption || []) };
             } else if (c.type === 'paragraph' && pendingImg) {
@@ -316,10 +355,11 @@ async function buildOne(page, { dryRun }) {
   const heroUrl = heroFiles[0].type === 'external' ? heroFiles[0].external.url : heroFiles[0].file.url;
   const heroExt = guessImageExtension(heroUrl);
   const heroLocalName = `story-${slug}-hero${heroExt}`;
-  const heroLocalPath = `/images/${heroLocalName}`;
   const heroFullPath = path.join(IMAGES_DIR, heroLocalName);
   await downloadFile(heroUrl, heroFullPath);
-  const heroDims = getImageDimensions(heroFullPath);
+  const heroCompressed = maybeCompressImage(heroFullPath);
+  const heroLocalPath = '/images/' + path.basename(heroCompressed.path);
+  const heroDims = getImageDimensions(heroCompressed.path);
 
   const blocks = await fetchAllChildren(page.id);
   const sections = await blocksToIR(blocks, slug);
