@@ -500,6 +500,16 @@
   .alc-about-photo img {
     width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
   }
+  /* Scroll-driven cross-fade: as the user reads through #about, the solo
+     portrait gradually dissolves into the couple photo. Driven by --fade
+     CSS variable set by JS (0 → 1). */
+  .alc-about-photo-img {
+    position: absolute;
+    inset: 0;
+    transition: opacity 0.25s linear;
+  }
+  .alc-about-photo-img--solo   { opacity: calc(1 - var(--fade, 0)); }
+  .alc-about-photo-img--couple { opacity: var(--fade, 0); }
   .alc-about-photo .badge {
     position: absolute;
     bottom: 24px; left: 24px;
@@ -1363,8 +1373,9 @@
       </div>
     </div>
     <div class="alc-about">
-      <div class="alc-about-photo reveal">
-        <img src="images/about-eliza.webp" alt="Елизавета Бабанова">
+      <div class="alc-about-photo reveal" id="aboutPhoto">
+        <img class="alc-about-photo-img alc-about-photo-img--solo" src="images/about-eliza.webp" alt="Елизавета Бабанова">
+        <img class="alc-about-photo-img alc-about-photo-img--couple" src="images/about-eliza-couple.webp" alt="Елизавета с мужем" loading="lazy">
       </div>
       <div class="alc-about-text reveal reveal-delay-1">
         <h2 class="h-1">Я знаю на своём опыте, какую цену платит женщина за <em>достижение высоких результатов.</em></h2>
@@ -1609,6 +1620,39 @@
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.08, rootMargin: '0px 0px -6% 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ── about-photo scroll cross-fade ──
+  // As the user scrolls through #about, blend the sticky portrait from
+  // the solo Liza shot into the couple shot (with husband). Driven via
+  // a CSS variable on .alc-about-photo so the visual is pure GPU
+  // opacity, no layout work.
+  const aboutPhoto = document.getElementById('aboutPhoto');
+  const aboutSection = document.getElementById('about');
+  if (aboutPhoto && aboutSection) {
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = aboutSection.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // Progress 0..1 as the section scrolls past the viewport top.
+      // 0 when section top enters viewport; 1 when section bottom leaves it.
+      const total = Math.max(1, r.height - vh);
+      const scrolled = Math.max(0, -r.top);
+      let p = Math.max(0, Math.min(1, scrolled / total));
+      // Hold solo for the first 25 % of the scroll window, finish swap by 80 %.
+      p = Math.max(0, Math.min(1, (p - 0.25) / 0.55));
+      aboutPhoto.style.setProperty('--fade', p.toFixed(3));
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
 
 })();
 </script>
