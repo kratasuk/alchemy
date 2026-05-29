@@ -1523,8 +1523,9 @@
 (function(){
   // ── data ──
   const voices = [
-    // Story card — long-form article, lives at the start so it lands first
-    // in the scroll. Same layout as testimonials + a «Читать всю историю» link.
+    // Story cards — long-form articles, lead the scroll. Same layout as
+    // testimonials + a «Читать всю историю» link. Newest first.
+    { story: 'stories/lukyanenko.html', photo: 'images/story-lukyanenko-hero.jpg', text: 'В 50 лет разрешила себе быть просто женщиной – и муж сделал то, что годами откладывал.', name: 'Наталья Л.', who: 'Нутрициолог, целитель' },
     { story: 'stories/litvinenko.html', photo: 'images/story-evgenia.jpg', text: 'После 25 лет вместе мы вышли на новый уровень близости и взаимопонимания с мужем.', name: 'Евгения Л.', who: 'Предприниматель' },
     { photo: 'images/voice-tatyana.jpg',  text: 'Эта программа – Executive MBA по женственности. Структурно, глубоко, трансформирующе и при этом очень практично.', name: 'Татьяна Г.', who: 'HR, консультант' },
     { photo: 'images/voice-anna.jpg',     text: 'Впервые за четыре года я смогла поднять чек на свои услуги и набрала вип-группу под своё сопровождение. Раньше не была к этому готова.', name: 'Анна Г.', who: 'Риск-менеджер' },
