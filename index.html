@@ -1640,8 +1640,8 @@
       const total = Math.max(1, r.height - vh);
       const scrolled = Math.max(0, -r.top);
       let p = Math.max(0, Math.min(1, scrolled / total));
-      // Hold solo for the first 20 % of the scroll window, finish swap by 70 %.
-      p = Math.max(0, Math.min(1, (p - 0.20) / 0.50));
+      // Hold solo for the first 20 % of the scroll window, finish swap by 50 %.
+      p = Math.max(0, Math.min(1, (p - 0.20) / 0.30));
       aboutPhoto.style.setProperty('--fade', p.toFixed(3));
     };
     const onScroll = () => {
