@@ -81,9 +81,11 @@ function renderHead(ir) {
     `<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>`,
     `<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter+Tight:wght@400;500;600&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">`,
     `<style>${STYLES}</style>`,
-    // Vercel Web Analytics — auto-served from the same domain when enabled
-    // in the Vercel dashboard. Single tag, no npm dependency for static HTML.
+    // Vercel Web Analytics + Speed Insights — auto-served from the same
+    // domain when enabled in the Vercel dashboard. Single tag each, no npm
+    // dependency for static HTML.
     `<script defer src="/_vercel/insights/script.js"></script>`,
+    `<script defer src="/_vercel/speed-insights/script.js"></script>`,
     `</head>`
   );
   return lines.join('\n');
