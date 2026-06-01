@@ -12,6 +12,22 @@ Living context for future sessions. Updated as work progresses.
 - `oferta.html`, `privacy.html` — legal pages
 - `api/_letter.js` — LLM system prompt (v4.7) for the quiz-generated personal letter
 
+### Analytics (enabled in Vercel dashboard)
+
+Vercel **Web Analytics** + **Speed Insights** are live. For a static
+site they're just two `<script defer>` tags before `</head>`:
+
+```html
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+```
+
+Already on: `index.html`, `test.html`, `oferta.html`, `privacy.html`,
+and every generated story (via `scripts/lib/render-story.cjs`). **Add
+both tags to any new top-level page you create.** Page-view stats per
+story: Vercel dashboard → Analytics → Pages, filter `/stories/...`.
+Both must stay enabled in the dashboard or the scripts 404.
+
 ## Critical state — DO NOT regress
 
 ### Brand rules (CLAUDE.md global)
