@@ -11,11 +11,13 @@ RU-лендинг 14-недельной программы Елизаветы Б
 | Файл / папка | Назначение |
 |---|---|
 | [`index.html`](index.html) | Канонический АЖ-лендинг |
-| [`quiz.html`](quiz.html) | Квиз-анкета (8 вопросов, заявка) |
 | [`test.html`](test.html) | Диагностический тест («Подать заявку» в hero) |
-| [`images/`](images) | Все ассеты лендинга и квиза (~20 файлов) |
-| `eliza.html` | **Отдельный EN-проект TrueLife.** Не трогаем в рамках этого Linear |
+| [`stories/`](stories) | Long-form истории выпускниц (генерируются из Notion / txt) |
+| [`scripts/`](scripts) | Генераторы статей (`build-from-notion.cjs`, `lib/render-story.cjs`) |
+| [`images/`](images) | Все ассеты лендинга, квиза и историй |
 | [`.github/pull_request_template.md`](.github/pull_request_template.md) | Шаблон для всех PR |
+
+> `eliza.html` / `quiz.html` (ранний EN-прототип «True Abundance») удалены с RU-домена 2026-06-02. Копии — в `WORK AREAS/Marketing/wmnalchemy-en-project/_reference-en-prototype/`.
 
 Статический сайт. Build-step нет: HTML/CSS/JS грузятся напрямую с CDN.
 
