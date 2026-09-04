@@ -111,6 +111,31 @@ export async function saveRegistration({ tree = SKV_TREE, event, token, fields }
   return key;
 }
 
+/** Все регистрации на событие: список объектов вида {ключ: значение}. Убранные пропускаем. */
+export async function listRegistrations({ tree = SKV_TREE, event } = {}) {
+  const eventNode = await byKey(tree, `webinar.${event}`);
+  if (!eventNode?.node_hash) return [];
+
+  const out = [];
+  let offset = 0;
+  const limit = 200;
+  // ответ страничный, идём до конца
+  for (let guard = 0; guard < 50; guard++) {
+    const { data } = await call('GET', `/xtrees/${tree}/nodes/${eventNode.node_hash}/children?limit=${limit}&offset=${offset}`);
+    const kids = data?.children || [];
+    for (const kid of kids) {
+      const row = {};
+      for (const v of kid.vals || []) row[v.val_name] = v.value;
+      if (row.removed === '1') continue;
+      if (!row.token) continue;
+      out.push(row);
+    }
+    offset += kids.length;
+    if (!kids.length || offset >= (data?.total_count ?? offset)) break;
+  }
+  return out;
+}
+
 /**
  * Привязать телеграм к регистрации: создаём или обновляем карточку человека
  * (это и есть база для рассылки) и помечаем саму регистрацию подтверждённой.
