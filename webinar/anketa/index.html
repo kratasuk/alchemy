@@ -199,7 +199,7 @@ const QUESTIONS = [
   ]},
   { id: 'name', q: 'Как вас зовут?', input: true, placeholder: 'Имя' },
   { id: 'want', q: 'Что вы больше всего хотите изменить в ближайший год?', hint: 'Одной-двумя фразами · последний шаг',
-    textarea: true, minLength: 10, placeholder: 'Пишите как чувствуется – это поможет нам сделать эфир полезнее именно для вас.' }
+    textarea: true, placeholder: 'Пишите как чувствуется – это поможет нам сделать эфир полезнее именно для вас.' }
 ];
 
 const answers = {};
@@ -296,7 +296,7 @@ function onNext() {
   } else if (item.input) {
     if (!String(value || '').trim()) { el.err.textContent = 'Напишите, как к вам обращаться'; return; }
   } else if (item.textarea) {
-    if (String(value || '').trim().length < (item.minLength || 10)) { el.err.textContent = 'Пары слов достаточно, но пусть они будут ваши'; return; }
+    // порога длины нет: сколько написала, столько и хорошо
   } else if (!value) {
     el.err.textContent = 'Выберите вариант'; return;
   }
