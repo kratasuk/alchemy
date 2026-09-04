@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="only dark">
+<title>Регистрация · Как расцвести после 40</title>
+<meta name="description" content="Девять коротких вопросов перед вебинаром 3 октября. Ссылка на эфир придёт в Telegram.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: only dark;
+    --night: #2a2416;          /* тёплый тёмный фон анкеты */
+    --card: #322b1c;
+    --card-soft: #3a3222;
+    --paper: #f3ece0;
+    --ink: #1c1814;
+    --soft: rgba(243,236,224,.72);
+    --faint: rgba(243,236,224,.44);
+    --hair: rgba(243,236,224,.16);
+    --gold: #9a7838;
+    --gold-bright: #c8a160;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    --gutter: clamp(20px, 5vw, 56px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--night); }
+  body { background: var(--night); color: var(--paper); font-family: var(--sans); font-size: 16px; line-height: 1.55;
+         -webkit-font-smoothing: antialiased; min-height: 100vh; display: flex; flex-direction: column; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+  ::selection { background: var(--gold); color: var(--paper); }
+
+  /* ─── шапка с прогрессом ─── */
+  .top { padding: 18px var(--gutter) 0; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; max-width: 760px; margin: 0 auto; }
+  .step { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); }
+  .back { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+  .back:hover { color: var(--paper); }
+  .bar { max-width: 760px; margin: 14px auto 0; height: 2px; background: var(--hair); border-radius: 2px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--gold-bright); transition: width .35s cubic-bezier(.2,.7,.2,1); }
+
+  /* ─── экран вопроса ─── */
+  main { flex: 1; display: flex; align-items: center; padding: clamp(28px, 5vw, 56px) var(--gutter) clamp(40px, 6vw, 80px); }
+  .wrap { width: 100%; max-width: 760px; margin: 0 auto; }
+  .q { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4.4vw, 46px); line-height: 1.1; color: var(--paper); text-wrap: balance; }
+  .hint { font-family: var(--mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--faint); margin-top: 12px; }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-top: clamp(24px, 3.5vw, 40px); }
+  .option { display: block; position: relative; padding: 20px 24px 20px 60px; background: var(--card); border: 1px solid transparent;
+            border-radius: 14px; cursor: pointer; transition: border-color .2s, background .2s; font-size: 16px; line-height: 1.4; }
+  .option:hover { background: var(--card-soft); }
+  .option input { position: absolute; opacity: 0; pointer-events: none; }
+  .option::before { content: ''; position: absolute; left: 22px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px;
+                    border: 1px solid var(--faint); border-radius: 50%; transition: all .2s; }
+  .option.on { border-color: var(--gold-bright); background: rgba(200,161,96,.08); }
+  .option.on::before { border-color: var(--gold-bright); background: var(--gold-bright); box-shadow: inset 0 0 0 4px var(--card); }
+  .option--multi::before { border-radius: 5px; }
+  .option--multi.on::before { box-shadow: none; }
+  .option--multi.on::after { content: '✓'; position: absolute; left: 26px; top: 50%; transform: translateY(-50%);
+                             color: var(--ink); font-size: 11px; font-weight: 700; line-height: 1; }
+
+  .field { margin-top: clamp(24px, 3.5vw, 40px); }
+  .field input, .field textarea { width: 100%; padding: 20px 22px; background: var(--card); border: 1px solid var(--hair);
+    border-radius: 14px; color: var(--paper); font-family: var(--serif); font-size: clamp(20px, 2vw, 24px); line-height: 1.4; resize: vertical; }
+  .field textarea { min-height: 160px; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--gold-bright); }
+  .field ::placeholder { color: var(--faint); }
+
+  .err { margin-top: 14px; font-size: 14px; color: #e2a06a; min-height: 20px; }
+  .actions { display: flex; gap: 14px; align-items: center; margin-top: clamp(24px, 3.5vw, 36px); flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 12px; padding: 18px 30px; border-radius: 999px; font-size: 12px; font-weight: 500;
+         letter-spacing: .16em; text-transform: uppercase; background: var(--gold); color: var(--paper); border: 1px solid var(--gold);
+         transition: transform .2s, background .2s, color .2s, border-color .2s; text-decoration: none; }
+  .btn:hover { background: var(--gold-bright); border-color: var(--gold-bright); color: var(--ink); transform: translateY(-1px); }
+  .btn[disabled] { opacity: .4; pointer-events: none; }
+  .btn--ghost { background: transparent; color: var(--soft); border-color: var(--hair); }
+  .btn--ghost:hover { background: transparent; color: var(--paper); border-color: var(--paper); transform: none; }
+
+  /* ─── финальный экран ─── */
+  .done { text-align: left; }
+  .done .q { margin-bottom: 18px; }
+  .done p { font-family: var(--serif); font-size: clamp(20px, 2vw, 26px); line-height: 1.45; color: var(--soft); max-width: 30ch; }
+  .done .btn { margin-top: clamp(26px, 3.5vw, 40px); padding: 22px 34px; font-size: 13px; }
+  .done .fine { margin-top: 18px; font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--faint); }
+  .done .fine a { border-bottom: 1px solid var(--hair); text-decoration: none; }
+  .hidden { display: none; }
+
+  @media (max-width: 640px) {
+    .option { padding: 17px 18px 17px 52px; font-size: 15px; }
+    .option::before { left: 18px; }
+    .option--multi.on::after { left: 22px; }
+    .actions .btn { padding: 16px 24px; }
+  }
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-row">
+    <a class="back" href="/webinar" id="back">← Назад</a>
+    <span class="step" id="step"></span>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+</div>
+
+<main>
+  <div class="wrap">
+    <!-- экран вопроса -->
+    <section id="screen-q">
+      <h1 class="q" id="q-text"></h1>
+      <div class="hint hidden" id="q-hint"></div>
+      <div class="options hidden" id="q-options"></div>
+      <div class="field hidden" id="q-field"></div>
+      <div class="err" id="q-err"></div>
+      <div class="actions">
+        <button class="btn" id="next">Дальше</button>
+      </div>
+    </section>
+
+    <!-- финальный экран -->
+    <section id="screen-done" class="done hidden">
+      <h1 class="q">Остался один шаг</h1>
+      <p>Ссылку на эфир пришлём в Telegram. Нажмите кнопку, чтобы мы знали, кому её отправить.</p>
+      <a class="btn" id="tg-link" href="#">Подтвердить в Telegram →</a>
+      <div class="fine">Не открылось? Напишите <a href="https://t.me/alchemysupportbot" target="_blank" rel="noopener">@alchemysupportbot</a></div>
+    </section>
+  </div>
+</main>
+
+<script>
+const QUESTIONS = [
+  { id: 'age', q: 'Сколько вам лет?', options: [
+    { v: 'under_35', t: 'До 35' },
+    { v: '35_40', t: '35–40' },
+    { v: '40_45', t: '40–45' },
+    { v: '45_50', t: '45–50' },
+    { v: '50_plus', t: '50 и больше' }
+  ]},
+  { id: 'gap', q: 'В какой сфере жизни сейчас наибольший разрыв между «как есть» и «как хочу»?', options: [
+    { v: 'body', t: 'Тело и энергия' },
+    { v: 'money', t: 'Деньги и реализация' },
+    { v: 'relations', t: 'Отношения' }
+  ]},
+  { id: 'energy', q: 'Какой уровень энергии у вас в среднем последний год?', options: [
+    { v: 'burnout', t: 'Сильное истощение' },
+    { v: 'low', t: 'Ниже среднего' },
+    { v: 'mid', t: 'Средне' },
+    { v: 'good', t: 'Выше среднего' },
+    { v: 'high', t: 'Высокий' }
+  ]},
+  { id: 'prof', q: 'Чем вы сейчас заняты профессионально?', options: [
+    { v: 'top', t: 'Руководитель в компании' },
+    { v: 'manager', t: 'Специалист в компании' },
+    { v: 'owner', t: 'Развиваю свой бизнес' },
+    { v: 'expert', t: 'Эксперт, веду частную практику' },
+    { v: 'transition', t: 'В переходе: вышла из старой роли, ищу новое' },
+    { v: 'family', t: 'Сейчас фокус на семье, не работаю' }
+  ]},
+  { id: 'work_pain', q: 'Что сейчас сложнее всего в работе?', hint: 'Можно выбрать 1–2', multi: true, max: 2, options: [
+    { v: 'low_income', t: 'Зарабатываю меньше, чем хочется и могла бы' },
+    { v: 'overwork', t: 'Работаю на износ – не успеваю восстанавливаться' },
+    { v: 'role_ceiling', t: 'Внутри текущей роли расти дальше некуда – упёрлась в потолок' },
+    { v: 'operational_lock', t: 'Всё держится на мне – не могу выйти из операционки или делегировать' },
+    { v: 'meaning_lost', t: 'Не вижу смысла в том, что делаю – радости и драйва стало мало' },
+    { v: 'not_relevant', t: 'Работа сейчас не актуальна' }
+  ]},
+  { id: 'income', q: 'Ваш средний доход в месяц', options: [
+    { v: 'under_100', t: 'Меньше 100 тысяч ₽' },
+    { v: '100_300', t: '100–300 тысяч ₽' },
+    { v: '300_1m', t: '300 тысяч – 1 миллион ₽' },
+    { v: '1_3m', t: '1–3 миллиона ₽' },
+    { v: '3m_plus', t: 'Больше 3 миллионов ₽' }
+  ]},
+  { id: 'relations', q: 'Как у вас сейчас в личной жизни?', options: [
+    { v: 'married_good', t: 'В браке или долгих отношениях, всё хорошо' },
+    { v: 'married_issues', t: 'В браке или долгих отношениях, есть напряжение' },
+    { v: 'single_choice', t: 'Одна, и это мой выбор' },
+    { v: 'single_seeking', t: 'Хочу встретить близкого человека, пока не получается' },
+    { v: 'recent_split', t: 'Развод или расставание было недавно' }
+  ]},
+  { id: 'family', q: 'Дети', options: [
+    { v: 'kids_small', t: 'Маленькие, до 7 лет' },
+    { v: 'kids_school', t: 'Школьники или подростки' },
+    { v: 'kids_adult', t: 'Уже взрослые, живут своей жизнью' },
+    { v: 'no_kids', t: 'Детей нет' },
+    { v: 'considering', t: 'Беременна или планирую' }
+  ]},
+  { id: 'name', q: 'Как вас зовут?', input: true, placeholder: 'Имя' },
+  { id: 'want', q: 'Что вы больше всего хотите изменить в ближайший год?', hint: 'Одной-двумя фразами, своими словами',
+    textarea: true, minLength: 10, placeholder: 'Пишите как чувствуется – это поможет нам сделать эфир полезнее именно для вас.' }
+];
+
+const answers = {};
+let idx = 0;
+let sending = false;
+
+const el = {
+  step: document.getElementById('step'), bar: document.getElementById('bar'), back: document.getElementById('back'),
+  qText: document.getElementById('q-text'), qHint: document.getElementById('q-hint'), qOptions: document.getElementById('q-options'),
+  qField: document.getElementById('q-field'), err: document.getElementById('q-err'), next: document.getElementById('next'),
+  screenQ: document.getElementById('screen-q'), screenDone: document.getElementById('screen-done'), tgLink: document.getElementById('tg-link')
+};
+
+function render() {
+  const item = QUESTIONS[idx];
+  el.step.textContent = (idx + 1) + ' / ' + QUESTIONS.length;
+  el.bar.style.width = ((idx) / QUESTIONS.length * 100) + '%';
+  el.err.textContent = '';
+  el.qText.textContent = item.q;
+  el.back.textContent = idx === 0 ? '← Назад' : '← Предыдущий';
+
+  el.qHint.classList.toggle('hidden', !item.hint);
+  if (item.hint) el.qHint.textContent = item.hint;
+
+  el.qOptions.innerHTML = '';
+  el.qField.innerHTML = '';
+  el.qOptions.classList.toggle('hidden', !item.options);
+  el.qField.classList.toggle('hidden', !(item.input || item.textarea));
+
+  if (item.options) {
+    const current = answers[item.id] || (item.multi ? [] : '');
+    item.options.forEach((opt) => {
+      const label = document.createElement('label');
+      label.className = 'option' + (item.multi ? ' option--multi' : '');
+      const chosen = item.multi ? current.includes(opt.v) : current === opt.v;
+      if (chosen) label.classList.add('on');
+      label.innerHTML = '<input type="' + (item.multi ? 'checkbox' : 'radio') + '" name="' + item.id + '" value="' + opt.v + '"><span></span>';
+      label.querySelector('span').textContent = opt.t;
+      label.addEventListener('click', (e) => {
+        e.preventDefault();
+        pick(item, opt.v, label);
+      });
+      el.qOptions.appendChild(label);
+    });
+  }
+
+  if (item.input || item.textarea) {
+    const node = document.createElement(item.textarea ? 'textarea' : 'input');
+    node.placeholder = item.placeholder || '';
+    node.value = answers[item.id] || '';
+    node.addEventListener('input', () => { answers[item.id] = node.value; el.err.textContent = ''; });
+    if (!item.textarea) node.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); onNext(); } });
+    el.qField.appendChild(node);
+    setTimeout(() => node.focus(), 60);
+  }
+
+  el.next.textContent = idx === QUESTIONS.length - 1 ? 'Зарегистрироваться' : 'Дальше';
+}
+
+// Один выбор ведёт дальше сам – так анкета проходится в темпе тапов.
+function pick(item, value, label) {
+  el.err.textContent = '';
+  if (item.multi) {
+    const list = answers[item.id] || [];
+    const at = list.indexOf(value);
+    if (at >= 0) { list.splice(at, 1); label.classList.remove('on'); }
+    else {
+      if (list.length >= (item.max || 2)) { el.err.textContent = 'Можно выбрать не больше ' + (item.max || 2); return; }
+      list.push(value); label.classList.add('on');
+    }
+    answers[item.id] = list;
+    return;
+  }
+  answers[item.id] = value;
+  el.qOptions.querySelectorAll('.option').forEach((o) => o.classList.remove('on'));
+  label.classList.add('on');
+  setTimeout(() => onNext(), 220);
+}
+
+function onNext() {
+  const item = QUESTIONS[idx];
+  const value = answers[item.id];
+
+  if (item.multi) {
+    if (!value || !value.length) { el.err.textContent = 'Выберите хотя бы один вариант'; return; }
+  } else if (item.input) {
+    if (!String(value || '').trim()) { el.err.textContent = 'Напишите, как к вам обращаться'; return; }
+  } else if (item.textarea) {
+    if (String(value || '').trim().length < (item.minLength || 10)) { el.err.textContent = 'Пары слов достаточно, но пусть они будут ваши'; return; }
+  } else if (!value) {
+    el.err.textContent = 'Выберите вариант'; return;
+  }
+
+  if (idx === QUESTIONS.length - 1) return submit();
+  idx += 1;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function onBack() {
+  if (idx === 0) return;
+  idx -= 1;
+  render();
+}
+
+async function submit() {
+  if (sending) return;
+  sending = true;
+  el.next.disabled = true;
+  el.next.textContent = 'Отправляем…';
+  try {
+    const payload = Object.assign({}, answers, { source: new URLSearchParams(location.search).get('utm_source') || 'webinar-page' });
+    const res = await fetch('/api/webinar-submit', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || 'Не получилось отправить');
+    el.tgLink.href = 'https://t.me/' + (data.botUsername || 'alchemysupportbot') + '?start=' + encodeURIComponent(data.token);
+    el.screenQ.classList.add('hidden');
+    el.screenDone.classList.remove('hidden');
+    el.step.textContent = 'Готово';
+    el.bar.style.width = '100%';
+    el.back.classList.add('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    el.err.textContent = err.message || 'Не получилось отправить, попробуйте ещё раз';
+    el.next.disabled = false;
+    el.next.textContent = 'Зарегистрироваться';
+    sending = false;
+  }
+}
+
+el.next.addEventListener('click', onNext);
+el.back.addEventListener('click', (e) => { if (idx > 0) { e.preventDefault(); onBack(); } });
+render();
+</script>
+</body>
+</html>
