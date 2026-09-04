@@ -55,6 +55,11 @@ const LABELS = {
 
 const label = (field, value) => LABELS[field]?.[value] || value || '';
 
+function shortToken() {
+  // Префикс w отличает вебинарный токен от токена анкеты Алхимии в боте.
+  return 'w' + crypto.randomBytes(8).toString('base64url');
+}
+
 // Поля регистрации в SKV: и коды (для выборок), и подписи (чтобы читалось глазами).
 function skvFields(a, token) {
   return {
