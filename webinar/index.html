@@ -55,12 +55,6 @@
   .ornament .ln { width: 44px; height: 1px; background: var(--gold-bright); opacity: .6; }
   .ornament .dia { width: 6px; height: 6px; background: var(--gold-bright); transform: rotate(45deg); }
 
-  /* ─── NAV: как на /retreat, светлая поверх тёмного края фото ─── */
-  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 18px var(--gutter); }
-  .nav-cta { font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; padding: 10px 18px; border-radius: 999px;
-             color: var(--paper); border: 1px solid rgba(243,236,224,.65); background: rgba(20,17,13,.28); backdrop-filter: blur(6px); }
-  .nav-cta:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
-
   /* ─── HERO: сетка как на /retreat, заголовок в один ряд по обе стороны от Лизы ───
      Кадр показан ЦЕЛИКОМ по высоте и прижат вправо: макушка сверху и цветок снизу не
      срезаются ни при какой пропорции окна. Поле, которое остаётся слева (и полосы сверху
@@ -133,24 +127,21 @@
     .hero-stage { display: flex; flex-direction: column; justify-content: flex-end; padding: 40vh var(--gutter) 36px; }
     .hero-kicker { margin-bottom: 12px; white-space: normal; line-height: 1.5; }
     .hero-aside--side { display: none; }
-    .hero-title { font-size: clamp(50px, 15vw, 76px); white-space: normal; }
-    .hero-aside--inline { position: static; width: auto; height: auto; overflow: visible; clip: auto; font-size: clamp(34px, 9.5vw, 48px); line-height: 1.05; margin-top: .08em; }
+    .hero-title, .hero-aside--inline { font-size: clamp(50px, 15vw, 76px); }
+    .hero-title { white-space: normal; }
+    .hero-aside--inline { position: static; width: auto; height: auto; overflow: visible; clip: auto; line-height: 1.05; margin-top: .04em; }
     .hero-inner { padding-top: 16px; gap: 16px; }
     .hero .ornament { margin: 0; }
     .hero-cta { gap: 10px; }
     .hero-cta .btn { padding: 15px 22px 15px 24px; font-size: 11px; }
-    .hero-lede { font-size: 20px; }
+    /* подзаголовок крупнее и во всю ширину заголовка */
+    .hero-lede { font-size: clamp(22px, 6.6vw, 30px); max-width: 100%; }
   }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
 </head>
 <body>
-
-<nav class="nav" id="nav">
-  <span></span>
-  <a class="nav-cta" href="https://t.me/alchemysupportbot" target="_blank" rel="noopener">Зарегистрироваться</a>
-</nav>
 
 <!-- HERO: единственный экран страницы; заголовок в один ряд по обе стороны от Лизы -->
 <section class="hero" id="top">
