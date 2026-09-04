@@ -61,14 +61,30 @@
              color: var(--paper); border: 1px solid rgba(243,236,224,.65); background: rgba(20,17,13,.28); backdrop-filter: blur(6px); }
   .nav-cta:hover { background: var(--paper); color: var(--ink); border-color: var(--paper); }
 
-  /* ─── HERO: та же сетка, что на /retreat. Отличие: заголовок из двух слов «Как расцвести»
-     стоит в две строки слева от Лизы, «после 40» справа на базовой линии второй строки. ─── */
+  /* ─── HERO: сетка как на /retreat, заголовок в один ряд по обе стороны от Лизы ───
+     Кадр показан ЦЕЛИКОМ по высоте и прижат вправо: макушка сверху и цветок снизу не
+     срезаются ни при какой пропорции окна. Поле, которое остаётся слева (и полосы сверху
+     и снизу на узких окнах), закрывает та же фотография, размытая и притемнённая, поэтому
+     стыка не видно, а текст ложится на спокойный тёмный фон.
+     --wp    – ширина кадра: всегда по высоте окна (1.4993 = 2000/1334), поэтому по вертикали
+               кадр не режется; вправо он при этом может уходить за край окна;
+     --face-x – где по горизонтали центр головы: лицо стоит на 49,5 % ширины кадра. Держим его
+                на 57 % ширины окна, но не левее, чем даёт кадр, прижатый к правому краю;
+     --gap   – зазор под голову между левой и правой колонками текста;
+     --col   – ширина левой колонки: от края страницы до зазора. */
   .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; background: var(--night); color: var(--paper);
-          /* кадр сдвинут вправо: фото шире окна на 14% и уходит за правый край, Лиза стоит на ~57% ширины окна.
-             --face: где по горизонтали центр головы; --gap: зазор под голову между колонками текста */
-          --face: 0.57; --gap: clamp(300px, 45vh, 580px); }
-  .hero-photo { position: absolute; top: 0; bottom: 0; left: 0; right: -14%; z-index: 0; }
-  .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+          --wp: 149.93vh;
+          --face-x: max(57vw, calc(100vw - 0.505 * var(--wp)));
+          --gap: clamp(300px, 45vh, 580px);
+          --col: calc(var(--face-x) - var(--gap) / 2 - var(--gutter));
+          --kicker-fs: clamp(15px, 1.05vw, 20px); }
+  .hero-photo { position: absolute; inset: 0; z-index: 0; }
+  .hero-photo img { position: absolute; top: 0; height: 100%; max-width: none; object-fit: cover; }
+  .hero-photo .hero-photo-back { left: 0; width: 100%; object-position: 50% 40%; filter: blur(40px) brightness(.68) saturate(.85); transform: scale(1.2); }
+  /* левый край кадра растворяется в размытом фоне, чтобы стыка не было видно */
+  .hero-photo .hero-photo-main { left: calc(var(--face-x) - 0.495 * var(--wp)); width: var(--wp);
+    -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0, rgba(0,0,0,1) 180px);
+            mask-image: linear-gradient(90deg, rgba(0,0,0,0) 0, rgba(0,0,0,1) 180px); }
   .hero::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background:
       linear-gradient(180deg, rgba(20,17,13,.42) 0%, rgba(20,17,13,0) 22%),
@@ -76,44 +92,41 @@
       linear-gradient(90deg, rgba(20,17,13,.80) 0%, rgba(20,17,13,.70) 18%, rgba(20,17,13,.42) 32%, rgba(20,17,13,.10) 44%, rgba(20,17,13,0) 52%),
       linear-gradient(270deg, rgba(20,17,13,.58) 0%, rgba(20,17,13,.42) 18%, rgba(20,17,13,.14) 34%, rgba(20,17,13,0) 44%); }
   .hero-stage { position: relative; z-index: 2; min-height: 100vh; min-height: 100dvh; display: grid;
-                grid-template-columns: minmax(0, calc(100% * var(--face) - var(--gap) / 2)) var(--gap) minmax(0, 1fr);
+                grid-template-columns: minmax(0, var(--col)) var(--gap) minmax(0, 1fr);
                 align-items: start; align-content: center; padding: 8vh clamp(24px, 4vw, 64px) 14vh var(--gutter); }
   .hero-left { grid-column: 1; justify-self: end; display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; }
-  .hero-kicker { font-family: var(--mono); font-size: 13px; line-height: 20px; letter-spacing: .28em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 18px; white-space: nowrap; }
+  .hero-kicker { font-family: var(--mono); font-size: var(--kicker-fs); line-height: 1.5; letter-spacing: .28em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 20px; white-space: nowrap; }
   .hero-headline { margin: 0; }
   .hero-title, .hero-aside { display: block; font-family: var(--serif); font-weight: 400; line-height: .92;
                              /* заголовок в один ряд: «Как расцвести» слева, «после 40» справа на той же линии.
-                                Размер как на /retreat (10.3vw, до 172px), но не больше, чем влезает «Как расцвести» в левую
-                                колонку: колонка = (ширина окна - отступы) * --face - зазор / 2, фраза ~5.5em в Cormorant */
-                             font-size: min(10.3vw, 172px, calc(((100vw - 120px) * var(--face) - var(--gap) / 2) / 5.5)); letter-spacing: -.02em; color: var(--paper);
+                                Размер как на /retreat (10.3vw, до 172px), но не больше, чем влезает «Как расцвести»
+                                в левую колонку: фраза занимает ~5.5em в Cormorant */
+                             font-size: min(10.3vw, 172px, calc(var(--col) / 5.5)); letter-spacing: -.02em; color: var(--paper);
                              white-space: nowrap; text-shadow: 0 2px 28px rgba(0,0,0,.35); }
   .hero-title .w { display: inline; }
   .hero-aside { font-style: italic; }
-  /* «после 40» на базовой линии заголовка: отступ равен высоте надзаголовка (18px строка + 18px отступ) */
-  .hero-aside--side { grid-column: 3; justify-self: start; margin-top: 36px; }
+  /* «после 40» на базовой линии заголовка: отступ равен высоте надзаголовка (строка + отступ снизу) */
+  .hero-aside--side { grid-column: 3; justify-self: start; margin-top: calc(1.5 * var(--kicker-fs) + 20px); }
   .hero-aside--inline { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .hero-inner { padding: 24px 0 0; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; max-width: 100%; }
   .hero .ornament { margin: -6px 0 -2px; }
-  .hero-lede { font-family: var(--serif); font-size: clamp(24px, 2.2vw, 40px); line-height: 1.35; color: var(--paper); text-wrap: balance; max-width: 24ch;
+  .hero-lede { font-family: var(--serif); font-size: clamp(26px, 2.6vw, 46px); line-height: 1.32; color: var(--paper); text-wrap: balance; max-width: 24ch;
                text-shadow: 0 1px 12px rgba(0,0,0,.35); }
   .hero-lede em { font-style: italic; color: var(--gold-bright); }
   .hero-cta { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
-  .hero-fine { font-family: var(--mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: rgba(243,236,224,.72); display: flex; gap: 14px; flex-wrap: wrap; margin-top: -8px; }
-  .hero-fine .dot { color: var(--gold-bright); }
-  .hero-fine a { border-bottom: 1px solid rgba(243,236,224,.35); padding-bottom: 2px; }
-  .hero-fine a:hover { color: var(--paper); border-color: var(--paper); }
 
   @media (max-width: 1140px) {
     .hero { --gap: clamp(220px, 36vh, 340px); }
     .hero-stage { padding-right: clamp(20px, 3vw, 40px); }
-    .hero-title, .hero-aside { font-size: min(9vw, 106px, calc(((100vw - 100px) * var(--face) - var(--gap) / 2) / 5.5)); }
+    .hero-title, .hero-aside { font-size: min(9vw, 106px, calc(var(--col) / 5.5)); }
     .hero-kicker { white-space: normal; max-width: 100%; letter-spacing: .2em; }
     .hero-cta .btn { padding: 14px 20px 14px 22px; font-size: 11px; }
   }
   @media (max-width: 760px) {
     /* телефон: фото на весь экран, лицо в верхней части, текст внизу поверх тёмной тени */
-    .hero-photo { right: 0; }
-    .hero-photo img { object-position: 50% 18%; }
+    /* на телефоне кадр по-прежнему заполняет экран: лицо в верхней части, текст внизу */
+    .hero-photo .hero-photo-back { display: none; }
+    .hero-photo .hero-photo-main { left: 0; width: 100%; object-position: 50% 18%; -webkit-mask-image: none; mask-image: none; }
     .hero::before { background:
       linear-gradient(180deg, rgba(20,17,13,.30) 0%, rgba(20,17,13,0) 20%),
       linear-gradient(180deg, rgba(20,17,13,0) 34%, rgba(20,17,13,.62) 52%, rgba(20,17,13,.90) 100%); }
@@ -127,7 +140,6 @@
     .hero-cta { gap: 10px; }
     .hero-cta .btn { padding: 15px 22px 15px 24px; font-size: 11px; }
     .hero-lede { font-size: 20px; }
-    .hero-fine { margin-top: -4px; }
   }
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
@@ -142,7 +154,10 @@
 
 <!-- HERO: единственный экран страницы; заголовок в один ряд по обе стороны от Лизы -->
 <section class="hero" id="top">
-  <div class="hero-photo" aria-hidden="true"><img src="/images/retreat-hero.jpg" alt=""></div>
+  <div class="hero-photo" aria-hidden="true">
+    <img class="hero-photo-back" src="/images/retreat-hero.jpg" alt="">
+    <img class="hero-photo-main" src="/images/retreat-hero.jpg" alt="">
+  </div>
   <div class="hero-stage">
     <div class="hero-left">
       <div class="hero-kicker reveal in">Вебинар · 3 октября</div>
@@ -153,7 +168,6 @@
         <div class="hero-cta reveal in">
           <a class="btn btn--light" href="https://t.me/alchemysupportbot" target="_blank" rel="noopener">Зарегистрироваться <span class="arrow">→</span></a>
         </div>
-        <div class="hero-fine reveal in"><span>Регистрация в боте</span><span class="dot">·</span><a href="https://t.me/alchemysupportbot" target="_blank" rel="noopener">@alchemysupportbot</a></div>
       </div>
     </div>
     <span class="hero-aside hero-aside--side reveal in" aria-hidden="true">после 40</span>
