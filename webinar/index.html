@@ -63,8 +63,11 @@
 
   /* ─── HERO: та же сетка, что на /retreat. Отличие: заголовок из двух слов «Как расцвести»
      стоит в две строки слева от Лизы, «после 40» справа на базовой линии второй строки. ─── */
-  .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; background: var(--night); color: var(--paper); }
-  .hero-photo { position: absolute; inset: 0; z-index: 0; }
+  .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; background: var(--night); color: var(--paper);
+          /* кадр сдвинут вправо: фото шире окна на 14% и уходит за правый край, Лиза стоит на ~57% ширины окна.
+             --face: где по горизонтали центр головы; --gap: зазор под голову между колонками текста */
+          --face: 0.57; --gap: clamp(300px, 45vh, 580px); }
+  .hero-photo { position: absolute; top: 0; bottom: 0; left: 0; right: -14%; z-index: 0; }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
   .hero::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
     background:
@@ -72,7 +75,8 @@
       linear-gradient(0deg, rgba(20,17,13,.34) 0%, rgba(20,17,13,0) 30%),
       linear-gradient(90deg, rgba(20,17,13,.80) 0%, rgba(20,17,13,.70) 18%, rgba(20,17,13,.42) 32%, rgba(20,17,13,.10) 44%, rgba(20,17,13,0) 52%),
       linear-gradient(270deg, rgba(20,17,13,.58) 0%, rgba(20,17,13,.42) 18%, rgba(20,17,13,.14) 34%, rgba(20,17,13,0) 44%); }
-  .hero-stage { position: relative; z-index: 2; min-height: 100vh; min-height: 100dvh; display: grid; grid-template-columns: 1fr clamp(280px, 40vh, 520px) 1fr;
+  .hero-stage { position: relative; z-index: 2; min-height: 100vh; min-height: 100dvh; display: grid;
+                grid-template-columns: minmax(0, calc(100% * var(--face) - var(--gap) / 2)) var(--gap) minmax(0, 1fr);
                 align-items: start; align-content: center; padding: 8vh clamp(24px, 4vw, 64px) 14vh var(--gutter); }
   .hero-left { grid-column: 1; justify-self: end; display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; }
   .hero-kicker { font-family: var(--mono); font-size: 13px; line-height: 20px; letter-spacing: .28em; text-transform: uppercase; color: var(--gold-bright); margin-bottom: 18px; white-space: nowrap; }
@@ -80,8 +84,8 @@
   .hero-title, .hero-aside { display: block; font-family: var(--serif); font-weight: 400; line-height: .92;
                              /* заголовок в один ряд: «Как расцвести» слева, «после 40» справа на той же линии.
                                 Размер как на /retreat (10.3vw, до 172px), но не больше, чем влезает «Как расцвести» в левую
-                                колонку: колонка = (ширина окна - зазор под голову - отступы) / 2, фраза ~5.5em в Cormorant */
-                             font-size: min(10.3vw, 172px, calc((100vw - max(280px, min(40vh, 520px)) - 120px) / 11)); letter-spacing: -.02em; color: var(--paper);
+                                колонку: колонка = (ширина окна - отступы) * --face - зазор / 2, фраза ~5.5em в Cormorant */
+                             font-size: min(10.3vw, 172px, calc(((100vw - 120px) * var(--face) - var(--gap) / 2) / 5.5)); letter-spacing: -.02em; color: var(--paper);
                              white-space: nowrap; text-shadow: 0 2px 28px rgba(0,0,0,.35); }
   .hero-title .w { display: inline; }
   .hero-aside { font-style: italic; }
@@ -90,7 +94,7 @@
   .hero-aside--inline { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .hero-inner { padding: 24px 0 0; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; max-width: 100%; }
   .hero .ornament { margin: -6px 0 -2px; }
-  .hero-lede { font-family: var(--serif); font-size: clamp(22px, 1.9vw, 32px); line-height: 1.4; color: var(--paper); text-wrap: balance; max-width: 24ch;
+  .hero-lede { font-family: var(--serif); font-size: clamp(24px, 2.2vw, 40px); line-height: 1.35; color: var(--paper); text-wrap: balance; max-width: 24ch;
                text-shadow: 0 1px 12px rgba(0,0,0,.35); }
   .hero-lede em { font-style: italic; color: var(--gold-bright); }
   .hero-cta { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
@@ -100,13 +104,15 @@
   .hero-fine a:hover { color: var(--paper); border-color: var(--paper); }
 
   @media (max-width: 1140px) {
-    .hero-stage { grid-template-columns: 1fr clamp(200px, 32vh, 300px) 1fr; padding-right: clamp(20px, 3vw, 40px); }
-    .hero-title, .hero-aside { font-size: min(9vw, 106px, calc((100vw - max(200px, min(32vh, 300px)) - 100px) / 11)); }
+    .hero { --gap: clamp(220px, 36vh, 340px); }
+    .hero-stage { padding-right: clamp(20px, 3vw, 40px); }
+    .hero-title, .hero-aside { font-size: min(9vw, 106px, calc(((100vw - 100px) * var(--face) - var(--gap) / 2) / 5.5)); }
     .hero-kicker { white-space: normal; max-width: 100%; letter-spacing: .2em; }
     .hero-cta .btn { padding: 14px 20px 14px 22px; font-size: 11px; }
   }
   @media (max-width: 760px) {
     /* телефон: фото на весь экран, лицо в верхней части, текст внизу поверх тёмной тени */
+    .hero-photo { right: 0; }
     .hero-photo img { object-position: 50% 18%; }
     .hero::before { background:
       linear-gradient(180deg, rgba(20,17,13,.30) 0%, rgba(20,17,13,0) 20%),
