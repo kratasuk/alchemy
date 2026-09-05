@@ -11,6 +11,18 @@ import { EVENT, EVENT_TITLE } from './_event.js';
 const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
 const TG_GROUP_CHAT_ID = process.env.TG_GROUP_CHAT_ID;
 const TG_WEBHOOK_SECRET = process.env.TG_WEBHOOK_SECRET;
+const CRON_SECRET = process.env.CRON_SECRET;
+
+// Vercel зовёт крон без заголовка x-vercel-cron: у node-функции в запросе
+// только user-agent «vercel-cron/1.0» и, если задан CRON_SECRET, заголовок
+// Authorization. Проверка по одному x-vercel-cron отбивала свой же крон 401-м,
+// и сводка за 04.09 не ушла. Принимаем все три признака.
+function isVercelCron(req) {
+  if (req.headers['x-vercel-cron']) return true;
+  if (/vercel-cron/i.test(String(req.headers['user-agent'] || ''))) return true;
+  if (CRON_SECRET && req.headers.authorization === `Bearer ${CRON_SECRET}`) return true;
+  return false;
+}
 
 // Порядок вариантов внутри категории не важен: сортируем по убыванию.
 const CATEGORIES = [
@@ -89,9 +101,11 @@ async function sendTgMessage(chatId, text) {
 }
 
 export default async function handler(req, res) {
-  const fromCron = Boolean(req.headers['x-vercel-cron']);
+  const fromCron = isVercelCron(req);
   const key = req.query?.key;
   if (!fromCron && (!TG_WEBHOOK_SECRET || key !== TG_WEBHOOK_SECRET)) {
+    // Печатаем user-agent (не секрет), чтобы отказ крону было видно в логах.
+    console.warn('webinar-digest: отказ, ua=', String(req.headers['user-agent'] || '–'));
     return res.status(401).json({ ok: false, error: 'Нужен ключ' });
   }
   if (!skvConfigured()) return res.status(500).json({ ok: false, error: 'SKV_API_KEY не задан' });
