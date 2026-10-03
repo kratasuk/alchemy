@@ -164,3 +164,20 @@ export async function linkTelegram({ tree = SKV_TREE, event, token, tg, fields }
   }
   return personKey;
 }
+
+/** Узел по ключу как объект {поле: значение} плюс node_hash; null, если узла нет. */
+export async function readNode({ tree = SKV_TREE, key }) {
+  const node = await byKey(tree, key);
+  if (!node?.node_hash) return null;
+  const row = { node_hash: node.node_hash };
+  for (const v of node.vals || []) row[v.val_name] = v.value;
+  return row;
+}
+
+/** Дописать поля в существующий узел по ключу. */
+export async function patchNode({ tree = SKV_TREE, key, fields }) {
+  const node = await byKey(tree, key);
+  if (!node?.node_hash) return false;
+  await updateNode(tree, node.node_hash, fields);
+  return true;
+}
